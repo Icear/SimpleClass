@@ -22,6 +22,6 @@ public class WelcomePresenter implements WelcomeContract.Presenter {
 
     @Override
     public void startFlow() {
-        mWelcomeView.leadToLogin();
+        mWelcomeView.leadToLoginModule();
     }
 }

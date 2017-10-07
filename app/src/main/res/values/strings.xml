@@ -10,6 +10,7 @@
     <string name="login">登陆</string>
     <string name="enterCorrectAccount">请输入正确的用户名</string>
     <string name="enterCorrectPassword">请输入正确的密码</string>
-    <string name="linktoAcademicError">连接到服务器时遇到问题</string>
+    <string name="linkToAcademicError">连接到服务器时遇到问题</string>
     <string name="accountOrPasswordError">用户名或密码错误</string>
+    <string name="loginSuccessfully">登陆成功</string>
 </resources>

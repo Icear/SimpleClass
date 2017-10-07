@@ -54,7 +54,7 @@ public class WelcomeFragment extends Fragment implements WelcomeContract.View{
     }
 
     @Override
-    public void leadToLogin() {
+    public void leadToLoginModule() {
         ModuleUtil.initModule(getActivity().getSupportFragmentManager(), LoginViewModule.class.getName(), null, true);
     }
 }

@@ -11,7 +11,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.support.v7.widget.Toolbar;
 
+import com.github.icear.nefu.simpleclass.CheckClass.CheckClassViewModule;
 import com.github.icear.nefu.simpleclass.R;
+import com.github.icear.nefu.simpleclass.Util.ModuleUtil;
 
 
 public class LoginFragment extends Fragment implements LoginContract.View{
@@ -73,13 +75,13 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     }
 
     @Override
-    public void showErrorMessage(String errorMessage) {
+    public void showMessage(String errorMessage) {
         Snackbar.make(getActivity().findViewById(R.id.container),errorMessage,Snackbar.LENGTH_LONG)
                 .show();
     }
 
     @Override
-    public void showErrorMessage(int resourceID) {
+    public void showMessage(int resourceID) {
         Snackbar.make(getActivity().findViewById(R.id.container),resourceID,Snackbar.LENGTH_LONG)
                 .show();
     }
@@ -92,5 +94,11 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     @Override
     public void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void leadToClassModule() {
+        ModuleUtil.initModule(getActivity().getSupportFragmentManager(),
+                CheckClassViewModule.class.getName(), null, true);
     }
 }

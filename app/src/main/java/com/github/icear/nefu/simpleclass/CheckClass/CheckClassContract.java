@@ -1,14 +1,18 @@
-package com.github.icear.nefu.simpleclass.Welcome;
+package com.github.icear.nefu.simpleclass.CheckClass;
 
 import com.github.icear.nefu.simpleclass.BasePresenter;
 import com.github.icear.nefu.simpleclass.BaseView;
 
-public interface WelcomeContract {
+/**
+ * Created by icear on 2017/10/7.
+ */
+
+public interface CheckClassContract {
     interface Presenter extends BasePresenter{
-        void startFlow();
+
     }
 
     interface View extends BaseView<Presenter>{
-        void leadToLoginModule();
+
     }
 }

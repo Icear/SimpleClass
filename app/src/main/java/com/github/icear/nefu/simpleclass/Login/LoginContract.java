@@ -10,9 +10,10 @@ public interface LoginContract {
     }
 
     interface View extends BaseView<Presenter>{
-        void showErrorMessage(String errorMessage);
-        void showErrorMessage(int sourceID);
+        void showMessage(String errorMessage);
+        void showMessage(int sourceID);
         void showProgressBar();
         void hideProgressBar();
+        void leadToClassModule();
     }
 }
