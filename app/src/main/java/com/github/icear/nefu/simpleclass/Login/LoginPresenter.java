@@ -3,6 +3,7 @@ package com.github.icear.nefu.simpleclass.Login;
 import android.support.annotation.NonNull;
 
 import com.github.Icear.NEFU.AcademicAdmin;
+import com.github.icear.nefu.simpleclass.Data.AcademicDataProvider;
 import com.github.icear.nefu.simpleclass.R;
 
 import java.io.IOException;
@@ -30,12 +31,10 @@ public class LoginPresenter implements LoginContract.Presenter {
         mLoginView.showProgressBar();
 
         /* 这部分有网络通信，需要放置到子线程中进行 */
-        AcademicAdmin academicAdmin = new AcademicAdmin();
         try {
-            if(academicAdmin.init(account,password)){
+            if(AcademicDataProvider.getInstance().init(account,password)){
                 //登陆成功
                 mLoginView.hideProgressBar();
-
             }else{
                 //登陆失败
                 mLoginView.hideProgressBar();

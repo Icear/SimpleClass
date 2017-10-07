@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.github.icear.nefu.simpleclass.Util.ModuleUtil;
 import com.github.icear.nefu.simpleclass.Welcome.WelcomeViewModule;
 
-
+//TODO 配置Log4j
 //TODO 将MainActivity的toolbar去掉，改为由每个fragment进行控制，避免标题无法即使更新
 public class MainActivity extends AppCompatActivity {
 
