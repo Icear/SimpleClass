@@ -272,7 +272,7 @@ public class AcademicAdmin {
         cookieToken = new HttpCookieStore();//准备CookieStore
 
 //        CookieHandler.setDefault(new CookieManager(cookieToken, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+//        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
 
 
         List<NameValuePair> parameter = new ArrayList<>();

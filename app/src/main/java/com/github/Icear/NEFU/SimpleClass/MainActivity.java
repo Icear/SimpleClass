@@ -9,6 +9,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
 //TODO 处理程序在中途离开的情况
 //TODO 配置Log4j
 //TODO 将MainActivity的toolbar去掉，改为由每个fragment进行控制，避免标题无法即使更新
+//TODO Activity的控件无法跟随变化（如输入法弹出时）
 public class MainActivity extends AppCompatActivity {
 
     /*

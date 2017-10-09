@@ -51,7 +51,7 @@ public class HttpClient {
 
     public String httpGetForString(String urlString, Iterable<? extends NameValuePair> params) throws IOException {
         //设置CookieHandle
-        CookieHandler.setDefault(cookieManager);
+//        CookieHandler.setDefault(cookieManager);
 
         //合并参数
         String urlParams;
@@ -64,7 +64,7 @@ public class HttpClient {
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setDoOutput(false);//不输出
 
-        CookieHandler.setDefault(null);
+//        CookieHandler.setDefault(null);
 
 //        loadCookieForConnection(URI,httpURLConnection);
 
@@ -74,14 +74,14 @@ public class HttpClient {
         inputStream.close();
 
 //        updateCookieForConnection(url,httpURLConnection);
-        CookieHandler.setDefault(null);
+//        CookieHandler.setDefault(null);
 
         return response;
     }
 
     public byte[] httpGetForByteArray(String urlString, Iterable<? extends NameValuePair> params) throws IOException {
         //设置CookieHandle
-        CookieHandler.setDefault(cookieManager);
+//        CookieHandler.setDefault(cookieManager);
 
         //合并参数
         String urlParams;
@@ -94,7 +94,7 @@ public class HttpClient {
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setDoOutput(false);//不输出
 
-        CookieHandler.setDefault(null);
+//        CookieHandler.setDefault(null);
 
 //        loadCookieForConnection(URI,httpURLConnection);
 
@@ -104,14 +104,14 @@ public class HttpClient {
         inputStream.close();
 
 //        updateCookieForConnection(url,httpURLConnection);
-        CookieHandler.setDefault(null);
+//        CookieHandler.setDefault(null);
 
         return response;
     }
 
     public String httpPostForString(String urlString, Iterable<? extends NameValuePair> params, Iterable<? extends NameValuePair> postParams) throws IOException {
         //设置CookieHandle
-        CookieHandler.setDefault(cookieManager);
+//        CookieHandler.setDefault(cookieManager);
 
         //合并参数
         String urlParams;
@@ -138,14 +138,14 @@ public class HttpClient {
         String response = ConvertUtil.toString(inputStream);
         inputStream.close();
 
-        CookieHandler.setDefault(null);
+//        CookieHandler.setDefault(null);
 
         return response;
     }
 
     public byte[] httpPostForByteArray(String urlString, Iterable<? extends NameValuePair> params, Iterable<? extends NameValuePair> postParams) throws IOException {
         //设置CookieHandle
-        CookieHandler.setDefault(cookieManager);
+//        CookieHandler.setDefault(cookieManager);
 
         //合并参数
         String urlParams;
@@ -172,7 +172,7 @@ public class HttpClient {
         byte[] response = ConvertUtil.toByteArray(inputStream);
         inputStream.close();
 
-        CookieHandler.setDefault(null);
+//        CookieHandler.setDefault(null);
 
         return response;
     }
