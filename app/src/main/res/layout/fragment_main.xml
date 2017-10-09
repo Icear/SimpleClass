@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.github.icear.nefu.simpleclass.Welcome.WelcomeFragment">
+    tools:context="com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeFragment">
 
     <!--<TextView-->
         <!--android:layout_width="match_parent"-->
