@@ -3,10 +3,13 @@ package com.github.Icear.NEFU.SimpleClass.ClassList;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.Icear.NEFU.SimpleClass.ClassList.dummy.DummyContent;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.ClassList.dummy.DummyContent.DummyItem;
 
@@ -45,13 +48,13 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_class_list, container, false);
 
-//        // Set the adapter
-//        if (rootView instanceof RecyclerView) {
-//            Context context = rootView.getContext();
-//            RecyclerView recyclerView = (RecyclerView) rootView;
-//            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-//            recyclerView.setAdapter(new MyClassRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-//        }
+        /// Set the adapter
+        if (rootView instanceof RecyclerView) {
+            Context context = rootView.getContext();
+            RecyclerView recyclerView = (RecyclerView) rootView;
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(new ClassListRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+        }
 
         return rootView;
     }

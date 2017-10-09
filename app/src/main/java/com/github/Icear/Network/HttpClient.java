@@ -10,8 +10,12 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -22,36 +26,54 @@ public class HttpClient {
 
     private CookieManager cookieManager;
 
-    public HttpClient(HttpCookieStore cookieStore){
+    public HttpClient(CookieStore cookieStore){
         //TODO 提供选项设定要接收Cookie的域
         //TODO ???CookieHandle的作用范围还不清楚，暂时当成大范围杀器（官方文档的System-Wide到底是个什么鬼....)
-        this.cookieManager = new CookieManager(cookieStore, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+//        this.cookieManager = new CookieManager(cookieStore, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+
+        /*
+         * 直接使用CookieManager内部的CookieStore实现，在外部对其进行持有，以实现跨连接的Cookie储存
+         * 这种方法只能实现单次运行周期内的Cookie持有，无法长期使用
+         * TODO 待改进
+         */
+
+        this.cookieManager = new CookieManager();
+
     }
 
     public CookieStore getCookieStore(){
         return cookieManager.getCookieStore();
     }
-//
-//    /**
-//     * 传入httpUrlConnection以载入储存的cookie
-//     * @param httpURLConnection httpUrlConnection
-//     */
-//    private void loadCookieForConnection(URI uri, HttpURLConnection httpURLConnection) throws IOException {
-//        Map<String,List<String>> stringCookieMap = cookieManager.get(uri,httpURLConnection.getHeaderFields());
-//
-//    }
 
-//    /**
-//     * 传入httpUrlConnection以更新connection中的cookie
-//     * @param httpURLConnection httpUrlConnection
-//     */
-//    private void updateCookieForConnection(String host, HttpURLConnection httpURLConnection){
+    /**
+     * 传入httpUrlConnection以载入储存的cookie
+     * @param httpURLConnection httpUrlConnection
+     */
+    private void loadCookieForConnection(URL url, HttpURLConnection httpURLConnection) throws IOException, URISyntaxException {
+        Map<String,List<String>> stringCookieMap = cookieManager.get(new URI(url.getHost()),httpURLConnection.getHeaderFields());
+        if (stringCookieMap.containsKey("Cookie")) {
+            for (String s : stringCookieMap.get("Cookie")) {
+                httpURLConnection.addRequestProperty("Cookie", s);
+            }
+        }
+        if(stringCookieMap.containsKey("Cookie2")){
+            for (String s : stringCookieMap.get("Cookie2")) {
+                httpURLConnection.addRequestProperty("Cookie2", s);
+            }
+        }
+    }
 //
-//    }
+    /**
+     * 传入httpUrlConnection以更新connection中的cookie
+     * @param httpURLConnection httpUrlConnection
+     */
+    private void updateCookieForConnection(URL url, HttpURLConnection httpURLConnection){
+
+    }
 
     public String httpGetForString(String urlString, Iterable<? extends NameValuePair> params) throws IOException {
         //设置CookieHandle
-        CookieHandler.setDefault(cookieManager);
+//        CookieHandler.setDefault(cookieManager);
 
         //合并参数
         String urlParams;
@@ -64,7 +86,7 @@ public class HttpClient {
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setDoOutput(false);//不输出
 
-        CookieHandler.setDefault(null);
+//        CookieHandler.setDefault(null);
 
 //        loadCookieForConnection(URI,httpURLConnection);
 

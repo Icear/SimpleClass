@@ -17,18 +17,20 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyClassRecyclerViewAdapter extends RecyclerView.Adapter<MyClassRecyclerViewAdapter.ViewHolder> {
+public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyClassRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public ClassListRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+        //在这里创建Adapter并传入要展示的item数据，同时设定传到上层的单击监听事件
         mValues = items;
         mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //在这里创建view并放入viewHolder
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_class, parent, false);
         return new ViewHolder(view);
@@ -36,6 +38,7 @@ public class MyClassRecyclerViewAdapter extends RecyclerView.Adapter<MyClassRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        //在这里给View填充内容
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
@@ -64,6 +67,7 @@ public class MyClassRecyclerViewAdapter extends RecyclerView.Adapter<MyClassRecy
         public DummyItem mItem;
 
         public ViewHolder(View view) {
+            //在这里取出View中的内容并保存到holder中
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
