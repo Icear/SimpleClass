@@ -1,5 +1,7 @@
 package com.github.Icear.NEFU.SimpleClass.Data;
 
+import android.util.Log;
+
 import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
 import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassInfo;
 import com.github.Icear.Network.BasicNameValuePair;
@@ -7,6 +9,7 @@ import com.github.Icear.Network.HttpClient;
 import com.github.Icear.Network.HttpCookieStore;
 import com.github.Icear.Network.NameValuePair;
 import com.github.Icear.Network.Util.NetworkUtil;
+import com.github.Icear.Util.ConvertUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,7 +23,9 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,9 +37,9 @@ import java.util.regex.Pattern;
  */
 public class AcademicAdmin {
 //    private static Logger logger = LogManager.getLogger(AcademicAdmin.class.getName());
-
+    private static String TAG = AcademicAdmin.class.getSimpleName();
     private User user;
-    private com.github.Icear.Network.HttpCookieStore cookieToken;//登陆令牌
+//    private com.github.Icear.Network.HttpCookieStore cookieToken;//登陆令牌
 
 
     private AcademicAdmin(){}
@@ -49,6 +54,14 @@ public class AcademicAdmin {
      */
     public static AcademicAdmin getInstance(String userName, String password) throws IOException {
         AcademicAdmin academicAdmin = new AcademicAdmin();
+        
+        /* 
+            似乎只要设定一次CookieHandle就能够维持整个生命周期内的Cookie
+            因为不需要接续下一次启动前的Cookie，所以直接在这里进行一次CookieHandle的绑定
+            之后便不再对其进行操作
+         */
+        CookieHandler.setDefault(new CookieManager(null,CookiePolicy.ACCEPT_ALL));
+        
         if (academicAdmin.login(userName, password)) {
             academicAdmin.initUser();
             return academicAdmin;
@@ -64,7 +77,8 @@ public class AcademicAdmin {
     public List<Class> getClasses() throws IOException {
         List<Class> classContainer = new ArrayList<>();
 
-        String response = new HttpClient(cookieToken).httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do",null);
+        String response = null;
+        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do",null);
 //        String response = NetworkUtil.httpGetForString(closeableHttpClient,
 //                "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
         Document document = Jsoup.parse(response);
@@ -89,7 +103,7 @@ public class AcademicAdmin {
             classIndex = 0;
         }
 
-//        logger.info("finally get " + classContainer.size() + " classes");
+        Log.i(TAG, "finally get " + classContainer.size() + " classes");
         if (classContainer.size() == 0) {
             return null;
         } else {
@@ -130,7 +144,7 @@ public class AcademicAdmin {
 //                classIndex = 0;
 //            }
 //        }
-////        logger.info("finally get " + classContainer.size() + " classes");
+////        Log.i(TAG, "finally get " + classContainer.size() + " classes");
 //        if (classContainer.size() == 0) {
 //            return null;
 //        } else {
@@ -139,21 +153,21 @@ public class AcademicAdmin {
 //    }
 
     private void parseNode(List<Class> classContainer, String html, int classIndex, int dayIndex) {
-//        logger.info("tend to parseNode");
+        Log.i(TAG, "tend to parseNode");
         Document document = Jsoup.parse(html);
         Element container = document.getElementsByAttributeValue("class", "kbcontent").first();
-//        logger.debug("container:");
-//        logger.debug(container.html());
+        Log.d(TAG, "container:");
+        Log.d(TAG, container.html());
 //        Pattern p = Pattern.compile("[-]*(<br>)?(.*?)<br><font title=\"周次\\(节次\\)\">(.*?)\\(周\\)</font><br><font title=\"教室\">(.*?)</font><br>");
         Pattern p = Pattern.compile("(<br>)?([^-<>]*?)\\s*?<br>\\s*?<font[\\s\\S]*?>(\\D*?)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)\\(周\\)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)</font>\\s*?<br>");
         Matcher m = p.matcher(container.html());
         for (int i = classIndex * 2 - 1; i <= classIndex * 2; i++) {
             if (m.find()) {
-//                logger.debug("class find match");
-//                logger.debug("name: " + m.group(2));
-//                logger.debug("teacher: " + m.group(3));
-//                logger.debug("week: " + m.group(4));
-//                logger.debug("location: " + m.group(5));
+                Log.d(TAG, "class find match");
+                Log.d(TAG, "name: " + m.group(2));
+                Log.d(TAG, "teacher: " + m.group(3));
+                Log.d(TAG, "week: " + m.group(4));
+                Log.d(TAG, "location: " + m.group(5));
 
                 ClassInfo classInfo = new ClassInfo();
                 classInfo.setWeekDay(dayIndex);
@@ -163,33 +177,33 @@ public class AcademicAdmin {
                 readLocation(classInfo, m.group(5));
                 updateClass(classContainer, m.group(2), m.group(3), classInfo);
             }
-//            else {
-//                logger.debug("no found, pass");
-//            }
+            else {
+                Log.d(TAG, "no found, pass");
+            }
         }
     }
 
     private void readLocation(ClassInfo classInfo, String mixLocation) {
-//        logger.debug("parse Location");
-//        logger.debug(mixLocation);
+        Log.d(TAG, "parse Location");
+        Log.d(TAG, mixLocation);
         /* 将上课地点的楼与教室分开，便于后面读取时间表 */
         Pattern p = Pattern.compile("(.{0,3})([a-zA-Z]?\\d{3})");
         Matcher m = p.matcher(mixLocation);
         if (m.find()) {
-//            logger.debug("location find match");
-//            logger.debug("location: " + m.group(1));
-//            logger.debug("room: " + m.group(2));
+            Log.d(TAG, "location find match");
+            Log.d(TAG, "location: " + m.group(1));
+            Log.d(TAG, "room: " + m.group(2));
             classInfo.setLocation(m.group(1));
             classInfo.setRoom(m.group(2));
         }
-//        else {
-//            logger.error("oh! We can't read this location!");
-//        }
+        else {
+            Log.e(TAG, "oh! We can't read this location!");
+        }
     }
 
     private void readWeek(ClassInfo classInfo, String mixWeek) {
-//        logger.debug("tend to parse Week");
-//        logger.debug(mixWeek);
+        Log.d(TAG, "tend to parse Week");
+        Log.d(TAG, mixWeek);
         List<Integer> weekList = new ArrayList<>();
         for (String weekPart :
                 mixWeek.split(",")) {
@@ -199,7 +213,7 @@ public class AcademicAdmin {
                 weekList.add(i);
             }
         }
-//        logger.debug("final parse week number: " + weekList.size());
+        Log.d(TAG, "final parse week number: " + weekList.size());
         classInfo.setWeek(weekList);
     }
 
@@ -240,7 +254,7 @@ public class AcademicAdmin {
      * @throws IOException 网络IO或数据处理错误
      */
     private boolean login(String userName, String password) throws IOException {
-//        logger.info("Start login");
+//        Log.i(TAG, "Start login");
         //执行登陆，获得有效的令牌Token
 //        try (CloseableHttpClient closeableHttpClient = HttpClients.custom().setDefaultCookieStore(cookieToken).build()) {
 //            List<NameValuePair> parameter = new ArrayList<>();
@@ -255,40 +269,47 @@ public class AcademicAdmin {
 //                //检查是否登陆成功
 //                if (response.getStatusLine().getStatusCode() == 302) {
 //                    //登陆成功
-////                    logger.info("Login status: succeed");
+////                    Log.i(TAG, "Login status: succeed");
 //                    return true;
 //                } else {
 //                    //登陆失败
 //                    cookieToken = null;
-////                    logger.info("Login status: failed");
-////                    logger.debug("response:");
-////                    logger.debug("\tstatus code: " + response.getStatusLine().getStatusCode());
-////                    logger.debug("\tcontext:" + response.getEntity().toString());
+//                    Log.i(TAG, "Login status: failed");
+//                    Log.d(TAG, "response:");
+//                    Log.d(TAG, "\tstatus code: " + response.getStatusLine().getStatusCode());
+//                    Log.d(TAG, "\tcontext:" + response.getEntity().toString());
 //                    return false;
 //                }
 //            }
 //        }
 
-        cookieToken = new HttpCookieStore();//准备CookieStore
+//        cookieToken = new HttpCookieStore();//准备CookieStore
 
 //        CookieHandler.setDefault(new CookieManager(cookieToken, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-
+//        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
         List<NameValuePair> parameter = new ArrayList<>();
         parameter.add(new BasicNameValuePair("USERNAME", userName));
         parameter.add(new BasicNameValuePair("PASSWORD", password));
 
         URL url = new URL("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xk/LoginToXk");
+
+        Log.d(TAG,"execute request to " + url.toString());
+        Log.d(TAG,"method: Post");
+
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
 
-        String postData = NetworkUtil.generateString(parameter,"=","&");
+        String postData = NetworkUtil.generateString(parameter);
+        httpURLConnection.setRequestProperty("Accept-Encoding","");
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setDoInput(true);
 
+//        Log.d(TAG,"postData: " + postData);//DONE 测试后删除此条数据，避免信息泄露
+
         OutputStream outputStream = httpURLConnection.getOutputStream();
-        outputStream.write(postData.getBytes());
+        outputStream.write(postData.getBytes("UTF-8"));
+//        outputStream.write(Charset.forName("UTF-8").encode(postData));
         outputStream.flush();
         outputStream.close();
 
@@ -296,13 +317,15 @@ public class AcademicAdmin {
         if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
             //登陆成功
             inputStream.close();
-            CookieHandler.setDefault(null);
+            Log.i(TAG,"Login status: successful");
             return true;
         }else{
             //登陆失败
+            Log.i(TAG, "Login status: failed");
+            Log.d(TAG, "response:");
+            Log.d(TAG, "\tstatus code: " + httpURLConnection.getResponseCode());
+            Log.d(TAG, "\tcontext:" + ConvertUtil.toString(inputStream));
             inputStream.close();
-            CookieHandler.setDefault(null);
-            cookieToken = null;
             return false;
         }
     }
@@ -313,12 +336,13 @@ public class AcademicAdmin {
      * @throws IOException 网络IO或读取信息失败
      */
     private void initUser() throws IOException {
-//        logger.info("Start to init User");
+        Log.i(TAG, "Start to init User");
 //        try (CloseableHttpClient closeableHttpClient = HttpClients.custom().setDefaultCookieStore(cookieToken).build()) {
 //            String response = NetworkUtil.httpGetForString(closeableHttpClient,
 //                    "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
 
-        String response = new HttpClient(cookieToken).httpGetForString( "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp",null);
+        String response;
+        response = NetworkUtil.httpGetForString( "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp",null);
         Document document = Jsoup.parse(response);
         Element container = document.getElementsByAttributeValue("class", "wap").first();
         Element targetElement = container.getElementsByAttributeValue("class", "block1text").first();
@@ -331,11 +355,11 @@ public class AcademicAdmin {
             user = new User();
             user.setName(m.group(1));
             user.setId(m.group(2));
-//                logger.info("read info succeed, method finish");
+            Log.i(TAG, "read info succeed, method finish");
         } else {
-//                logger.error("parse user info failed");
-//                logger.debug("container info:\n" + container);
-//                logger.debug("targetElement: \n" + info);
+            Log.e(TAG, "parse user info failed");
+            Log.d(TAG, "container info:\n" + container);
+            Log.d(TAG, "targetElement: \n" + info);
             throw new IOException("read user info failed, unknown format");
         }
 
