@@ -41,10 +41,12 @@ public class AcademicDataProvider {
         return user;
     }
 
+    public List<Class> getClassesFromNetwork() throws IOException{
+        classList = academicAdmin.getClasses();
+        return classList;
+    }
+
     public List<Class> getClasses() throws IOException {
-        if(classList == null){
-            classList = academicAdmin.getClasses();
-        }
         return classList;
     }
 }

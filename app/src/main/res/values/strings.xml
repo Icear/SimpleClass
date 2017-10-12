@@ -13,4 +13,7 @@
     <string name="linkToAcademicError">连接到服务器时遇到问题</string>
     <string name="accountOrPasswordError">用户名或密码错误</string>
     <string name="loginSuccessfully">登陆成功</string>
+    <string name="processingClass_PleaseWait">正在读取课程，请稍侯</string>
+    <string name="errorInReadClass_PleaseCheckTheInternet">读取课程时发生错误，请检查网络后重试</string>
+    <string name="checkYourCourse">检查课程</string>
 </resources>

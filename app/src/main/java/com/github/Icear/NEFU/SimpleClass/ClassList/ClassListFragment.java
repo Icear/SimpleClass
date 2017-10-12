@@ -2,28 +2,37 @@ package com.github.Icear.NEFU.SimpleClass.ClassList;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.Icear.NEFU.SimpleClass.ClassList.dummy.DummyContent;
+import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
-import com.github.Icear.NEFU.SimpleClass.ClassList.dummy.DummyContent.DummyItem;
+
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
  */
-public class ClassListFragment extends Fragment implements ClassListContract.View{
+public class ClassListFragment extends Fragment implements ClassListContract.View {
 
-    private OnListFragmentInteractionListener mListener;
+    //TODO 跳转向下一个module的函数未完成
+    //TODO 跳转向showItemDetail的函数未完成
+    //TODO Item右划以删除的功能未完成
+    //TODO Activity按钮确认事件未完成
+    //TODO 在onResume对Activity属性进行设置的话，就要在切换Module的时候重置所有属性，考虑是在切换时进行
+
     private ClassListContract.Presenter mPresenter;
-
+    private RecyclerView mRecyclerView;
+    private View mProgressBar;
+    private Toolbar toolbar;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -32,8 +41,6 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     public ClassListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static ClassListFragment newInstance() {
         return new ClassListFragment();
     }
@@ -47,39 +54,45 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_class_list, container, false);
-
-        /// Set the adapter
-        if (rootView instanceof RecyclerView) {
-            Context context = rootView.getContext();
-            RecyclerView recyclerView = (RecyclerView) rootView;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new ClassListRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-        }
-
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_class);
+        mProgressBar = rootView.findViewById(R.id.progressBar_classList);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        FloatingActionButton fabButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fabButton.setImageResource(R.drawable.ic_check_black_24dp);
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPresenter != null) {
+                    mPresenter.onUserConfirmed();
+                }
+            }
+        });
+        fabButton.setVisibility(View.VISIBLE);
         return rootView;
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnListFragmentInteractionListener) {
+//            mListener = (OnListFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnListFragmentInteractionListener");
+//        }
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mListener = null;
+//    }
 
     @Override
     public void onResume() {
         super.onResume();
+        toolbar.setTitle(R.string.checkYourCourse);
         mPresenter.start();
     }
 
@@ -88,18 +101,46 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         mPresenter = presenter;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+    @Override
+    public void showData(List<Class> classList) {
+        /// Set the adapter
+        Context context = mRecyclerView.getContext();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.setAdapter(new ClassListRecyclerViewAdapter(classList, new ListActionCallBack()));
     }
+
+    @Override
+    public void showProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void leadToImportModule() {
+
+    }
+
+    @Override
+    public void initItemDetailModule(Class item) {
+
+    }
+
+    @Override
+    public void showMessage(int resourceID) {
+        Snackbar.make(getActivity().findViewById(R.id.container),resourceID,Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    public class ListActionCallBack{
+        public void onListItemClick(Class item) {
+            mPresenter.showItemDetail(item);
+        }
+    }
+
+
+
 }

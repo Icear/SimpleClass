@@ -2,6 +2,7 @@ package com.github.Icear.NEFU.SimpleClass.Welcome;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 public class WelcomeFragment extends Fragment implements WelcomeContract.View{
 
     private WelcomeContract.Presenter mPresenter;
+    private Toolbar toolBar;
 
     public WelcomeFragment() {
     }
@@ -35,17 +37,19 @@ public class WelcomeFragment extends Fragment implements WelcomeContract.View{
         rootView.findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mPresenter != null){
+                if (mPresenter != null) {
                     mPresenter.startFlow();
                 }
             }
         });
+        toolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        toolBar.setTitle("SimpleClass");
         mPresenter.start();
     }
 

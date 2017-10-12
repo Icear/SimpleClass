@@ -22,6 +22,7 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     private EditText editText_login;
     private EditText editText_password;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -61,8 +62,7 @@ public class LoginFragment extends Fragment implements LoginContract.View{
                         editText_password.getText().toString());
             }
         });
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.linkToAcademic);
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         return rootView;
     }
 
@@ -74,6 +74,7 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     @Override
     public void onResume() {
         super.onResume();
+        toolbar.setTitle(R.string.linkToAcademic);
         mPresenter.start();
     }
 
