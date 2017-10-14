@@ -26,7 +26,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     //TODO 跳转向下一个module的函数未完成
     //TODO 跳转向showItemDetail的函数未完成
     //TODO Item右划以删除的功能未完成
-    //TODO Activity按钮确认事件未完成
+    //DONE Activity按钮确认事件未完成
     //TODO 在onResume对Activity属性进行设置的话，就要在切换Module的时候重置所有属性，考虑是在切换时进行
 
     private ClassListContract.Presenter mPresenter;
@@ -56,8 +56,8 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         View rootView = inflater.inflate(R.layout.fragment_class_list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_class);
         mProgressBar = rootView.findViewById(R.id.progressBar_classList);
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        FloatingActionButton fabButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        FloatingActionButton fabButton = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fabButton.setImageResource(R.drawable.ic_check_black_24dp);
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +68,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
             }
         });
         fabButton.setVisibility(View.VISIBLE);
+
         return rootView;
     }
 

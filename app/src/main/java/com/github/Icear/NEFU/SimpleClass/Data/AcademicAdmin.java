@@ -301,6 +301,7 @@ public class AcademicAdmin {
 
         String postData = NetworkUtil.generateString(parameter);
         httpURLConnection.setRequestProperty("Accept-Encoding","");
+        httpURLConnection.setInstanceFollowRedirects(false);
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setDoInput(true);
 
