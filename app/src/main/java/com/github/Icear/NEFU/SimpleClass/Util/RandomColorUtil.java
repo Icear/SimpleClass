@@ -1,62 +1,38 @@
 package com.github.Icear.NEFU.SimpleClass.Util;
 
-import com.github.Icear.NEFU.SimpleClass.R;
+import android.app.Application;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+
+import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 
 import java.util.Random;
 
 /**
- * Created by icear on 2017/10/14.
+ * Created by Icear on 2017/10/14.
  * 生成随机颜色的工具类
  */
 
 public class RandomColorUtil {
-    private static int[] colorArray = new int[]{
-            R.color.red,
-
-            R.color.pink,
-
-            R.color.purple,
-
-            R.color.deepPurple,
-
-            R.color.indigo,
-
-            R.color.blue,
-
-            R.color.lightBlue,
-
-            R.color.cyan,
-
-            R.color.teal,
-
-            R.color.green,
-
-            R.color.lightGreen,
-
-            R.color.lime,
-
-            R.color.yellow,
-
-            R.color.amber,
-
-            R.color.orange,
-
-            R.color.deepOrange,
-
-            R.color.brown,
-
-            R.color.grey,
-
-            R.color.blueGrey
-    };
+    static{
+        //用context读取res中预置的randomColor数组
+        Application application = SimpleClassApplication.getInstance();
+        int arrayId = application.getResources().getIdentifier("randomColor","array",application.getPackageName());
+        colors = application.getResources().getIntArray(arrayId);
+    }
 
     private static  Random randomSeed = new Random();
+    private static int[] colors;
 
     /**
      * 利用随机数随机返回一个预设定的Color
-     * @return
+     * @return 预置randomColor数组中的某一个,某些未初始化情况下可能返回Color.GRAY
      */
     public static int getRandomColor(){
-        return colorArray[randomSeed.nextInt(colorArray.length)];
+        int color = Color.GRAY;
+        if (colors != null) {
+            color = colors[randomSeed.nextInt(colors.length)];
+        }
+        return color;
     }
 }

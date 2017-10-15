@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,10 @@ import com.github.Icear.NEFU.SimpleClass.R;
 
 import java.util.List;
 
+import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
+import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
+import static android.support.v7.widget.helper.ItemTouchHelper.UP;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -25,8 +31,8 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
 
     //TODO 跳转向下一个module的函数未完成
     //TODO 跳转向showItemDetail的函数未完成
-    //TODO Item右划以删除的功能未完成
-    //DONE Activity按钮确认事件未完成
+    //Done Item右划以删除的功能完成
+    //DONE Activity按钮确认事件完成
     //TODO 在onResume对Activity属性进行设置的话，就要在切换Module的时候重置所有属性，考虑是在切换时进行
 
     private ClassListContract.Presenter mPresenter;
@@ -108,6 +114,32 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         Context context = mRecyclerView.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setAdapter(new ClassListRecyclerViewAdapter(classList, new ListActionCallBack()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity(), DividerItemDecoration.VERTICAL));//添加分割线
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(UP | DOWN , RIGHT);//允许上下拖拽，允许右滑
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                ClassListRecyclerViewAdapter adapter = (ClassListRecyclerViewAdapter) recyclerView.getAdapter();
+                adapter.swapItem(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == RIGHT) {
+                    //在这里选择删除
+                    ClassListRecyclerViewAdapter adapter = (ClassListRecyclerViewAdapter) mRecyclerView.getAdapter();
+                    adapter.delItem(viewHolder.getAdapterPosition());
+                }
+            }
+        });//用于实现向右滑动删除功能
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        //TODO 想办法把这段代码抽出去，放在这里混合了
     }
 
     @Override
