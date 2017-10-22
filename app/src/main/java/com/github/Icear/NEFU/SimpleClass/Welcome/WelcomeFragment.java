@@ -42,14 +42,12 @@ public class WelcomeFragment extends Fragment implements WelcomeContract.View{
                 }
             }
         });
-        toolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        toolBar.setTitle("SimpleClass");
         mPresenter.start();
     }
 

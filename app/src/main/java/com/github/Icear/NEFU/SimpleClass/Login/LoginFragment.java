@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.support.v7.widget.Toolbar;
 
 import com.github.Icear.NEFU.SimpleClass.ClassList.ClassListViewModule;
 import com.github.Icear.NEFU.SimpleClass.R;
@@ -62,7 +62,6 @@ public class LoginFragment extends Fragment implements LoginContract.View{
                         editText_password.getText().toString());
             }
         });
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         return rootView;
     }
 
@@ -74,7 +73,6 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     @Override
     public void onResume() {
         super.onResume();
-        toolbar.setTitle(R.string.linkToAcademic);
         mPresenter.start();
     }
 

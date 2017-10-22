@@ -1,15 +1,27 @@
 package com.github.Icear.NEFU.SimpleClass;
 
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.os.Bundle;
+
 import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
 
 //TODO 处理程序在中途离开的情况
-//TODO 配置Log4j
-//TODO 将MainActivity的toolbar去掉，改为由每个fragment进行控制，避免标题无法即使更新
-//TODO Activity的控件无法跟随变化（如输入法弹出时）
+//TODO 添加动画效果
+//TODO 重新安排对话以符合google的建议
+//TODO 添加英语支持
+
+/*
+ * 重新恢复：
+ * //Done 将MainActivity完全抽象出来作为一个容器，将显示部分放到对应的fragment中
+ * //TODO 引入自定义Style
+ * //TODO 修正Presenter的触发位置
+ * //TODO 将ItemHelper抽出去
+ * //TODO 修改ClassListItem样式
+ * //TODO 为Academic等相关类补完注释
+ * //TODO 补完ClassDetailViewModule
+ */
 public class MainActivity extends AppCompatActivity {
 
     /*

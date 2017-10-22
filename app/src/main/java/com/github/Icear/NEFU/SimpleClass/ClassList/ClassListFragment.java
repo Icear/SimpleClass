@@ -38,7 +38,6 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     private ClassListContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mProgressBar;
-    private Toolbar toolbar;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,9 +61,8 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         View rootView = inflater.inflate(R.layout.fragment_class_list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_class);
         mProgressBar = rootView.findViewById(R.id.progressBar_classList);
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        FloatingActionButton fabButton = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fabButton.setImageResource(R.drawable.ic_check_black_24dp);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        FloatingActionButton fabButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,33 +71,13 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
                 }
             }
         });
-        fabButton.setVisibility(View.VISIBLE);
-
         return rootView;
     }
 
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            mListener = (OnListFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-
     @Override
     public void onResume() {
         super.onResume();
-        toolbar.setTitle(R.string.checkYourCourse);
         mPresenter.start();
     }
 
