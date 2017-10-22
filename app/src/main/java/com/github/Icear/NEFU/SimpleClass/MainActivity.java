@@ -15,7 +15,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
 /*
  * 重新恢复：
  * //Done 将MainActivity完全抽象出来作为一个容器，将显示部分放到对应的fragment中
- * //TODO 引入自定义Style
+ * //Done 引入自定义Style
  * //TODO 修正Presenter的触发位置
  * //TODO 将ItemHelper抽出去
  * //TODO 修改ClassListItem样式
