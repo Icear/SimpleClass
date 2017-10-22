@@ -46,8 +46,8 @@ public class WelcomeFragment extends Fragment implements WelcomeContract.View{
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         mPresenter.start();
     }
 

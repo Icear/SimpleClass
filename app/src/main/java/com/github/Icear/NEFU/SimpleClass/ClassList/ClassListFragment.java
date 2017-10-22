@@ -74,10 +74,9 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         return rootView;
     }
 
-
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         mPresenter.start();
     }
 

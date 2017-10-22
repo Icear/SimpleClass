@@ -62,7 +62,13 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         }
     }
 
-//    @Override
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.start();
+    }
+
+    //    @Override
 //    public void onAttach(Context context) {
 //        super.onAttach(context);
 //        if (context instanceof OnFragmentInteractionListener) {
