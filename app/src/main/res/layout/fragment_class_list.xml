@@ -47,6 +47,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+
             app:layoutManager="LinearLayoutManager"
             tools:context="com.github.Icear.NEFU.SimpleClass.ClassList.ClassListFragment"
             tools:listitem="@layout/fragment_class" />
