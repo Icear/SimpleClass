@@ -17,10 +17,11 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
  * //Done 将MainActivity完全抽象出来作为一个容器，将显示部分放到对应的fragment中
  * //Done 引入自定义Style
  * //Done 修正Presenter的触发位置
- * //TODO 将ItemHelper抽出去
+ * //Done 将ItemHelper抽出去
  * //TODO 修改ClassListItem样式
  * //TODO 为Academic等相关类补完注释
  * //TODO 补完ClassDetailViewModule
+ * //TODO 修正部分warning
  */
 public class MainActivity extends AppCompatActivity {
 
