@@ -5,8 +5,6 @@ import android.util.Log;
 import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
 import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassInfo;
 import com.github.Icear.Network.BasicNameValuePair;
-import com.github.Icear.Network.HttpClient;
-import com.github.Icear.Network.HttpCookieStore;
 import com.github.Icear.Network.NameValuePair;
 import com.github.Icear.Network.Util.NetworkUtil;
 import com.github.Icear.Util.ConvertUtil;
@@ -24,7 +22,6 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,13 +32,14 @@ import java.util.regex.Pattern;
  * 教务处类
  */
 public class AcademicAdmin {
-//    private static Logger logger = LogManager.getLogger(AcademicAdmin.class.getName());
+    //    private static Logger logger = LogManager.getLogger(AcademicAdmin.class.getName());
     private static String TAG = AcademicAdmin.class.getSimpleName();
     private User user;
 //    private com.github.Icear.Network.HttpCookieStore cookieToken;//登陆令牌
 
 
-    private AcademicAdmin(){}
+    private AcademicAdmin() {
+    }
 
     /**
      * 初始化工具，注册到对应的用户上
@@ -51,7 +49,7 @@ public class AcademicAdmin {
      * @return 成功返回初始化的对象，失败返回null
      * @throws IOException 网络IO或数据处理错误
      */
-    public static AcademicAdmin getInstance(String userName, String password) throws IOException {
+    public static AcademicAdmin newInstance(String userName, String password) throws IOException {
         AcademicAdmin academicAdmin = new AcademicAdmin();
 
         /*
@@ -59,7 +57,7 @@ public class AcademicAdmin {
             因为不需要接续下一次启动前的Cookie，所以直接在这里进行一次CookieHandle的绑定
             之后便不再对其进行操作
          */
-        CookieHandler.setDefault(new CookieManager(null,CookiePolicy.ACCEPT_ALL));
+        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
         if (academicAdmin.login(userName, password)) {
             academicAdmin.initUser();
@@ -69,17 +67,26 @@ public class AcademicAdmin {
         }
     }
 
+    /**
+     * 获得User信息
+     *
+     * @return User信息
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * 链接至教务处读取课程信息，函数包含网络访问操作
+     *
+     * @return Class信息
+     * @throws IOException 网络IO或解析数据错误
+     */
     public List<Class> getClasses() throws IOException {
         List<Class> classContainer = new ArrayList<>();
 
         String response = null;
-        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do",null);
-//        String response = NetworkUtil.httpGetForString(closeableHttpClient,
-//                "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
+        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
         Document document = Jsoup.parse(response);
         Element classTable = document.getElementsByAttributeValue("id", "kbtable").first();
         Element tbody = classTable.getAllElements().first();
@@ -114,43 +121,15 @@ public class AcademicAdmin {
 //        return cookieToken != null;
 //    }
 
-//    public List<Class> getClasses() throws IOException {
-//        List<Class> classContainer = new ArrayList<>();
-//
-//
-//        try (CloseableHttpClient closeableHttpClient = HttpClients.custom().setDefaultCookieStore(cookieToken).build()) {
-//            String response = NetworkUtil.httpGetForString(closeableHttpClient,
-//                    "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
-//            Document document = Jsoup.parse(response);
-//            Element classTable = document.getElementsByAttributeValue("id", "kbtable").first();
-//            Element tbody = classTable.getAllElements().first();
-//            Elements trEls = tbody.getElementsByTag("tr");
-//
-//            trEls.remove(0);//跳过第一行（星期标识）
-//            trEls.remove(trEls.size() - 1);//跳过最后一行（备注）
-//
-//            int dayIndex = 0;
-//            int classIndex = 0;
-//            //行
-//            for (Element tr :
-//                    trEls) {
-//                dayIndex++;
-//                //列
-//                for (Element td :
-//                        tr.getElementsByTag("td")) {
-//                    parseNode(classContainer, td.html(), ++classIndex, dayIndex);
-//                }
-//                classIndex = 0;
-//            }
-//        }
-////        Log.i(TAG, "finally get " + classContainer.size() + " classes");
-//        if (classContainer.size() == 0) {
-//            return null;
-//        } else {
-//            return classContainer;
-//        }
-//    }
 
+    /**
+     * 解析课程所在的html元素
+     *
+     * @param classContainer class容器
+     * @param html           格子内html内容
+     * @param classIndex     节数索引（第几节课）
+     * @param dayIndex       天数索引（星期几）
+     */
     private void parseNode(List<Class> classContainer, String html, int classIndex, int dayIndex) {
         Log.i(TAG, "tend to parseNode");
         Document document = Jsoup.parse(html);
@@ -175,8 +154,7 @@ public class AcademicAdmin {
                 readWeek(classInfo, m.group(4));
                 readLocation(classInfo, m.group(5));
                 updateClass(classContainer, m.group(2), m.group(3), classInfo);
-            }
-            else {
+            } else {
                 Log.d(TAG, "no found, pass");
             }
         }
@@ -194,8 +172,7 @@ public class AcademicAdmin {
             Log.d(TAG, "room: " + m.group(2));
             classInfo.setLocation(m.group(1));
             classInfo.setRoom(m.group(2));
-        }
-        else {
+        } else {
             Log.e(TAG, "oh! We can't read this location!");
         }
     }
@@ -253,54 +230,21 @@ public class AcademicAdmin {
      * @throws IOException 网络IO或数据处理错误
      */
     private boolean login(String userName, String password) throws IOException {
-//        Log.i(TAG, "Start login");
-        //执行登陆，获得有效的令牌Token
-//        try (CloseableHttpClient closeableHttpClient = HttpClients.custom().setDefaultCookieStore(cookieToken).build()) {
-//            List<NameValuePair> parameter = new ArrayList<>();
-//            parameter.add(new BasicNameValuePair("USERNAME", userName));
-//            parameter.add(new BasicNameValuePair("PASSWORD", password));
-//
-//            HttpPost httpPost = new HttpPost("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xk/LoginToXk");
-//            UrlEncodedFormEntity postBody = new UrlEncodedFormEntity(parameter, Consts.UTF_8);
-//            httpPost.setEntity(postBody);
-//
-//            try (CloseableHttpResponse response = closeableHttpClient.execute(httpPost)) {
-//                //检查是否登陆成功
-//                if (response.getStatusLine().getStatusCode() == 302) {
-//                    //登陆成功
-////                    Log.i(TAG, "Login status: succeed");
-//                    return true;
-//                } else {
-//                    //登陆失败
-//                    cookieToken = null;
-//                    Log.i(TAG, "Login status: failed");
-//                    Log.d(TAG, "response:");
-//                    Log.d(TAG, "\tstatus code: " + response.getStatusLine().getStatusCode());
-//                    Log.d(TAG, "\tcontext:" + response.getEntity().toString());
-//                    return false;
-//                }
-//            }
-//        }
-
-//        cookieToken = new HttpCookieStore();//准备CookieStore
-
-//        CookieHandler.setDefault(new CookieManager(cookieToken, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-//        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-
+        Log.i(TAG, "Start login");
         List<NameValuePair> parameter = new ArrayList<>();
         parameter.add(new BasicNameValuePair("USERNAME", userName));
         parameter.add(new BasicNameValuePair("PASSWORD", password));
 
         URL url = new URL("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xk/LoginToXk");
 
-        Log.d(TAG,"execute request to " + url.toString());
-        Log.d(TAG,"method: Post");
+        Log.d(TAG, "execute request to " + url.toString());
+        Log.d(TAG, "method: Post");
 
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
 
         String postData = NetworkUtil.generateString(parameter);
-        httpURLConnection.setRequestProperty("Accept-Encoding","");
+        httpURLConnection.setRequestProperty("Accept-Encoding", "");
         httpURLConnection.setInstanceFollowRedirects(false);
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setDoInput(true);
@@ -317,9 +261,9 @@ public class AcademicAdmin {
         if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
             //登陆成功
             inputStream.close();
-            Log.i(TAG,"Login status: successful");
+            Log.i(TAG, "Login status: successful");
             return true;
-        }else{
+        } else {
             //登陆失败
             Log.i(TAG, "Login status: failed");
             Log.d(TAG, "response:");
@@ -337,12 +281,8 @@ public class AcademicAdmin {
      */
     private void initUser() throws IOException {
         Log.i(TAG, "Start to init User");
-//        try (CloseableHttpClient closeableHttpClient = HttpClients.custom().setDefaultCookieStore(cookieToken).build()) {
-//            String response = NetworkUtil.httpGetForString(closeableHttpClient,
-//                    "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
-
         String response;
-        response = NetworkUtil.httpGetForString( "http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp",null);
+        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
         Document document = Jsoup.parse(response);
         Element container = document.getElementsByAttributeValue("class", "wap").first();
         Element targetElement = container.getElementsByAttributeValue("class", "block1text").first();

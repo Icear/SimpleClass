@@ -11,15 +11,15 @@ import java.sql.Time;
 
 /**
  * Created by icear on 2017/9/22.
- * LocalTime类的Json反序列化函数
+ * java.sql.Time类的Json反序列化函数
  */
-public class TimeDeserializer implements JsonDeserializer<Time> {
+class TimeDeserializer implements JsonDeserializer<Time> {
     @Override
     public Time deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         Time time = null;
         String date = jsonElement.getAsString();
         String[] result = date.split(":");
-        switch (result.length){
+        switch (result.length) {
             case 0:
                 //error
                 break;

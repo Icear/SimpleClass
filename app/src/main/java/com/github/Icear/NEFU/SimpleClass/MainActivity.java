@@ -19,7 +19,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
  * //Done 修正Presenter的触发位置
  * //Done 将ItemHelper抽出去
  * //TODO 修改ClassListItem样式
- * //TODO 为Academic等相关类补完注释
+ * //Done 为Academic等相关类补完注释
  * //TODO 补完ClassDetailViewModule
  * //TODO 修正部分warning
  */
