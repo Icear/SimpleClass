@@ -117,8 +117,8 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
                 .show();
     }
 
-    public class ListActionCallBack{
-        public void onListItemClick(Class item) {
+    class ListActionCallBack {
+        void onListItemClick(Class item) {
             mPresenter.showItemDetail(item);
         }
     }
