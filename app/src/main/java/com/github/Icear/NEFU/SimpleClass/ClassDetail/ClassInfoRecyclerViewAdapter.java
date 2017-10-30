@@ -16,6 +16,8 @@ import java.util.List;
 
 /**
  * Created by icear on 2017/10/24.
+ * 定制的ClassInfoRecyclerViewAdapter
+ * 支持调用添加删除和交换item
  */
 
 class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecyclerViewAdapter.ViewHolder> {

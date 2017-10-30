@@ -7,6 +7,7 @@ import com.github.Icear.NEFU.SimpleClass.BaseViewModule;
 
 /**
  * Created by icear on 2017/10/14.
+ * ClassDetail初始化模块，用于链接View和Presenter
  */
 
 public class ClassDetailViewModule implements BaseViewModule {

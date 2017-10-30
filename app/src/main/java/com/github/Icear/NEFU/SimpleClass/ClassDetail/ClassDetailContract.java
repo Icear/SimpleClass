@@ -7,6 +7,7 @@ import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassInfo;
 
 /**
  * Created by icear on 2017/10/14.
+ * ClassDetail模块的MVP协议
  */
 
 interface ClassDetailContract {

@@ -4,6 +4,7 @@ import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
 
 /**
  * Created by icear on 2017/10/14.
+ * ClassDetail的Presenter控制层
  */
 
 class ClassDetailPresenter implements ClassDetailContract.Presenter {
