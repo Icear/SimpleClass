@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:clickable="true"
+    app:contentPadding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/classWeeks"
+                android:src="@drawable/ic_view_week_black_24dp"
+                android:tint="@color/colorPrimary" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/classLocation"
+                android:src="@drawable/ic_location_on_black_24dp"
+                android:tint="@color/colorPrimary" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/classTime"
+                android:src="@drawable/ic_timelapse_black_24dp"
+                android:tint="@color/colorPrimary" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="2dip"
+            android:layout_height="match_parent"
+            android:background="?attr/dividerVertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_weeks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_weight="1"
+                android:padding="1dp"
+                android:textColor="@color/black" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:background="?attr/dividerHorizontal" />
+
+            <TextView
+                android:id="@+id/textView_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_weight="1"
+                android:padding="1dp"
+                android:textColor="@color/black" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:background="?attr/dividerHorizontal" />
+
+            <TextView
+                android:id="@+id/textView_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_weight="1"
+                android:padding="1dp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

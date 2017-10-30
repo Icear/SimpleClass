@@ -10,7 +10,7 @@ import org.junit.Test;
 public class NetworkUtilTest {
     @Test
     public void httpGet() throws Exception {
-        System.out.println(NetworkUtil.httpGet("http://www.baidu.com",null));
+        System.out.println(NetworkUtil.httpGetForString("http://www.baidu.com", null));
     }
 
 }

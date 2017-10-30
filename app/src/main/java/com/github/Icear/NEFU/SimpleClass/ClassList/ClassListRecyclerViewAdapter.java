@@ -14,7 +14,6 @@ import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.Util.RandomColorUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
     private final List<Integer> mColorList;
     private final ClassListFragment.ListActionCallBack mListener;
 
-    public ClassListRecyclerViewAdapter(List<Class> items, ClassListFragment.ListActionCallBack listener) {
+    ClassListRecyclerViewAdapter(List<Class> items, ClassListFragment.ListActionCallBack listener) {
         //在这里创建Adapter并传入要展示的item数据，同时设定传到上层的单击监听事件
         mItemList = items;
         mListener = listener;
@@ -50,8 +49,8 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
     public void onBindViewHolder(final ViewHolder holder, int position) {
         //在这里给View填充(覆盖)内容
         holder.mItem = mItemList.get(position);
-        holder.mTitle.setText(holder.mItem.getName());
-        holder.mSubtitle.setText(holder.mItem.getTeachers());
+        holder.mTitle.setText(mItemList.get(position).getName());
+        holder.mSubtitle.setText(mItemList.get(position).getTeachers());
         holder.mIcon.setBackgroundTintList(ColorStateList.valueOf(mColorList.get(position)));//从ColorList中取出对应的颜色并填充
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,26 +67,6 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
     @Override
     public int getItemCount() {
         return mItemList.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mTitle;
-        public final TextView mSubtitle;
-        public final ImageView mIcon;
-        public Class mItem;
-        public ViewHolder(View view) {
-            //在这里预先hold住View中的元素并保存到holder中
-            super(view);
-            mView = view;
-            mIcon = (ImageView) view.findViewById(R.id.imageView_class);
-            mTitle = (TextView) view.findViewById(R.id.textView_title);
-            mSubtitle = (TextView) view.findViewById(R.id.textView_subTitle);
-        }
-//        @Override
-//        public String toString() {
-//            return super.toString() + " '" + mSubtitle.getText() + "'";
-//        }
     }
 
     /**
@@ -108,7 +87,7 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
      * 从数据表删除指定item，如果item不存在则操作无效
      * @param position position
      */
-    public void delItem(int position){
+    void delItem(int position) {
         if(0 < position && position < mItemList.size()){
             mItemList.remove(position);
             mColorList.remove(position);//同时移除颜色列表的对应值
@@ -132,6 +111,27 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
         }else{
             throw new IndexOutOfBoundsException("position1: " + position1 + " position2:" + position2);
         }
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        final View mView;
+        final TextView mTitle;
+        final TextView mSubtitle;
+        final ImageView mIcon;
+        Class mItem;
+
+        ViewHolder(View view) {
+            //在这里预先hold住View中的元素并保存到holder中
+            super(view);
+            mView = view;
+            mIcon = (ImageView) view.findViewById(R.id.imageView_class);
+            mTitle = (TextView) view.findViewById(R.id.textView_title);
+            mSubtitle = (TextView) view.findViewById(R.id.textView_subTitle);
+        }
+//        @Override
+//        public String toString() {
+//            return super.toString() + " '" + mSubtitle.getText() + "'";
+//        }
     }
 
 }

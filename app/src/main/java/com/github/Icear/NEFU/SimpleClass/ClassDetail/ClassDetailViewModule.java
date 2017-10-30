@@ -10,13 +10,16 @@ import com.github.Icear.NEFU.SimpleClass.BaseViewModule;
  */
 
 public class ClassDetailViewModule implements BaseViewModule {
+    private ClassDetailFragment fragment;
+
     @Override
     public void init(Bundle bundle) {
-        
+        fragment = ClassDetailFragment.newInstance(bundle);
+        new ClassDetailPresenter(fragment);
     }
 
     @Override
     public Fragment getFragment() {
-        return null;
+        return fragment;
     }
 }

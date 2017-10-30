@@ -16,4 +16,12 @@
     <string name="processingClass_PleaseWait">正在读取课程，请稍侯</string>
     <string name="errorInReadClass_PleaseCheckTheInternet">读取课程时发生错误，请检查网络后重试</string>
     <string name="checkYourCourse">检查课程</string>
+    <string name="info">信息</string>
+    <string name="className">课程名称</string>
+    <string name="classSection">第%d节</string>
+    <string name="weekCount">第%s周</string>
+    <string name="teacher">授课教师</string>
+    <string name="classWeeks">上课周</string>
+    <string name="classLocation">上课地点</string>
+    <string name="classTime">上课时间</string>
 </resources>

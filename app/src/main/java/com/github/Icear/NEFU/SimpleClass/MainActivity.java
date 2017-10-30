@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
 
+//TODO 改掉itemView的名字（fragment_class ->item_class)
 //TODO 处理程序在中途离开的情况
 //TODO 添加动画效果
 //TODO 重新安排对话以符合google的建议
@@ -22,6 +23,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
  * //Done 为Academic等相关类补完注释
  * //TODO 补完ClassDetailViewModule
  * //TODO 修正部分warning
+ * //TODO 确认presenter和View的职责，逻辑应该写在哪里
  */
 public class MainActivity extends AppCompatActivity {
 
