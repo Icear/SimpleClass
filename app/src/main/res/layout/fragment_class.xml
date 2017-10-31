@@ -1,44 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp">
-
-    <ImageView
-        android:id="@+id/imageView_class"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-        android:layout_weight="8"
-        android:adjustViewBounds="true"
-        android:src="@drawable/ic_donut_large_black_24dp"
-        android:tint="#ffffff" />
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout
-            android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/textView_title"
+        <ImageView
+            android:id="@+id/imageView_class"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_weight="8"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/course"
+            android:src="@drawable/ic_donut_large_black_24dp"
+            android:tint="#ffffff" />
 
-        <TextView
-            android:id="@+id/textView_subTitle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:textSize="13sp" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_subTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:textSize="13sp" />
+        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
+</android.support.v7.widget.CardView>
+
 
 

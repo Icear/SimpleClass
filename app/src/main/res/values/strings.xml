@@ -16,4 +16,5 @@
     <string name="processingClass_PleaseWait">正在读取课程，请稍侯</string>
     <string name="errorInReadClass_PleaseCheckTheInternet">读取课程时发生错误，请检查网络后重试</string>
     <string name="checkYourCourse">检查课程</string>
+    <string name="course">课程</string>
 </resources>
