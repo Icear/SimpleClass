@@ -2,7 +2,6 @@ package com.github.Icear.NEFU.SimpleClass;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
@@ -19,11 +18,12 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
  * //Done 引入自定义Style
  * //Done 修正Presenter的触发位置
  * //Done 将ItemHelper抽出去
- * //TODO 修改ClassListItem样式
+ * //Done 修改ClassListItem样式
  * //Done 为Academic等相关类补完注释
  * //TODO 补完ClassDetailViewModule
  * //TODO 修正部分warning
  * //TODO 确认presenter和View的职责，逻辑应该写在哪里
+ * //TODO 从ClassDetailViewModule回退到ClassListViewModule时会出现noAdapter的情况
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -49,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         ModuleUtil.initModule(getSupportFragmentManager(), WelcomeViewModule.class.getName(), null, false);
     }

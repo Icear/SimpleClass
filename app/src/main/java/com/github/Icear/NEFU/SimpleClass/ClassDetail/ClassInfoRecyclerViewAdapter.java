@@ -11,6 +11,7 @@ import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassInfo;
 import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassUtil;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
+import com.github.Icear.Util.DateUtil;
 
 import java.util.List;
 
@@ -85,15 +86,14 @@ class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecycle
                 SimpleClassApplication.getInstance()
                         .getString(R.string.weekCount,
                                 ClassUtil.toString(mValue.get(position).getWeek())));
-        holder.mTextViewTime.setText(mValue.get(position).getWeekDay() + " " +
+        holder.mTextViewTime.setText(DateUtil.formatWeek(mValue.get(position).getWeekDay()) + " " +
                 SimpleClassApplication.getInstance().getString(R.string.classSection, mValue.get(position).getSection()));
         holder.mTextViewLocation.setText(
                 mValue.get(position).getLocation() + " " + mValue.get(position).getRoom());
-
         holder.mTextViewWeeks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemActionCallBack.onItemCick(holder.mItem);//TODO 修改为对应的三个事件处理器
+                mItemActionCallBack.onItemClick(holder.mItem);//TODO 修改为对应的三个事件处理器
             }
         });
     }
@@ -113,7 +113,7 @@ class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecycle
     }
 
     interface ItemActionCallBack {
-        void onItemCick(ClassInfo item);
+        void onItemClick(ClassInfo item);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

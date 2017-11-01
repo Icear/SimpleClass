@@ -13,6 +13,7 @@ class ClassDetailPresenter implements ClassDetailContract.Presenter {
 
     ClassDetailPresenter(ClassDetailContract.View view) {
         mView = view;
+        mView.setPresenter(this);
     }
 
     @Override
@@ -24,5 +25,10 @@ class ClassDetailPresenter implements ClassDetailContract.Presenter {
     @Override
     public void receiveData(Class item) {
         mItem = item;
+    }
+
+    @Override
+    public void onUserConfirm() {
+        mView.goBackToLastLevel();
     }
 }

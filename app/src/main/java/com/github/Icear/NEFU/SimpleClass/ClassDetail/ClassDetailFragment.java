@@ -60,6 +60,13 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         textViewClassName = (TextView) rootView.findViewById(R.id.textView_className);
         textViewTeacher = (TextView) rootView.findViewById(R.id.textView_teacher);
         classInfoRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_classInfo);
+        View fab = rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onUserConfirm();
+            }
+        });
         return rootView;
     }
 
@@ -91,7 +98,12 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
     }
 
     @Override
-    public void onItemCick(ClassInfo item) {
+    public void goBackToLastLevel() {
+        getFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onItemClick(ClassInfo item) {
 
     }
 }

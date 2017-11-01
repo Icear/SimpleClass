@@ -2,7 +2,6 @@ package com.github.Icear.NEFU.SimpleClass.ClassList;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,8 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailFragment;
+import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailViewModule;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataProvider;
 import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
+import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 
 import java.util.List;
 
@@ -55,7 +58,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         View rootView = inflater.inflate(R.layout.fragment_class_list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_class);
         mProgressBar = rootView.findViewById(R.id.progressBar_classList);
-        FloatingActionButton fabButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        View fabButton = rootView.findViewById(R.id.fab);
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +111,10 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
 
     @Override
     public void initItemDetailModule(Class item) {
-
+        int position = AcademicDataProvider.getInstance().getClasses().indexOf(item);
+        Bundle bundle = new Bundle();
+        bundle.putInt(ClassDetailFragment.PARAMS_CLASS_POSITION, position); //TODO 待改进的传值方式，这里的关联程度太高
+        ModuleUtil.initModule(getFragmentManager(), ClassDetailViewModule.class.getName(), bundle, true);
     }
 
     @Override

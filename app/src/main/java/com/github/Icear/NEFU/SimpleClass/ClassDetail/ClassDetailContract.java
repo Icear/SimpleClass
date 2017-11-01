@@ -13,11 +13,15 @@ import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassInfo;
 interface ClassDetailContract {
     interface Presenter extends BasePresenter{
         void receiveData(Class item);
+
+        void onUserConfirm();
     }
 
     interface View extends BaseView<Presenter>{
         void showItemInfo(Class item);
 
         void showItemModifyView(ClassInfo item);
+
+        void goBackToLastLevel();
     }
 }

@@ -78,6 +78,7 @@ public class TimeManager {
     public void init() throws IOException {
         Log.i(TAG, "TimeManager start init...");
 
+        //TODO 检查获取input流为空的情况
         InputStream inputStream = Object.class.getResourceAsStream("/raw/timeschedule.json");//取得文件
         Log.d(TAG, "read \"timeschedule.json\" with inputStream: " + inputStream);
 
