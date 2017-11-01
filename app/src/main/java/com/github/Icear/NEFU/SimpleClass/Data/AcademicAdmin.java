@@ -85,12 +85,12 @@ public class AcademicAdmin {
     public List<Class> getClasses() throws IOException {
         List<Class> classContainer = new ArrayList<>();
 
-        String response = null;
+        String response;
         response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
         Document document = Jsoup.parse(response);
         Element classTable = document.getElementsByAttributeValue("id", "kbtable").first();
-        Element tbody = classTable.getAllElements().first();
-        Elements trEls = tbody.getElementsByTag("tr");
+        Element tBody = classTable.getAllElements().first();
+        Elements trEls = tBody.getElementsByTag("tr");
 
         trEls.remove(0);//跳过第一行（星期标识）
         trEls.remove(trEls.size() - 1);//跳过最后一行（备注）
@@ -100,13 +100,13 @@ public class AcademicAdmin {
         //行
         for (Element tr :
                 trEls) {
-            dayIndex++;
+            classIndex++;
             //列
             for (Element td :
                     tr.getElementsByTag("td")) {
-                parseNode(classContainer, td.html(), ++classIndex, dayIndex);
+                parseNode(classContainer, td.html(), classIndex, ++dayIndex);
             }
-            classIndex = 0;
+            dayIndex = 0;
         }
 
         Log.i(TAG, "finally get " + classContainer.size() + " classes");
@@ -139,8 +139,10 @@ public class AcademicAdmin {
 //        Pattern p = Pattern.compile("[-]*(<br>)?(.*?)<br><font title=\"周次\\(节次\\)\">(.*?)\\(周\\)</font><br><font title=\"教室\">(.*?)</font><br>");
         Pattern p = Pattern.compile("(<br>)?([^-<>]*?)\\s*?<br>\\s*?<font[\\s\\S]*?>(\\D*?)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)\\(周\\)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)</font>\\s*?<br>");
         Matcher m = p.matcher(container.html());
-        for (int i = classIndex * 2 - 1; i <= classIndex * 2; i++) {
-            if (m.find()) {
+        if (m.find()) {
+            //用于兼容林大的课程表格式：每两节课合并在一起显示
+            //所以这里对它添加两次，重新拆分成两节课以符合标准格式
+            for (int i = classIndex * 2 - 1; i <= classIndex * 2; i++) {
                 Log.d(TAG, "class find match");
                 Log.d(TAG, "name: " + m.group(2));
                 Log.d(TAG, "teacher: " + m.group(3));
@@ -153,10 +155,10 @@ public class AcademicAdmin {
 
                 readWeek(classInfo, m.group(4));
                 readLocation(classInfo, m.group(5));
-                updateClass(classContainer, m.group(2), m.group(3), classInfo);
-            } else {
-                Log.d(TAG, "no found, pass");
+                updateOrAddClass(classContainer, m.group(2), m.group(3), classInfo);
             }
+        }else {
+            Log.d(TAG, "no found, pass");
         }
     }
 
@@ -201,12 +203,12 @@ public class AcademicAdmin {
      * @param teacher        上课教室
      * @param classInfo      上课信息
      */
-    private void updateClass(List<Class> classContainer, String name, String teacher, ClassInfo classInfo) {
+    private void updateOrAddClass(List<Class> classContainer, String name, String teacher, ClassInfo classInfo) {
         //查找现有class，有相同者进行合并
-        for (Class cclass :
+        for (Class aClass :
                 classContainer) {
-            if (cclass.getName().equals(name) && cclass.getTeachers().equals(teacher)) {
-                cclass.getClassInfo().add(classInfo);
+            if (aClass.getName().equals(name) && aClass.getTeachers().equals(teacher)) {
+                aClass.getClassInfo().add(classInfo);
                 return;
             }
         }
@@ -302,6 +304,5 @@ public class AcademicAdmin {
             Log.d(TAG, "targetElement: \n" + info);
             throw new IOException("read user info failed, unknown format");
         }
-
     }
 }
