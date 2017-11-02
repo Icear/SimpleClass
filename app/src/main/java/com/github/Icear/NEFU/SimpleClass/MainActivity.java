@@ -23,7 +23,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
  * //TODO 补完ClassDetailViewModule
  * //TODO 修正部分warning
  * //TODO 确认presenter和View的职责，逻辑应该写在哪里
- * //TODO 从ClassDetailViewModule回退到ClassListViewModule时会出现noAdapter的情况
+ * //Done 从ClassDetailViewModule回退到ClassListViewModule时会出现noAdapter的情况
  */
 public class MainActivity extends AppCompatActivity {
 

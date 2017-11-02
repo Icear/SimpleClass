@@ -15,8 +15,6 @@ import java.util.List;
 
 public class ClassListPresenter implements ClassListContract.Presenter {
 
-    private boolean isInited = false;
-
     private ClassListContract.View mClassListView;
 
     public ClassListPresenter(ClassListContract.View classListView){
@@ -26,14 +24,14 @@ public class ClassListPresenter implements ClassListContract.Presenter {
 
     @Override
     public void start() {
-        if (!isInited) {
+        if (AcademicDataProvider.getInstance().getClasses() == null) {
             new AsyncTask<Object, Object, List<Class>>() {
 
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
                     mClassListView.showProgressBar();
-                    mClassListView.showMessage(R.string.processingClass_PleaseWait);
+//                    mClassListView.showMessage(R.string.processingClass_PleaseWait);
                 }
 
                 /**
@@ -65,13 +63,15 @@ public class ClassListPresenter implements ClassListContract.Presenter {
                     super.onPostExecute(classes);
                     if (classes != null) {
                         mClassListView.showData(classes);
-                        isInited = true;
                     } else {
                         mClassListView.showMessage(R.string.errorInReadClass_PleaseCheckTheInternet);
                     }
                     mClassListView.hideProgressBar();
                 }
             }.execute();
+        } else {
+            //已经获取过课程数据，直接从本地读取
+            mClassListView.showData(AcademicDataProvider.getInstance().getClasses());
         }
     }
 
