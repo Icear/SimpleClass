@@ -1,7 +1,6 @@
 package com.github.Icear.NEFU.SimpleClass.ClassList;
 
 
-import android.content.res.ColorStateList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +50,7 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
         holder.mItem = mItemList.get(position);
         holder.mTitle.setText(mItemList.get(position).getName());
         holder.mSubtitle.setText(mItemList.get(position).getTeachers());
-        holder.mIcon.setBackgroundTintList(ColorStateList.valueOf(mColorList.get(position)));//从ColorList中取出对应的颜色并填充
+        holder.mIcon.setColorFilter(mColorList.get(position));//从ColorList中取出对应的颜色并填充
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

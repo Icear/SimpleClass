@@ -18,8 +18,7 @@
             android:layout_weight="8"
             android:adjustViewBounds="true"
             android:contentDescription="@string/course"
-            android:src="@drawable/ic_donut_large_black_24dp"
-            android:tint="#ffffff" />
+            android:src="@drawable/ic_stars_black_24dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
