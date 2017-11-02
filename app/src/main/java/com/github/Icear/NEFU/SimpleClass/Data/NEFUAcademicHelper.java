@@ -18,9 +18,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,59 +27,51 @@ import java.util.regex.Pattern;
 
 /**
  * Created by icear on 2017/9/25.
- * 教务处类
+ * 东北林业大学教务处类
  */
-public class AcademicAdmin {
-    //    private static Logger logger = LogManager.getLogger(AcademicAdmin.class.getName());
-    private static String TAG = AcademicAdmin.class.getSimpleName();
-    private User user;
-//    private com.github.Icear.Network.HttpCookieStore cookieToken;//登陆令牌
+public class NEFUAcademicHelper implements AcademicDataHelper {
+    private static String TAG = NEFUAcademicHelper.class.getSimpleName();
 
-
-    private AcademicAdmin() {
+    public NEFUAcademicHelper() {
     }
 
-    /**
-     * 初始化工具，注册到对应的用户上
-     *
-     * @param userName 用户名
-     * @param password 密码
-     * @return 成功返回初始化的对象，失败返回null
-     * @throws IOException 网络IO或数据处理错误
-     */
-    public static AcademicAdmin newInstance(String userName, String password) throws IOException {
-        AcademicAdmin academicAdmin = new AcademicAdmin();
+//    /**
+//     * 初始化工具，注册到对应的用户上
+//     *
+//     * @param userName 用户名
+//     * @param password 密码
+//     * @return 成功返回初始化的对象，失败返回null
+//     * @throws IOException 网络IO或数据处理错误
+//     */
+//    public static NEFUAcademicHelper newInstance(String userName, String password){
+//        NEFUAcademicHelper NEFUAcademicHelper = new NEFUAcademicHelper();
+//
+//        /*
+//            似乎只要设定一次CookieHandle就能够维持整个生命周期内的Cookie
+//            因为不需要接续下一次启动前的Cookie，所以直接在这里进行一次CookieHandle的绑定
+//            之后便不再对其进行操作
+//         */
+//        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+//
+//        if (NEFUAcademicHelper.login(userName, password)) {
+//            NEFUAcademicHelper.initUser();
+//            return NEFUAcademicHelper;
+//        } else {
+//            return null;
+//        }
+//    }
 
-        /*
-            似乎只要设定一次CookieHandle就能够维持整个生命周期内的Cookie
-            因为不需要接续下一次启动前的Cookie，所以直接在这里进行一次CookieHandle的绑定
-            之后便不再对其进行操作
-         */
-        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-
-        if (academicAdmin.login(userName, password)) {
-            academicAdmin.initUser();
-            return academicAdmin;
-        } else {
-            return null;
-        }
+    @Override
+    public boolean init(String userName, String password) throws IOException {
+        return login(userName, password);
     }
 
-    /**
-     * 获得User信息
-     *
-     * @return User信息
-     */
-    public User getUser() {
-        return user;
+    @Override
+    public User getUser() throws IOException {
+        return initUser();
     }
 
-    /**
-     * 链接至教务处读取课程信息，函数包含网络访问操作
-     *
-     * @return Class信息
-     * @throws IOException 网络IO或解析数据错误
-     */
+    @Override
     public List<Class> getClasses() throws IOException {
         List<Class> classContainer = new ArrayList<>();
 
@@ -118,11 +107,6 @@ public class AcademicAdmin {
         }
     }
 
-//    public boolean hasLogin(){
-//        return cookieToken != null;
-//    }
-
-
     /**
      * 解析课程所在的html元素
      *
@@ -141,7 +125,7 @@ public class AcademicAdmin {
         Pattern p = Pattern.compile("(<br>)?([^-<>]*?)\\s*?<br>\\s*?<font[\\s\\S]*?>(\\D*?)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)\\(周\\)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)</font>\\s*?<br>");
         Matcher m = p.matcher(container.html());
         if (m.find()) {
-            //用于兼容林大的课程表格式：每两节课合并在一起显示
+            //用于兼容课程表格式,林大是每两节课合并在一起显示
             //所以这里对它添加两次，重新拆分成两节课以符合标准格式
             for (int i = classIndex * 2 - 1; i <= classIndex * 2; i++) {
                 Log.d(TAG, "class find match");
@@ -278,11 +262,11 @@ public class AcademicAdmin {
     }
 
     /**
-     * 访问用户主页，读取相关信息并初始化到User类中
-     *
+     * 访问用户主页，读取相关信息并储存到User类中
+     * @return user对象
      * @throws IOException 网络IO或读取信息失败
      */
-    private void initUser() throws IOException {
+    private User initUser() throws IOException {
         Log.i(TAG, "Start to init User");
         String response;
         response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
@@ -295,10 +279,11 @@ public class AcademicAdmin {
         Pattern r = Pattern.compile(patten);
         Matcher m = r.matcher(info);
         if (m.find()) {
-            user = new User();
+            User user = new User();
             user.setName(m.group(1));
             user.setId(m.group(2));
             Log.i(TAG, "read info succeed, method finish");
+            return user;
         } else {
             Log.e(TAG, "parse user info failed");
             Log.d(TAG, "container info:\n" + container);

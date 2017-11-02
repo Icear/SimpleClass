@@ -1,8 +1,9 @@
 package com.github.Icear.NEFU.SimpleClass;
 
-import com.github.Icear.NEFU.SimpleClass.Data.AcademicAdmin;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataHelper;
 import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.Data.Entity.User;
+import com.github.Icear.NEFU.SimpleClass.Data.NEFUAcademicHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,7 @@ public class AcademicDataProvider {
      * 为了能在不同的ViewModule之间同步数据
      * 所以使得AcademicDataProvider唯一，并且不与ViewModule关联
      */
-    private AcademicAdmin academicAdmin;
+    private AcademicDataHelper academicDataHelper;
     private User user;
     private List<Class> classList;
 
@@ -40,19 +41,19 @@ public class AcademicDataProvider {
      * @throws IOException 网络IO错误
      */
     public boolean init(String account, String password) throws IOException {
-        academicAdmin = AcademicAdmin.newInstance(account, password);
-        return academicAdmin != null;
+        academicDataHelper = new NEFUAcademicHelper();//使用Nefu的helper
+        return academicDataHelper.init(account, password);
     }
 
     /**
      * 获得User信息
      * 需先使用{@link AcademicDataProvider#init(String, String)}函数初始化
-     *
-     * @return 返回User信息，未初始化时返回Null
+     * @return User对象
+     * @exception IOException 网络IO错误或数据处理错误
      */
-    public User getUser() {
+    public User getUser() throws IOException {
         if (user == null) {
-            user = academicAdmin.getUser();
+            user = academicDataHelper.getUser();
         }
         return user;
     }
@@ -65,7 +66,7 @@ public class AcademicDataProvider {
      * @see AcademicDataProvider#getClasses()
      */
     public List<Class> getClassesFromNetwork() throws IOException {
-        classList = academicAdmin.getClasses();
+        classList = academicDataHelper.getClasses();
         return classList;
     }
 

@@ -23,7 +23,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
  * //Done 补完ClassDetailViewModule
  * //Done 修正部分warning
  * //TODO 确认presenter和View的职责，逻辑应该写在哪里
- * //TODO 为Module层编写接口
+ * //Done 为Module层编写接口
  * //TODO 统一主题，统一颜色调用，以便之后切换主题使用
  * //TODO 修改Item布局方式
  * //Done 从ClassDetailViewModule回退到ClassListViewModule时会出现noAdapter的情况
