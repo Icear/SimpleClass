@@ -48,7 +48,7 @@
 
             app:layoutManager="LinearLayoutManager"
             tools:context="com.github.Icear.NEFU.SimpleClass.ClassList.ClassListFragment"
-            tools:listitem="@layout/fragment_class" />
+            tools:listitem="@layout/item_class" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

@@ -40,7 +40,7 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //在这里创建view并放入viewHolder
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_class, parent, false);
+                .inflate(R.layout.item_class, parent, false);
         return new ViewHolder(view);
     }
 
