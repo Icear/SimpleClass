@@ -10,6 +10,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
 
 /*
  * //Done 改掉itemView的名字（item_class ->item_class)
+ * //TODO 重命名包->全部小写
  * //TODO 处理程序在中途离开的情况
  * //TODO 添加动画效果
  * //TODO 重新安排对话以符合google的建议
