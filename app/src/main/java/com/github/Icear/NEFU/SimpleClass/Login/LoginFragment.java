@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     private EditText editText_login;
     private EditText editText_password;
     private ProgressBar progressBar;
-    private Toolbar toolbar;
 
     public LoginFragment() {
         // Required empty public constructor

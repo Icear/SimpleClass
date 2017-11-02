@@ -1,4 +1,6 @@
-package com.github.Icear.NEFU.SimpleClass.Data.Class;
+package com.github.Icear.NEFU.SimpleClass.Data.Entity;
+
+import com.github.Icear.NEFU.SimpleClass.Util.ClassUtil;
 
 import org.junit.Test;
 

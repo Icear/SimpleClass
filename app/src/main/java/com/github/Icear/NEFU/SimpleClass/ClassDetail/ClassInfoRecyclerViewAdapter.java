@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassInfo;
-import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassUtil;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.ClassInfo;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
+import com.github.Icear.NEFU.SimpleClass.Util.ClassUtil;
 import com.github.Icear.Util.DateUtil;
 
 import java.util.List;

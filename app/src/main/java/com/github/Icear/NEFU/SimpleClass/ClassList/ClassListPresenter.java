@@ -1,37 +1,45 @@
 package com.github.Icear.NEFU.SimpleClass.ClassList;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 
+import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailFragment;
 import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataProvider;
-import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by icear on 2017/10/7.
+ * ClassListPresenter
  */
 
-public class ClassListPresenter implements ClassListContract.Presenter {
+class ClassListPresenter implements ClassListContract.Presenter {
 
     private ClassListContract.View mClassListView;
 
-    public ClassListPresenter(ClassListContract.View classListView){
+    ClassListPresenter(ClassListContract.View classListView) {
         mClassListView = classListView;
         mClassListView.setPresenter(this);
     }
 
     @Override
     public void start() {
-        if (AcademicDataProvider.getInstance().getClasses() == null) {
+        if (AcademicDataProvider.getInstance().getClasses() != null) {
+            //已经获取过课程数据，直接从本地读取
+            mClassListView.showData(AcademicDataProvider.getInstance().getClasses());
+        } else {
+            //调用函数初始化数据
             new AsyncTask<Object, Object, List<Class>>() {
 
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
                     mClassListView.showProgressBar();
-//                    mClassListView.showMessage(R.string.processingClass_PleaseWait);
+                    mClassListView.showMessage(R.string.processingClass_PleaseWait);
                 }
 
                 /**
@@ -69,19 +77,40 @@ public class ClassListPresenter implements ClassListContract.Presenter {
                     mClassListView.hideProgressBar();
                 }
             }.execute();
-        } else {
-            //已经获取过课程数据，直接从本地读取
-            mClassListView.showData(AcademicDataProvider.getInstance().getClasses());
         }
     }
 
     @Override
     public void showItemDetail(Class item) {
-        mClassListView.initItemDetailModule(item);
+        int position = AcademicDataProvider.getInstance().getClasses().indexOf(item);
+        Bundle bundle = new Bundle();
+        bundle.putInt(ClassDetailFragment.PARAMS_CLASS_POSITION, position);
+        mClassListView.initItemDetailModule(bundle);
     }
 
     @Override
     public void onUserConfirmed() {
         mClassListView.leadToImportModule();
     }
+
+    @Override
+    public void swapItem(int position1, int position2) {
+        List<Class> classes = AcademicDataProvider.getInstance().getClasses();
+        if (0 >= position1 || 0 >= position2
+                || position1 >= classes.size() || position2 >= classes.size()) {
+            throw new IndexOutOfBoundsException("position1: " + position1 + " position2:" + position2);
+        }
+        Collections.swap(classes, position1, position2);
+    }
+
+    @Override
+    public void delItem(int position) {
+        List<Class> classes = AcademicDataProvider.getInstance().getClasses();
+        if (0 >= position || position >= classes.size()) {
+            throw new IndexOutOfBoundsException("position: " + position);
+        }
+        classes.remove(position);
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package com.github.Icear.NEFU.SimpleClass.Data;
+package com.github.Icear.NEFU.SimpleClass.Data.Entity;
 
 /**
  * Created by icear on 2017/9/25.

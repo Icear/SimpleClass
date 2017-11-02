@@ -8,12 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
-import com.github.Icear.NEFU.SimpleClass.Util.RandomColorUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,16 +21,13 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
 
     private final List<Class> mItemList;
     private final List<Integer> mColorList;
-    private final ClassListFragment.ListActionCallBack mListener;
+    private final ListActionCallBack mListener;
 
-    ClassListRecyclerViewAdapter(List<Class> items, ClassListFragment.ListActionCallBack listener) {
+    ClassListRecyclerViewAdapter(List<Class> items, List<Integer> colorList, ListActionCallBack listener) {
         //在这里创建Adapter并传入要展示的item数据，同时设定传到上层的单击监听事件
         mItemList = items;
         mListener = listener;
-        mColorList = new ArrayList<>();
-        for(int i = 0; i < items.size(); i++){
-            mColorList.add(RandomColorUtil.getRandomColor());//生成随机的颜色
-        }
+        mColorList = colorList;
     }
 
     @Override
@@ -68,48 +62,52 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
         return mItemList.size();
     }
 
-    /**
-     * 向数据表添加指定item
-     * @param item item
-     */
-    public void addItem(Class item){
-        if(item != null){
-            mItemList.add(item);
-            mColorList.add(RandomColorUtil.getRandomColor());//同时为新的item添加颜色
-            notifyDataSetChanged();
-        }else{
-            throw new NullPointerException("the item is null");
-        }
-    }
+//    /**
+//     * 向数据表添加指定item
+//     * @param item item
+//     */
+//    public void addItem(Class item){
+//        if(item != null){
+//            mItemList.add(item);
+//            mColorList.add(RandomColorUtil.getRandomColor());//同时为新的item添加颜色
+//            notifyDataSetChanged();
+//        }else{
+//            throw new NullPointerException("the item is null");
+//        }
+//    }
+//
+//    /**
+//     * 从数据表删除指定item，如果item不存在则操作无效
+//     * @param position position
+//     */
+//    void delItem(int position) {
+//        if(0 < position && position < mItemList.size()){
+//            mItemList.remove(position);
+//            mColorList.remove(position);//同时移除颜色列表的对应值
+//            notifyDataSetChanged();
+//        }else{
+//            throw new IndexOutOfBoundsException("position: " + position);
+//        }
+//    }
+//
+//    /**
+//     * 交换数据表中指定两个item的位置，如果item不存在则操作无效
+//     * @param position1 position
+//     * @param position2 position
+//     */
+//    public void swapItem(int position1, int position2){
+//        if(0 < position1 && 0 < position2
+//                && position1 < mItemList.size() && position2 <mItemList.size()){
+//            Collections.swap(mItemList,position1,position2);
+//            Collections.swap(mColorList,position1,position2);
+//            notifyDataSetChanged();
+//        }else{
+//            throw new IndexOutOfBoundsException("position1: " + position1 + " position2:" + position2);
+//        }
+//    }
 
-    /**
-     * 从数据表删除指定item，如果item不存在则操作无效
-     * @param position position
-     */
-    void delItem(int position) {
-        if(0 < position && position < mItemList.size()){
-            mItemList.remove(position);
-            mColorList.remove(position);//同时移除颜色列表的对应值
-            notifyDataSetChanged();
-        }else{
-            throw new IndexOutOfBoundsException("position: " + position);
-        }
-    }
-
-    /**
-     * 交换数据表中指定两个item的位置，如果item不存在则操作无效
-     * @param position1 position
-     * @param position2 position
-     */
-    public void swapItem(int position1, int position2){
-        if(0 < position1 && 0 < position2
-                && position1 < mItemList.size() && position2 <mItemList.size()){
-            Collections.swap(mItemList,position1,position2);
-            Collections.swap(mColorList,position1,position2);
-            notifyDataSetChanged();
-        }else{
-            throw new IndexOutOfBoundsException("position1: " + position1 + " position2:" + position2);
-        }
+    interface ListActionCallBack {
+        void onListItemClick(Class item);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -132,5 +130,4 @@ public class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassList
 //            return super.toString() + " '" + mSubtitle.getText() + "'";
 //        }
     }
-
 }

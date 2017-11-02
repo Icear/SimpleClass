@@ -13,10 +13,10 @@ import static android.support.v7.widget.helper.ItemTouchHelper.UP;
  */
 
 class ClassListItemTouchHelperCallback extends ItemTouchHelper.Callback {
-    private RecyclerView mRecyclerView;
+    private ItemModifyActionCallBack mCallBack;
 
-    ClassListItemTouchHelperCallback(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
+    ClassListItemTouchHelperCallback(ItemModifyActionCallBack callBack) {
+        mCallBack = callBack;
     }
 
     @Override
@@ -26,8 +26,7 @@ class ClassListItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        ClassListRecyclerViewAdapter adapter = (ClassListRecyclerViewAdapter) recyclerView.getAdapter();
-        adapter.swapItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        mCallBack.swapItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
 
@@ -35,8 +34,13 @@ class ClassListItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         if (direction == RIGHT) {
             //在这里选择删除
-            ClassListRecyclerViewAdapter adapter = (ClassListRecyclerViewAdapter) mRecyclerView.getAdapter();
-            adapter.delItem(viewHolder.getAdapterPosition());
+            mCallBack.delItem(viewHolder.getAdapterPosition());
         }
+    }
+
+    interface ItemModifyActionCallBack {
+        void swapItem(int position1, int position2);
+
+        void delItem(int position);
     }
 }

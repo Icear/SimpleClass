@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataProvider;
-import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
-import com.github.Icear.NEFU.SimpleClass.Data.Class.ClassInfo;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.ClassInfo;
 import com.github.Icear.NEFU.SimpleClass.R;
 
 

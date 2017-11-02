@@ -1,6 +1,7 @@
 package com.github.Icear.NEFU.SimpleClass.Data;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +17,7 @@ public class AcademicDataProvider {
      * 为了能在不同的ViewModule之间同步数据
      * 所以使得AcademicDataProvider唯一，并且不与ViewModule关联
      */
+    //TODO 将Provider交由Application进行持有，以保证完整的生命周期
     private static AcademicDataProvider instance;
     private AcademicAdmin academicAdmin;
     private User user;

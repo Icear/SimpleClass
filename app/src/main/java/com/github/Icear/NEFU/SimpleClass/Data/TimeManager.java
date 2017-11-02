@@ -1,7 +1,8 @@
-package com.github.Icear.NEFU.SimpleClass.Data.Class;
+package com.github.Icear.NEFU.SimpleClass.Data;
 
 import android.util.Log;
 
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.TimeQuantum;
 import com.github.Icear.Util.ConvertUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

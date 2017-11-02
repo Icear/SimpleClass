@@ -1,4 +1,4 @@
-package com.github.Icear.NEFU.SimpleClass.Data.Class;
+package com.github.Icear.NEFU.SimpleClass.Data;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

@@ -12,29 +12,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailFragment;
 import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailViewModule;
-import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataProvider;
-import com.github.Icear.NEFU.SimpleClass.Data.Class.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
+import com.github.Icear.NEFU.SimpleClass.Util.RandomColorUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
  */
-public class ClassListFragment extends Fragment implements ClassListContract.View {
+public class ClassListFragment extends Fragment implements ClassListContract.View, ClassListRecyclerViewAdapter.ListActionCallBack, ClassListItemTouchHelperCallback.ItemModifyActionCallBack {
 
     //TODO 跳转向下一个module的函数未完成
-    //TODO 跳转向showItemDetail的函数未完成
+    //Done 跳转向showItemDetail的函数未完成
     //Done Item右划以删除的功能完成
-    //DONE Activity按钮确认事件完成
+    //Done Activity按钮确认事件完成
 
     private ClassListContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mProgressBar;
+    private List<Integer> mColorList;//用于储存RecycleViewItem的icon颜色
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -82,15 +84,29 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     }
 
     @Override
-    public void showData(List<Class> classList) {
+    public void showData(List<Class> itemList) {
         /// Set the adapter
+
+        if (mColorList == null) {
+            //初始化mColorList
+            mColorList = new ArrayList<>();
+        }
+        if (mColorList.size() != itemList.size()) {
+            //如果两者数量不相等，判断数据发生了变化，重新生成颜色
+            mColorList.clear();
+            for (int i = 0; i < itemList.size(); i++) {
+                //根据itemList数目生成对应数量的Color
+                mColorList.add(RandomColorUtil.getRandomColor());//生成随机的颜色
+            }
+        }
+
         Context context = mRecyclerView.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.setAdapter(new ClassListRecyclerViewAdapter(classList, new ListActionCallBack()));
+        mRecyclerView.setAdapter(new ClassListRecyclerViewAdapter(itemList, mColorList, this));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 getActivity(), DividerItemDecoration.VERTICAL));//添加分割线
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ClassListItemTouchHelperCallback(mRecyclerView));//用于实现向右滑动删除以及上下拖动的功能
+                new ClassListItemTouchHelperCallback(this));//用于实现向右滑动删除以及上下拖动的功能
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
@@ -110,25 +126,32 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     }
 
     @Override
-    public void initItemDetailModule(Class item) {
-        int position = AcademicDataProvider.getInstance().getClasses().indexOf(item);
-        Bundle bundle = new Bundle();
-        bundle.putInt(ClassDetailFragment.PARAMS_CLASS_POSITION, position); //TODO 待改进的传值方式，这里的关联程度太高
+    public void initItemDetailModule(Bundle bundle) {
         ModuleUtil.initModule(getFragmentManager(), ClassDetailViewModule.class.getName(), bundle, true);
     }
 
     @Override
     public void showMessage(int resourceID) {
-        Snackbar.make(getActivity().findViewById(R.id.container),resourceID,Snackbar.LENGTH_LONG)
+        Snackbar.make(getActivity().findViewById(R.id.container), resourceID, Snackbar.LENGTH_LONG)
                 .show();
     }
 
-    class ListActionCallBack {
-        void onListItemClick(Class item) {
-            mPresenter.showItemDetail(item);
-        }
+    @Override
+    public void onListItemClick(Class item) {
+        mPresenter.showItemDetail(item);
     }
 
+    @Override
+    public void swapItem(int position1, int position2) {
+        mPresenter.swapItem(position1, position2);
+        Collections.swap(mColorList, position1, position2);//参数检查由Presenter进行，这里只做基本的View层反馈
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
 
-
+    @Override
+    public void delItem(int position) {
+        mPresenter.delItem(position);
+        mColorList.remove(position);//参数检查由Presenter进行，这里只做基本的View层反馈
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
 }

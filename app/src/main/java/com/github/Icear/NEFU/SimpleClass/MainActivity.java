@@ -6,23 +6,26 @@ import android.support.v7.app.AppCompatActivity;
 import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
 
-//TODO 改掉itemView的名字（item_class ->item_class)
-//TODO 处理程序在中途离开的情况
-//TODO 添加动画效果
-//TODO 重新安排对话以符合google的建议
-//TODO 添加英语支持
+
 
 /*
- * 重新恢复：
+ * //Done 改掉itemView的名字（item_class ->item_class)
+ * //TODO 处理程序在中途离开的情况
+ * //TODO 添加动画效果
+ * //TODO 重新安排对话以符合google的建议
+ * //TODO 添加英语支持
  * //Done 将MainActivity完全抽象出来作为一个容器，将显示部分放到对应的fragment中
  * //Done 引入自定义Style
  * //Done 修正Presenter的触发位置
  * //Done 将ItemHelper抽出去
  * //Done 修改ClassListItem样式
  * //Done 为Academic等相关类补完注释
- * //TODO 补完ClassDetailViewModule
- * //TODO 修正部分warning
+ * //Done 补完ClassDetailViewModule
+ * //Done 修正部分warning
  * //TODO 确认presenter和View的职责，逻辑应该写在哪里
+ * //TODO 为Module层编写接口
+ * //TODO 统一主题，统一颜色调用，以便之后切换主题使用
+ * //TODO 修改Item布局方式
  * //Done 从ClassDetailViewModule回退到ClassListViewModule时会出现noAdapter的情况
  */
 public class MainActivity extends AppCompatActivity {
