@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataProvider;
 import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.Data.Entity.ClassInfo;
 import com.github.Icear.NEFU.SimpleClass.R;
+import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 
 
 public class ClassDetailFragment extends Fragment implements ClassDetailContract.View, ClassInfoRecyclerViewAdapter.ItemActionCallBack {
@@ -46,7 +46,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mPresenter.receiveData(
-                    AcademicDataProvider.getInstance()
+                    SimpleClassApplication.getAcademicDataProvider()
                             .getClasses().get(getArguments().getInt(PARAMS_CLASS_POSITION)));
         }
     }

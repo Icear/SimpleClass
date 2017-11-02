@@ -3,20 +3,21 @@ package com.github.Icear.NEFU.SimpleClass.Login;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataProvider;
 import com.github.Icear.NEFU.SimpleClass.R;
+import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 
 import java.io.IOException;
 
 /**
  * Created by icear on 2017/10/6.
+ * LoginPresenter
  */
 
-public class LoginPresenter implements LoginContract.Presenter {
+class LoginPresenter implements LoginContract.Presenter {
 
     private LoginContract.View mLoginView;
 
-    public LoginPresenter(@NonNull LoginContract.View loginView){
+    LoginPresenter(@NonNull LoginContract.View loginView) {
         mLoginView = loginView;
         mLoginView.setPresenter(this);
     }
@@ -45,7 +46,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
-                    return AcademicDataProvider.getInstance().init(params[0],params[1]);
+                    return SimpleClassApplication.getAcademicDataProvider().init(params[0], params[1]);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;

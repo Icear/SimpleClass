@@ -83,11 +83,11 @@ class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecycle
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValue.get(position);
         holder.mTextViewWeeks.setText(
-                SimpleClassApplication.getInstance()
+                SimpleClassApplication.getApplication()
                         .getString(R.string.weekCount,
                                 ClassUtil.toString(mValue.get(position).getWeek())));
         holder.mTextViewTime.setText(DateUtil.formatWeek(mValue.get(position).getWeekDay()) + " " +
-                SimpleClassApplication.getInstance().getString(R.string.classSection, mValue.get(position).getSection()));
+                SimpleClassApplication.getApplication().getString(R.string.classSection, mValue.get(position).getSection()));
         holder.mTextViewLocation.setText(
                 mValue.get(position).getLocation() + " " + mValue.get(position).getRoom());
         holder.mTextViewWeeks.setOnClickListener(new View.OnClickListener() {

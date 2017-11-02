@@ -1,5 +1,6 @@
-package com.github.Icear.NEFU.SimpleClass.Data;
+package com.github.Icear.NEFU.SimpleClass;
 
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicAdmin;
 import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.Data.Entity.User;
 
@@ -17,21 +18,17 @@ public class AcademicDataProvider {
      * 为了能在不同的ViewModule之间同步数据
      * 所以使得AcademicDataProvider唯一，并且不与ViewModule关联
      */
-    //TODO 将Provider交由Application进行持有，以保证完整的生命周期
-    private static AcademicDataProvider instance;
     private AcademicAdmin academicAdmin;
     private User user;
     private List<Class> classList;
 
-    private AcademicDataProvider() {
-    }
-
-    public static AcademicDataProvider getInstance() {
-        if (instance == null) {
-            instance = new AcademicDataProvider();
-        }
-
-        return instance;
+    /**
+     * 建议通过{@link SimpleClassApplication#getAcademicDataProvider()}函数获得实例
+     * 以保证AcademicDataProvider可以获得完整的生命周期
+     *
+     * @see SimpleClassApplication#getAcademicDataProvider()
+     */
+    AcademicDataProvider() {
     }
 
     /**

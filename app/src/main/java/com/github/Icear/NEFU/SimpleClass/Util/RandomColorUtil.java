@@ -1,7 +1,6 @@
 package com.github.Icear.NEFU.SimpleClass.Util;
 
 import android.app.Application;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
@@ -14,15 +13,15 @@ import java.util.Random;
  */
 
 public class RandomColorUtil {
+    private static Random randomSeed = new Random();
+    private static int[] colors;
+
     static{
         //用context读取res中预置的randomColor数组
-        Application application = SimpleClassApplication.getInstance();
+        Application application = SimpleClassApplication.getApplication();
         int arrayId = application.getResources().getIdentifier("randomColor","array",application.getPackageName());
         colors = application.getResources().getIntArray(arrayId);
     }
-
-    private static  Random randomSeed = new Random();
-    private static int[] colors;
 
     /**
      * 利用随机数随机返回一个预设定的Color

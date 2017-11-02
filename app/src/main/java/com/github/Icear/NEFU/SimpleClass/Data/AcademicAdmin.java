@@ -158,7 +158,7 @@ public class AcademicAdmin {
                 readLocation(classInfo, m.group(5));
                 updateOrAddClass(classContainer, m.group(2), m.group(3), classInfo);
             }
-        }else {
+        } else {
             Log.d(TAG, "no found, pass");
         }
     }
