@@ -45,7 +45,6 @@
             android:name="com.github.icear.nefu.simpleclass.CheckClass.ClassFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             app:layoutManager="LinearLayoutManager"
             tools:context="com.github.Icear.NEFU.SimpleClass.ClassList.ClassListFragment"
             tools:listitem="@layout/item_class" />

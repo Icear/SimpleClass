@@ -33,8 +33,9 @@
         android:id="@+id/recyclerView_class_process_import"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layoutManager="LinearLayout"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_manager="LinearLayout"
+        tools:context="com.github.Icear.NEFU.SimpleClass.CalendarImport.CalendarImportFragment"
         tools:listitem="@layout/item_class">
 
     </android.support.v7.app.AlertController.RecycleListView>

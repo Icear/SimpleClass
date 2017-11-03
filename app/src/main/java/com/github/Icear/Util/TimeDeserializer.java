@@ -1,4 +1,4 @@
-package com.github.Icear.NEFU.SimpleClass.Data;
+package com.github.Icear.Util;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -13,7 +13,7 @@ import java.sql.Time;
  * Created by icear on 2017/9/22.
  * java.sql.Time类的Json反序列化函数
  */
-class TimeDeserializer implements JsonDeserializer<Time> {
+public class TimeDeserializer implements JsonDeserializer<Time> {
     @Override
     public Time deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         Time time = null;

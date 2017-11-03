@@ -1,6 +1,6 @@
-package com.github.Icear.NEFU.SimpleClass.Data.Entity;
+package com.github.Icear.NEFU.SimpleClass;
 
-import com.github.Icear.NEFU.SimpleClass.Data.TimeManager;
+import com.github.Icear.NEFU.SimpleClass.Data.Entity.TimeQuantum;
 
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class TimeManagerTest {
 
     @Test
     public void init() throws Exception {
-        timeManager = TimeManager.getInstance();
+        timeManager = new TimeManager();
         timeManager.init();
         System.out.println("TimeManager:" + timeManager);
 

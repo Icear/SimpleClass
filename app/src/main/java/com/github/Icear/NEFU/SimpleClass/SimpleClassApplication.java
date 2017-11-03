@@ -10,6 +10,7 @@ import android.app.Application;
 public class SimpleClassApplication extends Application {
     private static SimpleClassApplication application;
     private static AcademicDataProvider academicDataProvider;
+    private static TimeManager timeManager;
 
     /**
      * 获得Application对象
@@ -31,6 +32,19 @@ public class SimpleClassApplication extends Application {
         }
         return academicDataProvider;
     }
+
+    /**
+     * 获得TimeManager对象
+     *
+     * @return TimeManager对象
+     */
+    public static TimeManager getTimeManager() {
+        if (timeManager == null) {
+            timeManager = new TimeManager();
+        }
+        return timeManager;
+    }
+
 
     @Override
     public void onCreate() {

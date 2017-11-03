@@ -1,9 +1,10 @@
-package com.github.Icear.NEFU.SimpleClass.Data;
+package com.github.Icear.NEFU.SimpleClass;
 
 import android.util.Log;
 
 import com.github.Icear.NEFU.SimpleClass.Data.Entity.TimeQuantum;
 import com.github.Icear.Util.ConvertUtil;
+import com.github.Icear.Util.TimeDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -26,32 +27,30 @@ public class TimeManager {
      * 再提供一个函数来读取指定的时间
      */
     private static String TAG = TimeManager.class.getSimpleName();
-    private static TimeManager instance;
     private Map<String, List<TimeQuantum>> timeList;
 
-    private TimeManager() {
-
-    }
-
-    /**
-     * TimeManager
-     * 单例模式
-     *
-     * @return 初始化成功返回TimeManager，失败返回Null
-     */
-    public static TimeManager getInstance() {
-        if (instance == null) {
-            try {
-                instance = new TimeManager();
-                instance.init();
-            } catch (IOException e) {
-                Log.d(TAG, "Exception occur during init");
-                e.printStackTrace();
-                instance = null;
-            }
+    TimeManager() {
+        try {
+            init();
+        } catch (IOException e) {
+            Log.d(TAG, "Exception occur during init");
+            e.printStackTrace();
+            //理论上这里不会触发
         }
-        return instance;
     }
+//
+//    /**
+//     * TimeManager
+//     * 单例模式
+//     *
+//     * @return 初始化成功返回TimeManager，失败返回Null
+//     */
+//    public static TimeManager getInstance() {
+//        if (instance == null) {
+//
+//        }
+//        return instance;
+//    }
 
     /**
      * 获得时间数据

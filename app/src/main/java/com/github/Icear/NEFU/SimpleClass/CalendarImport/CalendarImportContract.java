@@ -10,7 +10,7 @@ import com.github.Icear.NEFU.SimpleClass.BaseView;
 
 public interface CalendarImportContract {
     interface Presenter extends BasePresenter {
-
+        void startImportProgress();
     }
 
     interface View extends BaseView<Presenter> {
