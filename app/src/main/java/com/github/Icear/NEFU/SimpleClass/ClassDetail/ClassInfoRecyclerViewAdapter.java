@@ -108,10 +108,6 @@ class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecycle
         return mValue.size();
     }
 
-    void delItem(int Position) {
-        mValue.remove(Position);
-    }
-
     interface ItemActionCallBack {
         void onItemClick(ClassInfo item);
     }

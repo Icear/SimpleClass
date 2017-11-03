@@ -1,24 +1,22 @@
-package com.github.Icear.NEFU.SimpleClass.ClassDetail;
+package com.github.Icear.NEFU.SimpleClass.Util;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-
-import com.github.Icear.NEFU.SimpleClass.ClassList.ClassListRecyclerViewAdapter;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 
 /**
- * Created by icear on 2017/10/30.
- * 自定义的ItemTouchHelper，实现了右滑删除,与上下拖拽
+ * Created by icear on 2017/10/23.
+ * 自定义的ItemTouchHelper，实现了右滑删除以及长按上下拖拽的功能
  */
 
-class ClassInfoItemTouchHelperCallback extends ItemTouchHelper.Callback {
-    private RecyclerView mRecyclerView;
+public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
+    private ItemModifyActionCallBack mCallBack;
 
-    ClassInfoItemTouchHelperCallback(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
+    public CustomItemTouchHelperCallback(ItemModifyActionCallBack callBack) {
+        mCallBack = callBack;
     }
 
     @Override
@@ -28,8 +26,7 @@ class ClassInfoItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        ClassListRecyclerViewAdapter adapter = (ClassListRecyclerViewAdapter) recyclerView.getAdapter();
-        adapter.swapItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        mCallBack.swapItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
 
@@ -37,8 +34,13 @@ class ClassInfoItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         if (direction == RIGHT) {
             //在这里选择删除
-            ClassInfoRecyclerViewAdapter adapter = (ClassInfoRecyclerViewAdapter) mRecyclerView.getAdapter();
-            adapter.delItem(viewHolder.getAdapterPosition());
+            mCallBack.delItem(viewHolder.getAdapterPosition());
         }
+    }
+
+    public interface ItemModifyActionCallBack {
+        void swapItem(int position1, int position2);
+
+        void delItem(int position);
     }
 }

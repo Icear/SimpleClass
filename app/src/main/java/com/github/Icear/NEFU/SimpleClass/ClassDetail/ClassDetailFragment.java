@@ -14,9 +14,10 @@ import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.ClassInfo;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
+import com.github.Icear.NEFU.SimpleClass.Util.CustomItemTouchHelperCallback;
 
 
-public class ClassDetailFragment extends Fragment implements ClassDetailContract.View, ClassInfoRecyclerViewAdapter.ItemActionCallBack {
+public class ClassDetailFragment extends Fragment implements ClassDetailContract.View, ClassInfoRecyclerViewAdapter.ItemActionCallBack, CustomItemTouchHelperCallback.ItemModifyActionCallBack {
 
     public static String PARAMS_CLASS_POSITION = "PARAMS_CLASS_POSITION";
     private ClassDetailContract.Presenter mPresenter;
@@ -88,7 +89,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         textViewTeacher.setText(item.getTeachers());
         classInfoRecyclerView.setAdapter(new ClassInfoRecyclerViewAdapter(item.getClassInfo(), this));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ClassInfoItemTouchHelperCallback(classInfoRecyclerView));
+                new CustomItemTouchHelperCallback(this));
         itemTouchHelper.attachToRecyclerView(classInfoRecyclerView);
     }
 
@@ -104,6 +105,16 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
 
     @Override
     public void onItemClick(ClassInfo item) {
+
+    }
+
+    @Override
+    public void swapItem(int position1, int position2) {
+
+    }
+
+    @Override
+    public void delItem(int position) {
 
     }
 }

@@ -16,6 +16,7 @@ import com.github.Icear.NEFU.SimpleClass.CalendarImport.CalendarImportViewModule
 import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailViewModule;
 import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
+import com.github.Icear.NEFU.SimpleClass.Util.CustomItemTouchHelperCallback;
 import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 import com.github.Icear.NEFU.SimpleClass.Util.RandomColorUtil;
 
@@ -27,7 +28,7 @@ import java.util.List;
  * A fragment representing a list of Items.
  * <p/>
  */
-public class ClassListFragment extends Fragment implements ClassListContract.View, ClassListRecyclerViewAdapter.ListActionCallBack, ClassListItemTouchHelperCallback.ItemModifyActionCallBack {
+public class ClassListFragment extends Fragment implements ClassListContract.View, ClassListRecyclerViewAdapter.ListActionCallBack, CustomItemTouchHelperCallback.ItemModifyActionCallBack {
 
     //TODO 跳转向下一个module的函数未完成
     //Done 跳转向showItemDetail的函数未完成
@@ -107,7 +108,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 getActivity(), DividerItemDecoration.VERTICAL));//添加分割线
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ClassListItemTouchHelperCallback(this));//用于实现向右滑动删除以及上下拖动的功能
+                new CustomItemTouchHelperCallback(this));//用于实现向右滑动删除以及上下拖动的功能
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
