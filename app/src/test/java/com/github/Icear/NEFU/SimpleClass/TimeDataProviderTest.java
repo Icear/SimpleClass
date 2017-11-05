@@ -1,6 +1,7 @@
 package com.github.Icear.NEFU.SimpleClass;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.TimeQuantum;
+import com.github.Icear.NEFU.SimpleClass.Data.TimeData.Entity.TimeQuantum;
+import com.github.Icear.NEFU.SimpleClass.Data.TimeData.TimeDataProvider;
 
 import org.junit.Test;
 
@@ -14,14 +15,14 @@ import java.util.Map;
  *
  * @deprecated 依赖android SDK环境，无法正常执行
  */
-public class TimeManagerTest {
-    private TimeManager timeManager;
+public class TimeDataProviderTest {
+    private TimeDataProvider timeDataProvider;
 
     @Test
     public void init() throws Exception {
-        timeManager = new TimeManager();
-        timeManager.init();
-        System.out.println("TimeManager:" + timeManager);
+        timeDataProvider = new TimeDataProvider();
+        timeDataProvider.init();
+        System.out.println("TimeDataProvider:" + timeDataProvider);
 
     }
 
@@ -29,7 +30,7 @@ public class TimeManagerTest {
     public void getTimeList() throws Exception {
         init();
         System.out.println("TimeList:");
-        Map<String, List<TimeQuantum>> timeList = timeManager.getTimeList();
+        Map<String, List<TimeQuantum>> timeList = timeDataProvider.getTimeList();
 
         //输出
         for (String key :

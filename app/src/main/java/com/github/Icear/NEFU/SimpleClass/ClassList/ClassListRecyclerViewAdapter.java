@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
 
 import java.util.List;

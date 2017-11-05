@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SimpleClassApplication.getApplication().registerActivity(this);
 
         ModuleUtil.initModule(getSupportFragmentManager(), WelcomeViewModule.class.getName(), null, false);
     }

@@ -1,10 +1,10 @@
-package com.github.Icear.NEFU.SimpleClass.Data;
+package com.github.Icear.NEFU.SimpleClass.Data.AcademicData;
 
 import android.util.Log;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.ClassInfo;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.User;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.ClassInfo;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.User;
 import com.github.Icear.Network.BasicNameValuePair;
 import com.github.Icear.Network.NameValuePair;
 import com.github.Icear.Network.Util.NetworkUtil;

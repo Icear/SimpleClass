@@ -1,4 +1,4 @@
-package com.github.Icear.NEFU.SimpleClass.Util;
+package com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Util;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import java.util.List;
  * 提供class数据的处理函数
  */
 
-public class ClassUtil {
+public class ClassConvertUtil {
 
     /**
      * 将class的week数字转换为%d-%d的格式

@@ -1,4 +1,4 @@
-package com.github.Icear.Util;
+package com.github.Icear.NEFU.SimpleClass.Data.TimeData.Util;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

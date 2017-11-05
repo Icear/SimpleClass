@@ -2,17 +2,32 @@ package com.github.Icear.NEFU.SimpleClass.CalendarImport;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toolbar;
 
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
+import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  */
-public class CalendarImportFragment extends Fragment {
+public class CalendarImportFragment extends Fragment implements CalendarImportContract.View {
+    private CalendarImportContract.Presenter mPresenter;
+    private RecyclerView mRecyclerView;
+    private Toolbar mToolbar;
+    private View mProgressBar;
+
+    //    private List<Class> mItems;
+    private List<Class> mShownItems;
+    private List<Boolean> mStatusList;
 
     public CalendarImportFragment() {
         // Required empty public constructor
@@ -27,10 +42,6 @@ public class CalendarImportFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -38,9 +49,73 @@ public class CalendarImportFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_calendar_import, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_class_process_import);
-
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_class_process_import);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        mProgressBar = rootView.findViewById(R.id.progressBar_import);
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.start();
+    }
+
+    @Override
+    public void setPresenter(CalendarImportContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void showProgress() {
+        mToolbar.setTitle(R.string.import_course_to_calendar);
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        mToolbar.setTitle(R.string.className);
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showWorkingItems(List<Class> items) {
+        mShownItems = new ArrayList<>();
+        mStatusList = new ArrayList<>();
+        mRecyclerView.setAdapter(new CalendarImportRecyclerViewAdapter(mShownItems, mStatusList));
+    }
+
+    @Override
+    public void showWorkingItem(Class item) {
+//        mShownItems.add(0,item);
+//        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void showItemWorkResult(Class item, boolean result) {
+        mShownItems.add(0, item);
+        mStatusList.add(0, result);
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void showProgressFinished() {
+        mToolbar.setTitle(R.string.import_finish);
+    }
+
+    @Override
+    public void showWarningMessage(int resId) {
+        AlertDialog alertDialog =
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.app_name)
+                        .setMessage(resId)
+                        .create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void quitAll() {
+//        getFragmentManager().popBackStack();
+        SimpleClassApplication.getApplication().exitAPP();
+    }
 }

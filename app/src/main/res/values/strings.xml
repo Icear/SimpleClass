@@ -25,4 +25,7 @@
     <string name="classWeeks">上课周</string>
     <string name="classLocation">上课地点</string>
     <string name="classTime">上课时间</string>
+    <string name="import_finish">导入完成</string>
+    <string name="import_course_to_calendar">将课程导入至日历中</string>
+    <string name="oh_no_we_cant_access_your_calendar_app_exit">惊了，我们没有权限访问您的日历。程序即将退出</string>
 </resources>

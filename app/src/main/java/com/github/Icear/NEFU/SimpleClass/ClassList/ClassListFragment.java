@@ -12,8 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.Icear.NEFU.SimpleClass.CalendarImport.CalendarImportViewModule;
 import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailViewModule;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.Util.ModuleUtil;
 import com.github.Icear.NEFU.SimpleClass.Util.RandomColorUtil;
@@ -122,7 +123,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
 
     @Override
     public void leadToImportModule() {
-
+        ModuleUtil.initModule(getFragmentManager(), CalendarImportViewModule.class.getName(), null, true);
     }
 
     @Override

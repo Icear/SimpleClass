@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailFragment;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 

@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.ClassInfo;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.ClassInfo;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Util.ClassConvertUtil;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
-import com.github.Icear.NEFU.SimpleClass.Util.ClassUtil;
 import com.github.Icear.Util.DateUtil;
 
 import java.util.List;
@@ -85,7 +85,7 @@ class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecycle
         holder.mTextViewWeeks.setText(
                 SimpleClassApplication.getApplication()
                         .getString(R.string.weekCount,
-                                ClassUtil.toString(mValue.get(position).getWeek())));
+                                ClassConvertUtil.toString(mValue.get(position).getWeek())));
         holder.mTextViewTime.setText(DateUtil.formatWeek(mValue.get(position).getWeekDay()) + " " +
                 SimpleClassApplication.getApplication().getString(R.string.classSection, mValue.get(position).getSection()));
         holder.mTextViewLocation.setText(

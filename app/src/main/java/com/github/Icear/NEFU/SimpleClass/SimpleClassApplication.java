@@ -1,16 +1,25 @@
 package com.github.Icear.NEFU.SimpleClass;
 
+import android.app.Activity;
 import android.app.Application;
+
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.AcademicDataProvider;
+import com.github.Icear.NEFU.SimpleClass.Data.TimeData.TimeDataProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by icear on 2017/10/15.
  * 自定义Application类
  */
 
+//TODO 将Provider切换为非静态属性
 public class SimpleClassApplication extends Application {
     private static SimpleClassApplication application;
     private static AcademicDataProvider academicDataProvider;
-    private static TimeManager timeManager;
+    private static TimeDataProvider timeDataProvider;
+    private List<Activity> activityList;
 
     /**
      * 获得Application对象
@@ -38,19 +47,38 @@ public class SimpleClassApplication extends Application {
      *
      * @return TimeManager对象
      */
-    public static TimeManager getTimeManager() {
-        if (timeManager == null) {
-            timeManager = new TimeManager();
+    public static TimeDataProvider getTimeDataProvider() {
+        if (timeDataProvider == null) {
+            timeDataProvider = new TimeDataProvider();
         }
-        return timeManager;
+        return timeDataProvider;
     }
-
 
     @Override
     public void onCreate() {
         super.onCreate();
         application = this;
+        activityList = new ArrayList<>();
         //在onCreate的时候获得自己的引用，使得包括presenter在内的Code能够访问Context
+    }
+
+    /**
+     * 向Application注册Activity
+     *
+     * @param activity 要注册的Activity
+     */
+    public void registerActivity(Activity activity) {
+        activityList.add(activity);
+    }
+
+    /**
+     * 调用此项以退出APP
+     */
+    public void exitAPP() {
+        for (Activity activity :
+                activityList) {
+            activity.finish();
+        }
     }
 
 }

@@ -1,9 +1,8 @@
-package com.github.Icear.NEFU.SimpleClass;
+package com.github.Icear.NEFU.SimpleClass.Data.AcademicData;
 
-import com.github.Icear.NEFU.SimpleClass.Data.AcademicDataHelper;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.User;
-import com.github.Icear.NEFU.SimpleClass.Data.NEFUAcademicHelper;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.User;
+import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +28,7 @@ public class AcademicDataProvider {
      *
      * @see SimpleClassApplication#getAcademicDataProvider()
      */
-    AcademicDataProvider() {
+    public AcademicDataProvider() {
     }
 
     /**

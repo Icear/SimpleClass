@@ -1,4 +1,4 @@
-package com.github.Icear.NEFU.SimpleClass.Data.Entity;
+package com.github.Icear.NEFU.SimpleClass.Data.TimeData.Entity;
 
 import java.sql.Time;
 
