@@ -66,6 +66,8 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
             return;
         }
 
+        /*获得要插入的日历项*/
+        //TODO 获得要插入的日历
 
         /*获得TimeManager*/
         TimeDataProvider timeDataProvider = SimpleClassApplication.getTimeDataProvider();
