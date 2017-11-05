@@ -28,6 +28,7 @@ import com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeViewModule;
  * //TODO 统一主题，统一颜色调用，以便之后切换主题使用
  * //TODO 修改Item布局方式
  * //Done 从ClassDetailViewModule回退到ClassListViewModule时会出现noAdapter的情况
+ * //TODO 为输入框增加回车键关联事件
  */
 public class MainActivity extends AppCompatActivity {
 

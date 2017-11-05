@@ -6,6 +6,7 @@ import com.github.Icear.NEFU.SimpleClass.Data.TimeData.Entity.TimeData;
 import com.github.Icear.NEFU.SimpleClass.Data.TimeData.Entity.TimeQuantum;
 import com.github.Icear.NEFU.SimpleClass.Data.TimeData.Util.DateDeserializer;
 import com.github.Icear.NEFU.SimpleClass.Data.TimeData.Util.TimeDeserializer;
+import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 import com.github.Icear.Util.ConvertUtil;
 import com.google.gson.Gson;
@@ -77,7 +78,8 @@ public class TimeDataProvider {
 
         //TODO 检查获取input流为空的情况
         //取得文件
-        InputStream inputStream = Object.class.getResourceAsStream("/raw/timeschedule.json");
+//        InputStream inputStream = Object.class.getResourceAsStream("/raw/timeschedule.json");
+        InputStream inputStream = SimpleClassApplication.getApplication().getResources().openRawResource(R.raw.timeschedule);
         Log.d(TAG, "read \"timeschedule.json\" with inputStream: " + inputStream);
 
         //这里会抛出IOException，和文件读写有关
@@ -109,7 +111,7 @@ public class TimeDataProvider {
      * @return 仅在按照参数索引到目标时返回课程时间段，未查找到目标时返回Null
      */
     public TimeQuantum getClassTime(String classLocation, int index) {
-        if (index >= 1) {
+        if (index < 1) {
             throw new IllegalArgumentException("index: " + index);
         }
 

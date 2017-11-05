@@ -35,9 +35,8 @@
         android:id="@+id/recyclerView_class_process_import"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="LinearLayout"
+        app:layoutManager="LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_class">
-
-    </android.support.v7.widget.RecyclerView>
+        tools:context="com.github.Icear.NEFU.SimpleClass.CalendarImport.CalendarImportFragment"
+        tools:listitem="@layout/item_class" />
 </android.support.design.widget.CoordinatorLayout>

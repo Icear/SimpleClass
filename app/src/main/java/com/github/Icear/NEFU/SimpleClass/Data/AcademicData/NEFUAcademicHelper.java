@@ -18,6 +18,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
     private static String TAG = NEFUAcademicHelper.class.getSimpleName();
 
     public NEFUAcademicHelper() {
+        //用于保持Cookie的同步
+        //这段代码不知道什么时候被误删了，尴尬
+        CookieHandler.setDefault(new CookieManager());
     }
 
 //    /**
