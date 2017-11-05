@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.github.Icear.NEFU.SimpleClass.BasePresenter;
 import com.github.Icear.NEFU.SimpleClass.BaseView;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
 
 import java.util.List;
 

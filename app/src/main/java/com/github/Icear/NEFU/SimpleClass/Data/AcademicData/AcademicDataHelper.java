@@ -1,7 +1,7 @@
-package com.github.Icear.NEFU.SimpleClass.Data;
+package com.github.Icear.NEFU.SimpleClass.Data.AcademicData;
 
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.User;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.User;
 
 import java.io.IOException;
 import java.util.List;

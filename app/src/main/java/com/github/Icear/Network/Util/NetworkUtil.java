@@ -9,7 +9,6 @@ import com.github.Icear.Util.ConvertUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
@@ -17,7 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +79,7 @@ public class NetworkUtil {
         String response = ConvertUtil.toString(inputStream);
         inputStream.close();
 
+        Log.d(TAG, response);
         Log.d(TAG,"response code: " + httpURLConnection.getResponseCode() );
 
         if (cookieManager != null) {

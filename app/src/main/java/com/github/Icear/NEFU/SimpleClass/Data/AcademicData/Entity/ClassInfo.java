@@ -1,4 +1,4 @@
-package com.github.Icear.NEFU.SimpleClass.Data.Entity;
+package com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity;
 
 import java.util.List;
 

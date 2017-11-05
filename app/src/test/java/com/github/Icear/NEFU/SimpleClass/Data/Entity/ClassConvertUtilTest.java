@@ -1,6 +1,6 @@
 package com.github.Icear.NEFU.SimpleClass.Data.Entity;
 
-import com.github.Icear.NEFU.SimpleClass.Util.ClassUtil;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Util.ClassConvertUtil;
 
 import org.junit.Test;
 
@@ -9,9 +9,9 @@ import java.util.List;
 
 /**
  * Created by icear on 2017/10/30.
- * ClassUtilTest
+ * ClassConvertUtilTest
  */
-public class ClassUtilTest {
+public class ClassConvertUtilTest {
     @Test
     public void toStringTest() throws Exception {
         List<Integer> weeks = new ArrayList<>();
@@ -39,7 +39,7 @@ public class ClassUtilTest {
 //        weeks.add(14);
 
 
-        System.out.println(ClassUtil.toString(weeks));
+        System.out.println(ClassConvertUtil.toString(weeks));
     }
 
 }

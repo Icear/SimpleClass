@@ -1,5 +1,7 @@
 package com.github.Icear.NEFU.SimpleClass.Data;
 
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.NEFUAcademicHelper;
+
 import org.junit.Test;
 
 /**

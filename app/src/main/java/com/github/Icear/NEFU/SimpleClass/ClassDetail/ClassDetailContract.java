@@ -2,8 +2,8 @@ package com.github.Icear.NEFU.SimpleClass.ClassDetail;
 
 import com.github.Icear.NEFU.SimpleClass.BasePresenter;
 import com.github.Icear.NEFU.SimpleClass.BaseView;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.Class;
-import com.github.Icear.NEFU.SimpleClass.Data.Entity.ClassInfo;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.ClassInfo;
 
 /**
  * Created by icear on 2017/10/14.

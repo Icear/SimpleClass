@@ -7,18 +7,20 @@ import com.github.Icear.NEFU.SimpleClass.BaseViewModule;
 
 /**
  * Created by icear on 2017/11/2.
+ * CalendarImportViewModule
  */
 
 public class CalendarImportViewModule implements BaseViewModule {
-
+    private CalendarImportFragment fragment;
 
     @Override
     public void init(Bundle bundle) {
-
+        fragment = CalendarImportFragment.newInstance(bundle);
+        new CalendarImportPresenter(fragment);
     }
 
     @Override
     public Fragment getFragment() {
-        return null;
+        return fragment;
     }
 }
