@@ -10,8 +10,17 @@ import java.util.Map;
  */
 
 public class TimeData {
+    private String timeZone;
     private Date semesterStartDay;
     private Map<String, List<TimeQuantum>> timeSchedule;
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
 
     public Date getSemesterStartDay() {
         return semesterStartDay;

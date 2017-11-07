@@ -1,5 +1,6 @@
 package com.github.Icear.NEFU.SimpleClass.CalendarImport;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.Icear.NEFU.SimpleClass.Data.AcademicData.Entity.Class;
+import com.github.Icear.NEFU.SimpleClass.Data.CalendarData.Entity.CalendarInfo;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 
@@ -101,6 +103,7 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     @Override
     public void showProgressFinished() {
         mToolbar.setTitle(R.string.import_finish);
+        //TODO 添加更多引导信息
     }
 
     @Override
@@ -117,5 +120,37 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     public void quitAll() {
 //        getFragmentManager().popBackStack();
         SimpleClassApplication.getApplication().exitAPP();
+    }
+
+    /**
+     * 要求用户选择一个日历以导入或创建单独的日历
+     *
+     * @param calendarInfoList 备选日历
+     */
+    @Override
+    public void chooseOrCreateNewCalendar(final List<CalendarInfo> calendarInfoList) {
+        final List<String> itemList = new ArrayList<>();
+
+        for (CalendarInfo calendarInfo :
+                calendarInfoList) {
+            itemList.add(calendarInfo.getAccountName());
+        }
+
+        itemList.add(getString(R.string.use_preset_account));
+
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.choose_account_to_write)
+                .setItems(itemList.toArray(new String[itemList.size()]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which < itemList.size()) {
+                            mPresenter.onCalendarConfirm(calendarInfoList.get(which));
+                        } else {
+                            mPresenter.onCalendarConfirm(null);
+                        }
+                    }
+                })
+                .create();
+        alertDialog.show();
     }
 }

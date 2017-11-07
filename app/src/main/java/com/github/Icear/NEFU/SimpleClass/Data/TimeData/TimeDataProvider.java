@@ -73,7 +73,7 @@ public class TimeDataProvider {
      *
      * @throws IOException 预置数据读写异常
      */
-    public void init() throws IOException {
+    public void init() throws IOException, ReadNoDataException {
         Log.i(TAG, "TimeDataProvider start init...");
 
         //TODO 检查获取input流为空的情况
@@ -100,6 +100,8 @@ public class TimeDataProvider {
             Log.d(TAG, timeData.toString());
         } else {
             Log.w(TAG, "Oh no! We loaded nothing!");
+            //如果读取到的数据为空，这不合理，应该让程序崩溃
+            throw new ReadNoDataException("load nothing from json data file");
         }
     }
 
@@ -115,8 +117,7 @@ public class TimeDataProvider {
             throw new IllegalArgumentException("index: " + index);
         }
 
-        if (timeData != null && timeData.getTimeSchedule() != null
-                && timeData.getTimeSchedule().containsKey(classLocation)) {
+        if (timeData.getTimeSchedule().containsKey(classLocation)) {
             return timeData.getTimeSchedule().get(classLocation).get(index - 1);
         } else {
             return null;
@@ -139,13 +140,27 @@ public class TimeDataProvider {
     /**
      * 获得学期第一天的日期
      *
-     * @return 日期, 可能为空
+     * @return 日期,
      */
     public Date getFirstSemesterDay() {
-        if (timeData != null) {
             return timeData.getSemesterStartDay();
-        } else {
-            return null;
+    }
+
+    /**
+     * 获得时间数据的时区
+     *
+     * @return 时区
+     */
+    public String getTimeZone() {
+        return timeData.getTimeZone();
+    }
+
+    public class ReadNoDataException extends RuntimeException {
+        public ReadNoDataException() {
+        }
+
+        public ReadNoDataException(String v) {
+            super(v);
         }
     }
 }
