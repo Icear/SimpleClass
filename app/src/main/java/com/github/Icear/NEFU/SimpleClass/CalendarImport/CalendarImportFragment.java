@@ -143,7 +143,7 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
                 .setItems(itemList.toArray(new String[itemList.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (which < itemList.size()) {
+                        if (which < calendarInfoList.size()) {
                             mPresenter.onCalendarConfirm(calendarInfoList.get(which));
                         } else {
                             mPresenter.onCalendarConfirm(null);

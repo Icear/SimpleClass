@@ -219,7 +219,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                 values.put(CalendarContract.Events.DTEND, classEnd.getTimeInMillis());
 
                 //事件的时区，这里使用默认导入者的时区即可
-//                values.put(CalendarContract.Events.EVENT_TIMEZONE, "");
+                values.put(CalendarContract.Events.EVENT_TIMEZONE, timeDataProvider.getTimeZone());
 
                 values.put(CalendarContract.Events.RRULE, "");//事件的重复发生规则
                 values.put(CalendarContract.Events.RDATE, "");//和上一个组合使用

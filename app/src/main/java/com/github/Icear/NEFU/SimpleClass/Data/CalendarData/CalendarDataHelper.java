@@ -136,7 +136,11 @@ public class CalendarDataHelper {
         calendar.put(CalendarContract.Calendars.OWNER_ACCOUNT, calendarInfo.getOwnerAccount());
         calendar.put(CalendarContract.Calendars.CAN_ORGANIZER_RESPOND, calendarInfo.getName());
 
-        Uri calendarUri = CalendarContract.Calendars.CONTENT_URI;
+        Uri calendarUri = CalendarContract.Calendars.CONTENT_URI.buildUpon()
+                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, calendarInfo.getAccountName())
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+                .build();
 
         Uri result = cr.insert(calendarUri, calendar);
 
