@@ -43,6 +43,7 @@ public class TimeData {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append("TimeData{").append("\n")
+                .append("timeZone=").append(timeZone).append("\n")
                 .append("semesterStartDay=").append(semesterStartDay).append("\n")
                 .append("timeSchedule=");
         for (String key :

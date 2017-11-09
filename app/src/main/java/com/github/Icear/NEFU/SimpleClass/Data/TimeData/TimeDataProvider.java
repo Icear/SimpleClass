@@ -60,15 +60,6 @@ public class TimeDataProvider {
     }
 
     /**
-     * 设置数据
-     *
-     * @param timeData 数据
-     */
-    public void setTimeList(TimeData timeData) {
-        this.timeData = timeData;
-    }
-
-    /**
      * 初始化函数，用于从本地读取预置数据
      *
      * @throws IOException 预置数据读写异常
@@ -111,8 +102,9 @@ public class TimeDataProvider {
      * @param classLocation 教室地点
      * @param index         课程位置
      * @return 仅在按照参数索引到目标时返回课程时间段，未查找到目标时返回Null
+     * @exception DataNotProvidedException 当请求了没有被设定的time数据时抛出此异常
      */
-    public TimeQuantum getClassTime(String classLocation, int index) {
+    public TimeQuantum getClassTime(String classLocation, int index) throws DataNotProvidedException {
         if (index < 1) {
             throw new IllegalArgumentException("index: " + index);
         }
@@ -120,22 +112,9 @@ public class TimeDataProvider {
         if (timeData.getTimeSchedule().containsKey(classLocation)) {
             return timeData.getTimeSchedule().get(classLocation).get(index - 1);
         } else {
-            return null;
+            throw new DataNotProvidedException("time data about " + classLocation + " had not been provided");
         }
     }
-
-//    /**
-//     * 获取符合AndroidCalendar格式的时区标记
-//     * 详见<a href='https://developer.android.com/guide/topics/providers/calendar-provider.html?hl=zh-cn#events'>事件列</a>的EVENT_TIMEZONE项
-//     * @return 时区标记,可能为空
-//     */
-//    public String getTimeZone(){
-//        if (timeData != null) {
-//            return timeData.getTimeZone();
-//        } else {
-//            return null;
-//        }
-//    }
 
     /**
      * 获得学期第一天的日期
@@ -143,7 +122,7 @@ public class TimeDataProvider {
      * @return 日期,
      */
     public Date getFirstSemesterDay() {
-            return timeData.getSemesterStartDay();
+        return timeData.getSemesterStartDay();
     }
 
     /**
@@ -160,6 +139,16 @@ public class TimeDataProvider {
         }
 
         public ReadNoDataException(String v) {
+            super(v);
+        }
+    }
+
+    public class DataNotProvidedException extends Exception {
+        public DataNotProvidedException() {
+
+        }
+
+        public DataNotProvidedException(String v) {
             super(v);
         }
     }

@@ -9,6 +9,7 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 
 import com.github.Icear.NEFU.SimpleClass.Data.CalendarData.Entity.CalendarInfo;
+import com.github.Icear.NEFU.SimpleClass.Data.CalendarData.Entity.EventInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class CalendarDataHelper {
         final int PROJECTION_ID_INDEX = 0;
         final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
         final int PROJECTION_DISPLAY_NAME_INDEX = 2;
-        final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
+
 
         Cursor cur = null;
         try {
@@ -65,7 +66,6 @@ public class CalendarDataHelper {
                     calendarInfo.setCalendarId(cur.getLong(PROJECTION_ID_INDEX));
                     calendarInfo.setCalendarDisplayName(cur.getString(PROJECTION_DISPLAY_NAME_INDEX));
                     calendarInfo.setAccountName(cur.getString(PROJECTION_ACCOUNT_NAME_INDEX));
-                    calendarInfo.setOwnerAccount(cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX));
 
                     // Do something with the values...
                     calendarInfoList.add(calendarInfo);
@@ -136,6 +136,7 @@ public class CalendarDataHelper {
         calendar.put(CalendarContract.Calendars.OWNER_ACCOUNT, calendarInfo.getOwnerAccount());
         calendar.put(CalendarContract.Calendars.CAN_ORGANIZER_RESPOND, calendarInfo.getName());
 
+        //以同步适配器身份插入日历
         Uri calendarUri = CalendarContract.Calendars.CONTENT_URI.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, calendarInfo.getAccountName())
@@ -145,5 +146,50 @@ public class CalendarDataHelper {
         Uri result = cr.insert(calendarUri, calendar);
 
         return result == null ? -1 : ContentUris.parseId(result);
+    }
+
+    /**
+     * 根据传入的EventInfo创建新的Event
+     *
+     * @param event EventInfo
+     * @return 新Event的ID
+     * @throws SecurityException 没有写入日历的权限时抛出异常
+     */
+    public long createNewEvent(EventInfo event) throws SecurityException {
+        ContentValues values = new ContentValues();
+        //必填项
+        values.put(CalendarContract.Events.CALENDAR_ID, event.getCalendarId());//事件所属的日历id
+        values.put(CalendarContract.Events.DTSTART, event.getDtStart());//事件的开始时间
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, event.getEventTimeZone());//事件的时区
+
+        //非必填项，检查未设置的则跳过
+        if (event.getTitle() != null) {
+            values.put(CalendarContract.Events.TITLE, event.getTitle());//事件的标题
+        }
+
+        if (event.getEventLocation() != null) {
+            values.put(CalendarContract.Events.EVENT_LOCATION, event.getEventLocation());//事件的发生地点
+        }
+
+        if (event.getDescription() != null) {
+            values.put(CalendarContract.Events.DESCRIPTION, event.getDescription());//事件的描述
+        }
+
+        if (event.getDtEnd() != 0L) {
+            values.put(CalendarContract.Events.DTEND, event.getDtEnd());//事件的结束时间
+        }
+
+        if (event.getrRule() != null) {
+            values.put(CalendarContract.Events.RRULE, event.getrRule());//事件的重复发生规则
+        }
+
+        if (event.getrDate() != null) {
+            values.put(CalendarContract.Events.RDATE, event.getrDate());//和上一个组合使用
+        }
+
+        values.put(CalendarContract.Events.AVAILABILITY, event.getAvailability());//是否为忙碌事件，默认值为0表示不是忙碌事件
+
+        Uri result = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+        return result == null ? -1 : ContentUris.parseId(result);//TODO 不确定效果
     }
 }
