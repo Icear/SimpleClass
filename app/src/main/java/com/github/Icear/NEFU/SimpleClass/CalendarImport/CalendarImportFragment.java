@@ -103,7 +103,11 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     @Override
     public void showProgressFinished() {
         mToolbar.setTitle(R.string.import_finish);
-        //TODO 添加更多引导信息
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.import_finish)
+                .setMessage(R.string.import_finish_last_sentence)
+                .create();
+        dialog.show();
     }
 
     @Override

@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class ClassListFragment extends Fragment implements ClassListContract.View, ClassListRecyclerViewAdapter.ListActionCallBack, CustomItemTouchHelperCallback.ItemModifyActionCallBack {
 
-    //TODO 跳转向下一个module的函数未完成
+    //Done 跳转向下一个module的函数未完成
     //Done 跳转向showItemDetail的函数未完成
     //Done Item右划以删除的功能完成
     //Done Activity按钮确认事件完成

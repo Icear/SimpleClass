@@ -19,6 +19,7 @@ import java.net.URL;
 
 /**
  * Created by icear on 2017/10/8.
+ * 自定义的HttpClient网络通信类
  */
 
 public class HttpClient {
@@ -31,7 +32,7 @@ public class HttpClient {
 
     public HttpClient(CookieStore cookieStore){
         //TODO 提供选项设定要接收Cookie的域
-        //TODO ???CookieHandle的作用范围还不清楚，暂时当成大范围杀器（官方文档的System-Wide到底是个什么鬼....)
+        //???CookieHandle的作用范围还不清楚，暂时当成大范围杀器（官方文档的System-Wide到底是个什么鬼....)
 
         /*
          * 直接使用CookieManager内部的CookieStore实现，在外部对其进行持有，以实现跨连接的Cookie储存

@@ -64,14 +64,19 @@ public class TimeDataProvider {
      *
      * @throws IOException 预置数据读写异常
      */
-    public void init() throws IOException, ReadNoDataException {
+    public void init() throws IOException {
         Log.i(TAG, "TimeDataProvider start init...");
 
-        //TODO 检查获取input流为空的情况
+        //Done 检查获取input流为空的情况->如果无法获取到时间数据，那就让它崩溃好了
         //取得文件
 //        InputStream inputStream = Object.class.getResourceAsStream("/raw/timeschedule.json");
         InputStream inputStream = SimpleClassApplication.getApplication().getResources().openRawResource(R.raw.timeschedule);
         Log.d(TAG, "read \"timeschedule.json\" with inputStream: " + inputStream);
+        if (inputStream == null) {
+            Log.w(TAG, "the inputStream is null");
+            //无法获取文件，这不合理，应该让程序崩溃
+            throw new NullPointerException("the inputStream is null, maybe forgot to set time schedule data?");
+        }
 
         //这里会抛出IOException，和文件读写有关
         String timeDataString = ConvertUtil.toString(inputStream);
@@ -86,6 +91,7 @@ public class TimeDataProvider {
                 .create();//创建Gson解析器
         timeData = gson.fromJson(timeDataString, new TypeToken<TimeData>() {
         }.getType());
+
         if (timeData != null) {
             Log.i(TAG, "successful loaded data.");
             Log.d(TAG, timeData.toString());
@@ -134,21 +140,14 @@ public class TimeDataProvider {
         return timeData.getTimeZone();
     }
 
-    public class ReadNoDataException extends RuntimeException {
-        public ReadNoDataException() {
-        }
-
-        public ReadNoDataException(String v) {
+    private class ReadNoDataException extends RuntimeException {
+        ReadNoDataException(String v) {
             super(v);
         }
     }
 
     public class DataNotProvidedException extends Exception {
-        public DataNotProvidedException() {
-
-        }
-
-        public DataNotProvidedException(String v) {
+        DataNotProvidedException(String v) {
             super(v);
         }
     }

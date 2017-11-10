@@ -30,4 +30,5 @@
     <string name="oh_no_we_cant_access_your_calendar_app_exit">惊了，我们没有权限访问您的日历。程序即将退出</string>
     <string name="use_preset_account">使用程序预设的帐户</string>
     <string name="choose_account_to_write">选择要写入的帐户</string>
+    <string name="import_finish_last_sentence">所有的操作都已经完成，现在你可以退出这个APP并卸载它，导入的日历可以在系统的日历APP中看到，感谢使用</string>
 </resources>

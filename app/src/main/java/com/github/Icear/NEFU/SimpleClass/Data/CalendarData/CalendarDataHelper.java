@@ -192,6 +192,6 @@ public class CalendarDataHelper {
 
 
         Uri result = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-        return result == null ? -1 : ContentUris.parseId(result);//TODO 不确定效果
+        return result == null ? -1 : ContentUris.parseId(result);
     }
 }
