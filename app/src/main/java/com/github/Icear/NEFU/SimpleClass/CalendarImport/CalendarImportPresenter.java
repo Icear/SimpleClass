@@ -1,7 +1,6 @@
 package com.github.Icear.NEFU.SimpleClass.CalendarImport;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -20,6 +20,7 @@ import com.github.Icear.NEFU.SimpleClass.Data.CalendarData.Entity.CalendarInfo;
 import com.github.Icear.NEFU.SimpleClass.Data.CalendarData.Entity.EventInfo;
 import com.github.Icear.NEFU.SimpleClass.Data.TimeData.Entity.TimeQuantum;
 import com.github.Icear.NEFU.SimpleClass.Data.TimeData.TimeDataProvider;
+import com.github.Icear.NEFU.SimpleClass.PermissionQuestActivity;
 import com.github.Icear.NEFU.SimpleClass.R;
 import com.github.Icear.NEFU.SimpleClass.SimpleClassApplication;
 
@@ -33,17 +34,14 @@ import java.util.List;
  * Created by icear on 2017/11/3.
  * CalendarImportPresenter
  */
-//TODO 重构重构 代码好乱。。。。
-//TODO 事件插入后日历中看不到，待跟进
-class CalendarImportPresenter implements CalendarImportContract.Presenter {
+class CalendarImportPresenter implements CalendarImportContract.Presenter, PermissionQuestActivity.OnRequestPermissionResultCallback {
     private static final String TAG = CalendarImportPresenter.class.getSimpleName();
-    //TODO 将所有SimpleClassApplication的getApplication替换成Context
+    private static final int REQUEST_CODE_REQUEST_PERMISSION = 126;
 
     private CalendarImportContract.View mView;
     private boolean isRunning; //防止重复执行
     private CalendarDataHelper calendarDataHelper;
     private List<CalendarInfo> calendarInfoList;
-    private TimeDataProvider timeDataProvider;
     private List<Class> classes;
 
 
@@ -56,36 +54,14 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
     public void start() {
         if (!isRunning) {
             isRunning = true;
-            askToConfirmCalendar();
+            if (!checkPermission()) {
+                requestPermission();
+            } else {
+                askToConfirmCalendar();
+            }
         }
     }
 
-
-    private void askToConfirmCalendar() {
-        //从Provider拿到数据，对应插入到日历中，同时UI提供反馈
-
-
-        /*权限检查*/
-        if (!checkPermission()) {
-            //没有权限时的处理
-            mView.showWarningMessage(R.string.oh_no_we_cant_access_your_calendar_app_exit);
-//            mView.quitAll();
-            isRunning = false;
-            mView.hideProgress();
-            return;
-        }
-
-        /*获得ContentResolver*/
-        ContentResolver cr = SimpleClassApplication.getApplication().getContentResolver();
-
-        /*获得要插入的日历项*/
-        calendarDataHelper = new CalendarDataHelper(cr);
-        calendarInfoList = calendarDataHelper.queryCalendar();
-
-        //传递给view
-        mView.chooseOrCreateNewCalendar(calendarInfoList);
-
-    }
 
     /**
      * 当用户确认要导入课程的日历时触发
@@ -96,27 +72,15 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
     public void onCalendarConfirm(@Nullable CalendarInfo calendar) {
         //把剥离的变量初始化和程序块合并，优化的事以后再做，先保证代码的清晰
 
-
-        /*权限检查*/
-        if (!checkPermission()) {
-            mView.showWarningMessage(R.string.oh_no_we_cant_access_your_calendar_app_exit);
-            isRunning = false;
-            mView.hideProgress();
-            return;
-        }
-
-        /*获得TimeDataProvider*/
-        timeDataProvider = SimpleClassApplication.getTimeDataProvider();
-
         /*确定要插入的日历id*/
-        long calendarId = getCalendarId(calendar);
+        long calendarId = getCalendarIdWithCreate(calendar);
 
         /*获得数据*/
         classes = SimpleClassApplication.getAcademicDataProvider().getClasses();
         mView.showWorkingItems(classes);
 
         /*使用异步线程完成剩余操作*/
-        new CalendarEventAsyncTask(calendarId, classes, new PresenterMessageHandler(new WeakReference<>(this))).execute();
+        new CalendarEventAsyncTask(calendarId, classes, SimpleClassApplication.getTimeDataProvider(), new PresenterMessageHandler(new WeakReference<>(this))).execute();
 
 
 //        /*获得TimeManager*/
@@ -127,7 +91,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
 //        mView.showWorkingItems(classes);
 //
 //        /*获得日历*/
-//        long calendarId = getCalendarId(calendar);
+//        long calendarId = getCalendarIdWithCreate(calendar);
 //
 //        /*遍历数据，将每一个数据插入到日历中*/
 //        for (Class aClass :
@@ -233,12 +197,12 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
     }
 
     /**
-     * 获得应写入的日历id
+     * 获得应写入的日历id，如果传入值为null则创建新的日历
      *
      * @param calendar 目标日历
      * @return 日历id
      */
-    private long getCalendarId(@Nullable CalendarInfo calendar) {
+    private long getCalendarIdWithCreate(@Nullable CalendarInfo calendar) {
         //TODO 将这些字符串转到配置文件中，还有AcademicDataHelper
         long calendarId = -1;
         String presetAccountName = "SimpleClass@gmail.com";
@@ -265,7 +229,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                 newCalendar.setCalendarColor(Color.BLUE);//允许个性化？
                 newCalendar.setSyncEvent(true);
                 newCalendar.setCalendarAccessLevel(CalendarContract.Calendars.CAL_ACCESS_OWNER);
-                newCalendar.setCalendarTimeZone(timeDataProvider.getTimeZone());
+                newCalendar.setCalendarTimeZone(SimpleClassApplication.getTimeDataProvider().getTimeZone());
                 calendarId = calendarDataHelper.createNewCalendarAccount(newCalendar);
             }
         } else {
@@ -273,6 +237,21 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
         }
         return calendarId;
     }
+
+    /**
+     * 要求用户确认要导入的日历
+     */
+    private void askToConfirmCalendar() {
+        //从Provider拿到数据，对应插入到日历中，同时UI提供反馈
+
+        /*获得要插入的日历项*/
+        calendarDataHelper = new CalendarDataHelper(SimpleClassApplication.getApplication().getContentResolver());
+        calendarInfoList = calendarDataHelper.queryCalendar();
+
+        //传递给view，要求用户选择或创建一个新的日历
+        mView.chooseOrCreateNewCalendar(calendarInfoList);
+    }
+
 
     /**
      * 检查相关权限
@@ -285,30 +264,59 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                 PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(SimpleClassApplication.getApplication(), Manifest.permission.READ_CALENDAR) !=
                 PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request nthe missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            //TODO 添加权限申请代码
-
-//            ActivityCompat.requestPermissions(SimpleClassApplication.getApplication(),);
-
+            requestPermission();
             return false;
         }
         return true;
     }
 
     /**
-     * 用于处理来自子线程的UI操作请求
+     * 请求相关权限
+     */
+    private void requestPermission() {
+        String[] permissions = new String[]{
+                Manifest.permission.WRITE_CALENDAR,
+                Manifest.permission.READ_CALENDAR
+        };
+        ActivityCompat.requestPermissions(new PermissionQuestActivity(this), permissions, REQUEST_CODE_REQUEST_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        boolean GRANT_PERMISSION_READ_CALENDAR = false;
+        boolean GRANT_PERMISSION_WRITE_CALENDAR = false;
+
+        switch (requestCode) {
+            case REQUEST_CODE_REQUEST_PERMISSION:
+                for (int i = 0; i < permissions.length; i++) {
+                    if (Manifest.permission.READ_CALENDAR.equals(permissions[i])) {
+                        GRANT_PERMISSION_READ_CALENDAR = (grantResults[i] == PackageManager.PERMISSION_GRANTED);
+                    } else if (Manifest.permission.WRITE_CALENDAR.equals(permissions[i])) {
+                        GRANT_PERMISSION_WRITE_CALENDAR = (grantResults[i] == PackageManager.PERMISSION_GRANTED);
+                    }
+                }
+                isRunning = false;
+                if (GRANT_PERMISSION_READ_CALENDAR && GRANT_PERMISSION_WRITE_CALENDAR) {
+                    start();
+                } else {
+                    //没有权限时的处理
+                    mView.showWarningMessage(R.string.oh_no_we_cant_access_your_calendar_app_exit);
+//                    mView.quitAll();
+                }
+                break;
+        }
+    }
+
+    /**
+     * 用于接收来自子线程的UI操作请求
      */
     private static class PresenterMessageHandler extends Handler {
-        private static final int ACTION_SHOW_ITEM_WORK_RESULT = 568;
-        private static final String ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX = "ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX";
-        private static final String ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX = "ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX";
-        private WeakReference<CalendarImportPresenter> calendarImportPresenterWeakReference;
+
+        static final int ACTION_SHOW_ITEM_WORK_RESULT = 568;
+        static final String ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX = "ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX";
+        static final String ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX = "ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX";
+        private WeakReference<CalendarImportPresenter> calendarImportPresenterWeakReference;//使用WeakReference来避免内存泄漏
 
         PresenterMessageHandler(WeakReference<CalendarImportPresenter> calendarImportPresenterWeakReference) {
             this.calendarImportPresenterWeakReference = calendarImportPresenterWeakReference;
@@ -329,20 +337,24 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                     break;
             }
         }
+
     }
 
     /**
      * 用于完成向日历插入事件的任务
      */
     private class CalendarEventAsyncTask extends AsyncTask<Long, Object, Object> {
+
         private int eventCount = 0;//统计插入了多少事件
         private long calendarId;
         private List<Class> classes;
+        private TimeDataProvider timeDataProvider;
         private Handler mHandler;
 
-        CalendarEventAsyncTask(long calendarId, List<Class> classes, Handler receiver) {
+        CalendarEventAsyncTask(long calendarId, List<Class> classes, TimeDataProvider timeDataProvider, Handler receiver) {
             this.calendarId = calendarId;
             this.classes = classes;
+            this.timeDataProvider = timeDataProvider;
             mHandler = receiver;
         }
 
@@ -415,7 +427,8 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                     Log.d(TAG, String.valueOf(firstSemesterDay.getMonth() + 1));
                     Log.d(TAG, String.valueOf(firstSemesterDay.getDate()));
 
-                    gregorianCalendar.set(firstSemesterDay.getYear() + 1900,//设定日期为开学第一日日期，然后再做日期加法
+                    //设定日期为开学第一日日期，然后再做日期加法
+                    gregorianCalendar.set(firstSemesterDay.getYear() + 1900,
                             firstSemesterDay.getMonth() + 1,
                             firstSemesterDay.getDate()
                     );
@@ -431,7 +444,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                     classEndTemplate.set(Calendar.MINUTE, classTimeQuantum.getEndTime().getMinutes());
                     classStartTemplate.set(Calendar.SECOND, classTimeQuantum.getStartTime().getSeconds());
 
-                    //为每一个class的每一个课时设定一个事件 TODO 忘了有没有对classInfo 的week做有效检查。。。
+                    //为每一个class的每一个课时设定一个事件
                     for (int week : classinfo.getWeek()) {
                         try {
                             EventInfo newEvent = eventTemplate.clone();
@@ -487,5 +500,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
             message.arg1 = PresenterMessageHandler.ACTION_SHOW_ITEM_WORK_RESULT;//设置标志
             mHandler.sendMessage(message);
         }
+
     }
+
 }
