@@ -101,4 +101,20 @@ public class EventInfo implements Cloneable {
     public void setAvailability(int availability) {
         this.availability = availability;
     }
+
+    @Override
+    public String toString() {
+        return "EventInfo{" +
+                "calendarId=" + calendarId +
+                ", title='" + title + '\'' +
+                ", eventLocation='" + eventLocation + '\'' +
+                ", description='" + description + '\'' +
+                ", dtStart=" + dtStart +
+                ", dtEnd=" + dtEnd +
+                ", eventTimeZone='" + eventTimeZone + '\'' +
+                ", rRule='" + rRule + '\'' +
+                ", rDate='" + rDate + '\'' +
+                ", availability=" + availability +
+                '}';
+    }
 }

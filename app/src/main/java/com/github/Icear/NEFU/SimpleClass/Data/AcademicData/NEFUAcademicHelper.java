@@ -241,7 +241,6 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setDoInput(true);
 
-//        Log.d(TAG,"postData: " + postData);//DONE 测试后删除此条数据，避免信息泄露
 
         OutputStream outputStream = httpURLConnection.getOutputStream();
         outputStream.write(postData.getBytes("UTF-8"));

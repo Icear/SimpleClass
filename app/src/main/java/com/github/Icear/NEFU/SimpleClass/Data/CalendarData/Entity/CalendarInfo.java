@@ -19,6 +19,7 @@ public class CalendarInfo {
     private boolean syncEvent;//Is this calendar synced and are its events stored on the device? 0 - Do not sync this calendar or store events for this calendar. 1 - Sync down events for this calendar.
     private String calendarTimeZone;//The time zone the calendar is associated with.
 
+
     public long getCalendarId() {
         return calendarId;
     }

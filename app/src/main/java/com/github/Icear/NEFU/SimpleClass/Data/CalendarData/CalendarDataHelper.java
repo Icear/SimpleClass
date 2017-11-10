@@ -21,6 +21,7 @@ import java.util.List;
  */
 
 public class CalendarDataHelper {
+    private static final String TAG = CalendarDataHelper.class.getSimpleName();
 
     private ContentResolver cr;
 
@@ -134,7 +135,7 @@ public class CalendarDataHelper {
         calendar.put(CalendarContract.Calendars.SYNC_EVENTS, calendarInfo.isSyncEvent() ? 1 : 0);
         calendar.put(CalendarContract.Calendars.CALENDAR_TIME_ZONE, calendarInfo.getCalendarTimeZone());
         calendar.put(CalendarContract.Calendars.OWNER_ACCOUNT, calendarInfo.getOwnerAccount());
-        calendar.put(CalendarContract.Calendars.CAN_ORGANIZER_RESPOND, calendarInfo.getName());
+//        calendar.put(CalendarContract.Calendars.CAN_ORGANIZER_RESPOND, );
 
         //以同步适配器身份插入日历
         Uri calendarUri = CalendarContract.Calendars.CONTENT_URI.buildUpon()
@@ -188,6 +189,7 @@ public class CalendarDataHelper {
         }
 
         values.put(CalendarContract.Events.AVAILABILITY, event.getAvailability());//是否为忙碌事件，默认值为0表示不是忙碌事件
+
 
         Uri result = cr.insert(CalendarContract.Events.CONTENT_URI, values);
         return result == null ? -1 : ContentUris.parseId(result);//TODO 不确定效果

@@ -105,6 +105,9 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
             return;
         }
 
+        /*获得TimeDataProvider*/
+        timeDataProvider = SimpleClassApplication.getTimeDataProvider();
+
         /*确定要插入的日历id*/
         long calendarId = getCalendarId(calendar);
 
@@ -351,8 +354,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
 
         @Override
         protected Object doInBackground(Long... params) {
-            /*获得TimeDataProvider*/
-            timeDataProvider = SimpleClassApplication.getTimeDataProvider();
+
 
             /*遍历数据，将每一个数据插入到日历中*/
             for (Class aClass :
@@ -371,7 +373,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                     eventTemplate.setCalendarId(calendarId);
 
                     //事件的标题,这里用课程名@上课地点，方面查看
-                    eventTemplate.setTitle(aClass.getName() + "@" + classinfo.getLocation() + classinfo.getRoom());
+                    eventTemplate.setTitle(aClass.getName());
 
                     //事件的发生地点，即上课地点
                     eventTemplate.setEventLocation(classinfo.getLocation() + classinfo.getRoom());
@@ -409,8 +411,12 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                     //获得开学的第一天日期
                     Date firstSemesterDay = timeDataProvider.getFirstSemesterDay();
                     Calendar gregorianCalendar = new GregorianCalendar();
-                    gregorianCalendar.set(firstSemesterDay.getYear(),//设定日期为开学第一日日期，然后再做日期加法
-                            firstSemesterDay.getMonth(),
+                    Log.d(TAG, String.valueOf(firstSemesterDay.getYear() + 1900));
+                    Log.d(TAG, String.valueOf(firstSemesterDay.getMonth() + 1));
+                    Log.d(TAG, String.valueOf(firstSemesterDay.getDate()));
+
+                    gregorianCalendar.set(firstSemesterDay.getYear() + 1900,//设定日期为开学第一日日期，然后再做日期加法
+                            firstSemesterDay.getMonth() + 1,
                             firstSemesterDay.getDate()
                     );
 
@@ -418,10 +424,12 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
                     Calendar classStartTemplate = (Calendar) gregorianCalendar.clone();
                     classStartTemplate.set(Calendar.HOUR, classTimeQuantum.getStartTime().getHours());
                     classStartTemplate.set(Calendar.MINUTE, classTimeQuantum.getStartTime().getMinutes());
+                    classStartTemplate.set(Calendar.SECOND, classTimeQuantum.getStartTime().getSeconds());
 
                     Calendar classEndTemplate = (Calendar) gregorianCalendar.clone();
                     classEndTemplate.set(Calendar.HOUR, classTimeQuantum.getEndTime().getHours());
                     classEndTemplate.set(Calendar.MINUTE, classTimeQuantum.getEndTime().getMinutes());
+                    classStartTemplate.set(Calendar.SECOND, classTimeQuantum.getStartTime().getSeconds());
 
                     //为每一个class的每一个课时设定一个事件 TODO 忘了有没有对classInfo 的week做有效检查。。。
                     for (int week : classinfo.getWeek()) {
@@ -433,12 +441,12 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter {
 
                             // 设定课程节开始时间
                             Calendar classStart = (Calendar) classStartTemplate.clone();
-                            classStart.add(Calendar.DAY_OF_YEAR, amount);
+                            classStart.add(Calendar.DATE, amount);
                             newEvent.setDtStart(classStart.getTimeInMillis());//事件的开始时间
 
                             //设定课程节结束时间
                             Calendar classEnd = (Calendar) classEndTemplate.clone();
-                            classStart.add(Calendar.DAY_OF_YEAR, amount);
+                            classEnd.add(Calendar.DATE, amount);
                             newEvent.setDtEnd(classEnd.getTimeInMillis());//事件的结束时间
 
                             calendarDataHelper.createNewEvent(newEvent);//创建
