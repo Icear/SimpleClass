@@ -6,9 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- 开启动画效果 -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:inAnimation">@android:anim/slide_in_left</item>
         <item name="android:outAnimation">@android:anim/slide_out_right</item>
+
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

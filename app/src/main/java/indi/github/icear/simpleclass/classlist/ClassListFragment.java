@@ -29,6 +29,7 @@ import indi.github.icear.simpleclass.util.RandomColorUtil;
  */
 public class ClassListFragment extends Fragment implements ClassListContract.View, ClassListRecyclerViewAdapter.ListActionCallBack, CustomItemTouchHelperCallback.ItemModifyActionCallBack {
 
+    //TODO listItem点击范围不对，待修复
     //Done 跳转向下一个module的函数未完成
     //Done 跳转向showItemDetail的函数未完成
     //Done Item右划以删除的功能完成
