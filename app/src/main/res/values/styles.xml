@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="SimpleClassAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,9 +9,13 @@
 
         <!-- 开启动画效果 -->
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:inAnimation">@android:anim/slide_in_left</item>
-        <item name="android:outAnimation">@android:anim/slide_out_right</item>
-
+        <item name="android:inAnimation">@android:anim/decelerate_interpolator</item>
+        <item name="android:outAnimation">@android:anim/decelerate_interpolator</item>
+        <item name="android:activityOpenEnterAnimation">@android:anim/decelerate_interpolator</item>
+        <item name="android:activityOpenExitAnimation">@android:anim/decelerate_interpolator</item>
+        <item name="android:activityCloseEnterAnimation">@android:anim/decelerate_interpolator
+        </item>
+        <item name="android:activityCloseExitAnimation">@android:anim/decelerate_interpolator</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

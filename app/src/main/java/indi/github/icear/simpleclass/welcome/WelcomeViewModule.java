@@ -2,6 +2,7 @@ package indi.github.icear.simpleclass.welcome;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.transition.Explode;
 
 import indi.github.icear.simpleclass.BaseViewModule;
 
@@ -16,6 +17,10 @@ public class WelcomeViewModule implements BaseViewModule {
     @Override
     public void init(Bundle bundle) {
         fragment = WelcomeFragment.newInstance();
+        fragment.setEnterTransition(new Explode());
+        fragment.setExitTransition(new Explode());
+        fragment.setReturnTransition(new Explode());
+        fragment.setEnterTransition(new Explode());
         new WelcomePresenter(fragment);
     }
 

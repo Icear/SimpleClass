@@ -32,6 +32,7 @@ public class ModuleUtil {
             module.init(bundle);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(indi.github.icear.simpleclass.R.id.container, module.getFragment());
+
             if(isAddToBackStack){
                 fragmentTransaction.addToBackStack(null);
             }

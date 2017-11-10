@@ -32,11 +32,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.github.icear.nefu.simpleclass.Login.LoginFragment">
 
-        <!--<Toolbar-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:title="@string/linkToAcademic" />-->
         <ProgressBar
             android:id="@+id/progressBar_login"
             style="?android:attr/progressBarStyleHorizontal"
@@ -50,7 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
-            android:hint="@string/ID" />
+            android:hint="@string/ID"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:maxLines="1" />
 
         <EditText
             android:id="@+id/editText_password"
@@ -58,7 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLines="1" />
 
         <Button
             android:id="@+id/button_login"
@@ -68,5 +68,15 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:text="@string/login" />
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_check_black_24dp"
+        app:fabSize="normal" />
+
 </android.support.design.widget.CoordinatorLayout>
 

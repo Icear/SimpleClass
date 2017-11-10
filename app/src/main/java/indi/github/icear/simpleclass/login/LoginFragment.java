@@ -4,12 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.classlist.ClassListViewModule;
 import indi.github.icear.simpleclass.util.ModuleUtil;
 
@@ -17,8 +22,8 @@ import indi.github.icear.simpleclass.util.ModuleUtil;
 public class LoginFragment extends Fragment implements LoginContract.View{
 
     private LoginContract.Presenter mPresenter;
-    private EditText editText_login;
-    private EditText editText_password;
+    private EditText editTextAccount;
+    private EditText editTextPassword;
     private ProgressBar progressBar;
 
     public LoginFragment() {
@@ -41,22 +46,46 @@ public class LoginFragment extends Fragment implements LoginContract.View{
                              @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(indi.github.icear.simpleclass.R.layout.fragment_login, container, false);
-        editText_login = (EditText) rootView.findViewById(indi.github.icear.simpleclass.R.id.editText_account);
-        editText_password = (EditText) rootView.findViewById(indi.github.icear.simpleclass.R.id.editText_password);
+        editTextAccount = (EditText) rootView.findViewById(indi.github.icear.simpleclass.R.id.editText_account);
+        editTextPassword = (EditText) rootView.findViewById(indi.github.icear.simpleclass.R.id.editText_password);
         progressBar = (ProgressBar) rootView.findViewById(indi.github.icear.simpleclass.R.id.progressBar_login);
-        rootView.findViewById(indi.github.icear.simpleclass.R.id.button_login).setOnClickListener(new View.OnClickListener() {
+        final Button buttonLogin = (Button) rootView.findViewById(R.id.button_login);
+
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editText_login.getText().toString().trim().isEmpty()){
-                    editText_login.setError(getString(indi.github.icear.simpleclass.R.string.enterCorrectAccount));
+                if (editTextAccount.getText().toString().trim().isEmpty()) {
+                    editTextAccount.setError(getString(indi.github.icear.simpleclass.R.string.enterCorrectAccount));
                     return;
                 }
-                if(editText_password.getText().toString().trim().isEmpty()){
-                    editText_password.setError(getString(indi.github.icear.simpleclass.R.string.enterCorrectPassword));
+                if (editTextPassword.getText().toString().trim().isEmpty()) {
+                    editTextPassword.setError(getString(indi.github.icear.simpleclass.R.string.enterCorrectPassword));
                     return;
                 }
-                mPresenter.login(editText_login.getText().toString(),
-                        editText_password.getText().toString());
+                mPresenter.login(editTextAccount.getText().toString(),
+                        editTextPassword.getText().toString());
+            }
+        });
+        editTextAccount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_NEXT:
+                        editTextPassword.requestFocus();
+                        break;
+                }
+                return true;
+            }
+        });
+        editTextPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        buttonLogin.callOnClick();
+                        break;
+                }
+                return true;
             }
         });
         return rootView;
@@ -75,13 +104,13 @@ public class LoginFragment extends Fragment implements LoginContract.View{
 
     @Override
     public void showMessage(String errorMessage) {
-        Snackbar.make(getActivity().findViewById(indi.github.icear.simpleclass.R.id.container), errorMessage, Snackbar.LENGTH_LONG)
+        Snackbar.make(editTextPassword, errorMessage, Snackbar.LENGTH_LONG)
                 .show();
     }
 
     @Override
     public void showMessage(int resourceID) {
-        Snackbar.make(getActivity().findViewById(indi.github.icear.simpleclass.R.id.container), resourceID, Snackbar.LENGTH_LONG)
+        Snackbar.make(editTextPassword, resourceID, Snackbar.LENGTH_LONG)
                 .show();
     }
 

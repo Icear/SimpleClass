@@ -10,8 +10,10 @@ import indi.github.icear.simpleclass.welcome.WelcomeViewModule;
 /*
  * //Done 改掉itemView的名字（item_class ->item_class)
  * //Done 重命名包->全部小写
+ * //Done 给WelcomeView加上简单的程序介绍
+ * //TODO Presenter会在fragment被退出之前回收，导致异常
  * //TODO 处理程序在中途离开的情况
- * //TODO 添加动画效果
+ * //Done 添加动画效果
  * //TODO 重新安排对话以符合google的建议
  * //TODO 添加英语支持
  * //Done 将MainActivity完全抽象出来作为一个容器，将显示部分放到对应的fragment中

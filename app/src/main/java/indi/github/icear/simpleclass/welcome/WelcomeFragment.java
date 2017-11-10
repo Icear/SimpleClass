@@ -2,7 +2,6 @@ package indi.github.icear.simpleclass.welcome;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import indi.github.icear.simpleclass.util.ModuleUtil;
 public class WelcomeFragment extends Fragment implements WelcomeContract.View{
 
     private WelcomeContract.Presenter mPresenter;
-    private Toolbar toolBar;
 
     public WelcomeFragment() {
     }

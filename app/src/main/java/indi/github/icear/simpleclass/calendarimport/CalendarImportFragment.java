@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.data.academicdata.entity.Class;
 import indi.github.icear.simpleclass.data.calendardata.entity.CalendarInfo;
@@ -105,6 +106,7 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle(indi.github.icear.simpleclass.R.string.import_finish)
                 .setMessage(indi.github.icear.simpleclass.R.string.import_finish_last_sentence)
+                .setPositiveButton(R.string.yes, null)
                 .create();
         dialog.show();
     }
@@ -113,8 +115,9 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     public void showWarningMessage(int resId) {
         AlertDialog alertDialog =
                 new AlertDialog.Builder(getContext())
-                        .setTitle(indi.github.icear.simpleclass.R.string.app_name)
+                        .setTitle(R.string.app_name)
                         .setMessage(resId)
+                        .setPositiveButton(R.string.yes, null)
                         .create();
         alertDialog.show();
     }

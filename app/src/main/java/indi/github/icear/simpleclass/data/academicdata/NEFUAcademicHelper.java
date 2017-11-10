@@ -81,7 +81,7 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         List<Class> classContainer = new ArrayList<>();
 
         String response;
-        response = NetworkUtil.httpGetForString("http://jwcnew.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
+        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
         Document document = Jsoup.parse(response);
         Element classTable = document.getElementsByAttributeValue("id", "kbtable").first();
         Element tBody = classTable.getAllElements().first();
@@ -227,7 +227,7 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         parameter.add(new BasicNameValuePair("USERNAME", userName));
         parameter.add(new BasicNameValuePair("PASSWORD", password));
 
-        URL url = new URL("http://jwcnew.edu.cn/dblydx_jsxsd/xk/LoginToXk");
+        URL url = new URL("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xk/LoginToXk");
 
         Log.d(TAG, "execute request to " + url.toString());
         Log.d(TAG, "method: Post");
@@ -273,7 +273,7 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
     private User initUser() throws IOException {
         Log.i(TAG, "Start to init User");
         String response;
-        response = NetworkUtil.httpGetForString("http://jwcnew.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
+        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
         Document document = Jsoup.parse(response);
         Element container = document.getElementsByAttributeValue("class", "wap").first();
         Element targetElement = container.getElementsByAttributeValue("class", "block1text").first();

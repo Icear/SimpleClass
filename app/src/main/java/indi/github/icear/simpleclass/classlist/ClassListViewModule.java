@@ -2,6 +2,7 @@ package indi.github.icear.simpleclass.classlist;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.transition.Explode;
 
 import indi.github.icear.simpleclass.BaseViewModule;
 
@@ -16,6 +17,10 @@ public class ClassListViewModule implements BaseViewModule {
     @Override
     public void init(Bundle bundle) {
         fragment = ClassListFragment.newInstance();
+        fragment.setEnterTransition(new Explode());
+        fragment.setExitTransition(new Explode());
+        fragment.setReturnTransition(new Explode());
+        fragment.setEnterTransition(new Explode());
         new ClassListPresenter(fragment);
     }
 
