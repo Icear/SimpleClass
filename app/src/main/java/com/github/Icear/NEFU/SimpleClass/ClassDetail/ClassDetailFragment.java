@@ -47,7 +47,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mPresenter.receiveData(
-                    SimpleClassApplication.getAcademicDataProvider()
+                    SimpleClassApplication.getApplication().getAcademicDataProvider()
                             .getClasses().get(getArguments().getInt(PARAMS_CLASS_POSITION)));
         }
     }

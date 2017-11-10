@@ -14,11 +14,11 @@ import java.util.List;
  * 自定义Application类
  */
 
-//TODO 将Provider切换为非静态属性
+//Done 将Provider切换为非静态属性
 public class SimpleClassApplication extends Application {
     private static SimpleClassApplication application;
-    private static AcademicDataProvider academicDataProvider;
-    private static TimeDataProvider timeDataProvider;
+    private AcademicDataProvider academicDataProvider;
+    private TimeDataProvider timeDataProvider;
     private List<Activity> activityList;
 
     /**
@@ -35,7 +35,7 @@ public class SimpleClassApplication extends Application {
      *
      * @return AcademicDataProvider对象
      */
-    public static AcademicDataProvider getAcademicDataProvider() {
+    public AcademicDataProvider getAcademicDataProvider() {
         if (academicDataProvider == null) {
             academicDataProvider = new AcademicDataProvider();
         }
@@ -47,7 +47,7 @@ public class SimpleClassApplication extends Application {
      *
      * @return TimeManager对象
      */
-    public static TimeDataProvider getTimeDataProvider() {
+    public TimeDataProvider getTimeDataProvider() {
         if (timeDataProvider == null) {
             timeDataProvider = new TimeDataProvider();
         }

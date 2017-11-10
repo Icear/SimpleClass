@@ -46,7 +46,7 @@ class LoginPresenter implements LoginContract.Presenter {
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
-                    return SimpleClassApplication.getAcademicDataProvider().init(params[0], params[1]);
+                    return SimpleClassApplication.getApplication().getAcademicDataProvider().init(params[0], params[1]);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;

@@ -76,11 +76,11 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, Permi
         long calendarId = getCalendarIdWithCreate(calendar);
 
         /*获得数据*/
-        classes = SimpleClassApplication.getAcademicDataProvider().getClasses();
+        classes = SimpleClassApplication.getApplication().getAcademicDataProvider().getClasses();
         mView.showWorkingItems(classes);
 
         /*使用异步线程完成剩余操作*/
-        new CalendarEventAsyncTask(calendarId, classes, SimpleClassApplication.getTimeDataProvider(), new PresenterMessageHandler(new WeakReference<>(this))).execute();
+        new CalendarEventAsyncTask(calendarId, classes, SimpleClassApplication.getApplication().getTimeDataProvider(), new PresenterMessageHandler(new WeakReference<>(this))).execute();
 
     }
 
@@ -117,7 +117,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, Permi
                 newCalendar.setCalendarColor(Color.BLUE);//允许个性化？
                 newCalendar.setSyncEvent(true);
                 newCalendar.setCalendarAccessLevel(CalendarContract.Calendars.CAL_ACCESS_OWNER);
-                newCalendar.setCalendarTimeZone(SimpleClassApplication.getTimeDataProvider().getTimeZone());
+                newCalendar.setCalendarTimeZone(SimpleClassApplication.getApplication().getTimeDataProvider().getTimeZone());
                 calendarId = calendarDataHelper.createNewCalendarAccount(newCalendar);
             }
         } else {
