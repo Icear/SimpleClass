@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.github.Icear.NEFU.SimpleClass.Welcome.WelcomeFragment">
+        tools:context="com.github.icear.nefu.simpleclass.Welcome.WelcomeFragment">
 
         <!--<TextView-->
         <!--android:layout_width="match_parent"-->

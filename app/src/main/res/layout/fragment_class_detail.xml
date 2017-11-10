@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                tools:context="com.github.Icear.NEFU.SimpleClass.ClassDetail.ClassDetailFragment">
+                tools:context="com.github.icear.nefu.simpleclass.ClassDetail.ClassDetailFragment">
 
                 <TextView
                     android:layout_width="match_parent"
