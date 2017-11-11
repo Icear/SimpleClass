@@ -269,7 +269,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                     //事件所属日历的id
                     eventTemplate.setCalendarId(calendarId);
 
-                    //事件的标题,这里用课程名@上课地点，方面查看
+                    //事件的标题
                     eventTemplate.setTitle(aClass.getName());
 
                     //事件的发生地点，即上课地点
