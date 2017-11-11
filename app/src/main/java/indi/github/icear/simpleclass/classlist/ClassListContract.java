@@ -19,8 +19,9 @@ interface ClassListContract {
         void onUserConfirmed();
 
         void swapItem(int position1, int position2);
-
         void delItem(int position);
+
+        void revertItemDel(int position);
     }
 
     interface View extends BaseView<Presenter> {

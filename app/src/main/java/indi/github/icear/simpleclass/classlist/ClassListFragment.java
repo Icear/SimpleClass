@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.calendarimport.CalendarImportViewModule;
 import indi.github.icear.simpleclass.classdetail.ClassDetailViewModule;
 import indi.github.icear.simpleclass.data.academicdata.entity.Class;
-import indi.github.icear.simpleclass.util.CustomItemTouchHelperCallback;
 import indi.github.icear.simpleclass.util.ModuleUtil;
 import indi.github.icear.simpleclass.util.RandomColorUtil;
 
@@ -27,20 +27,23 @@ import indi.github.icear.simpleclass.util.RandomColorUtil;
  * A fragment representing a list of Items.
  * <p/>
  */
-public class ClassListFragment extends Fragment implements ClassListContract.View, ClassListRecyclerViewAdapter.ListActionCallBack, CustomItemTouchHelperCallback.ItemModifyActionCallBack {
+public class ClassListFragment extends Fragment implements ClassListContract.View,
+        ClassListRecyclerViewAdapter.ListActionCallBack,
+        ClassListItemTouchHelperCallback.ItemModifyActionCallBack {
 
     //Done listItem点击范围不对，待修复
     //Done 跳转向下一个module的函数未完成
     //Done 跳转向showItemDetail的函数未完成
     //Done Item右划以删除的功能完成
     //Done Activity按钮确认事件完成
-    //TODO Item拖拽没有动画效果
-    //TODO Item删除没有撤销按钮
+    //Done Item拖拽没有动画效果
+    //Done Item删除没有撤销按钮
 
     private ClassListContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mProgressBar;
     private List<Integer> mColorList;//用于储存RecycleViewItem的icon颜色
+    private Integer deletedColor;//备份被删除的颜色
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -110,7 +113,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 getContext(), DividerItemDecoration.VERTICAL));//添加分割线
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new CustomItemTouchHelperCallback(this, mRecyclerView.getAdapter()));//用于实现向右滑动删除以及上下拖动的功能
+                new ClassListItemTouchHelperCallback(this, mRecyclerView.getAdapter()));//用于实现向右滑动删除以及上下拖动的功能
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
@@ -154,9 +157,23 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     }
 
     @Override
-    public void delItemData(int position) {
+    public void delItemData(final int position) {
         mPresenter.delItem(position);
+        deletedColor = mColorList.get(position);
         mColorList.remove(position);//参数检查由Presenter进行，这里只做基本的View层反馈
+        Snackbar.make(mRecyclerView, R.string.delete_succeed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPresenter.revertItemDel(position);
+                        if (deletedColor != null) {
+                            mColorList.add(position, deletedColor);
+                        }
+                        mRecyclerView.getAdapter().notifyItemInserted(position);
+                    }
+                })
+                .show();
 //        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
+
 }

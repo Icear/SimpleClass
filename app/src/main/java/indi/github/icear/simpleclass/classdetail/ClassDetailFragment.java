@@ -1,6 +1,7 @@
 package indi.github.icear.simpleclass.classdetail;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,20 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.data.academicdata.entity.Class;
 import indi.github.icear.simpleclass.data.academicdata.entity.ClassInfo;
-import indi.github.icear.simpleclass.util.CustomItemTouchHelperCallback;
 
 
-public class ClassDetailFragment extends Fragment implements ClassDetailContract.View, ClassInfoRecyclerViewAdapter.ItemActionCallBack, CustomItemTouchHelperCallback.ItemModifyActionCallBack {
+public class ClassDetailFragment extends Fragment implements ClassDetailContract.View,
+        ClassInfoRecyclerViewAdapter.ItemActionCallBack,
+        ClassDetailItemTouchHelperCallback.ItemModifyActionCallBack {
 
     public static String PARAMS_CLASS_POSITION = "PARAMS_CLASS_POSITION";
     private ClassDetailContract.Presenter mPresenter;
     private Toolbar toolbar;
     private TextView textViewClassName;
     private TextView textViewTeacher;
-    private RecyclerView classInfoRecyclerView;
+    private RecyclerView mRecyclerView;
 
     public ClassDetailFragment() {
         // Required empty public constructor
@@ -59,7 +62,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         toolbar = (Toolbar) rootView.findViewById(indi.github.icear.simpleclass.R.id.toolbar);
         textViewClassName = (TextView) rootView.findViewById(indi.github.icear.simpleclass.R.id.textView_className);
         textViewTeacher = (TextView) rootView.findViewById(indi.github.icear.simpleclass.R.id.textView_teacher);
-        classInfoRecyclerView = (RecyclerView) rootView.findViewById(indi.github.icear.simpleclass.R.id.recyclerView_classInfo);
+        mRecyclerView = (RecyclerView) rootView.findViewById(indi.github.icear.simpleclass.R.id.recyclerView_classInfo);
         View fab = rootView.findViewById(indi.github.icear.simpleclass.R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,10 +89,10 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         toolbar.setTitle(item.getName());
         textViewClassName.setText(item.getName());
         textViewTeacher.setText(item.getTeachers());
-        classInfoRecyclerView.setAdapter(new ClassInfoRecyclerViewAdapter(item.getClassInfo(), this));
+        mRecyclerView.setAdapter(new ClassInfoRecyclerViewAdapter(item.getClassInfo(), this));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new CustomItemTouchHelperCallback(this, classInfoRecyclerView.getAdapter()));
-        itemTouchHelper.attachToRecyclerView(classInfoRecyclerView);
+                new ClassDetailItemTouchHelperCallback(this, mRecyclerView.getAdapter()));
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     @Override
@@ -109,11 +112,20 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
 
     @Override
     public void swapItemData(int position1, int position2) {
-
+        mPresenter.swipeItem(position1, position2);
     }
 
     @Override
-    public void delItemData(int position) {
-
+    public void delItemData(final int position) {
+        mPresenter.delItem(position);
+        Snackbar.make(mRecyclerView, R.string.delete_succeed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPresenter.revertItemDel(position);
+                        mRecyclerView.getAdapter().notifyItemInserted(position);
+                    }
+                })
+                .show();
     }
 }

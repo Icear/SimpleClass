@@ -1,4 +1,4 @@
-package indi.github.icear.simpleclass.util;
+package indi.github.icear.simpleclass.classlist;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -12,11 +12,12 @@ import static android.support.v7.widget.helper.ItemTouchHelper.UP;
  * 自定义的ItemTouchHelper，实现了右滑删除以及长按上下拖拽的功能
  */
 
-public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
+class ClassListItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private ItemModifyActionCallBack mCallBack;
     private RecyclerView.Adapter mAdapter;
 
-    public CustomItemTouchHelperCallback(ItemModifyActionCallBack callBack, RecyclerView.Adapter adapter) {
+
+    ClassListItemTouchHelperCallback(ItemModifyActionCallBack callBack, RecyclerView.Adapter adapter) {
         mCallBack = callBack;
         mAdapter = adapter;
     }
@@ -44,7 +45,7 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
         if (direction == RIGHT) {
             //在这里选择删除
             mCallBack.delItemData(viewHolder.getAdapterPosition());
@@ -52,7 +53,7 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
         }
     }
 
-    public interface ItemModifyActionCallBack {
+    interface ItemModifyActionCallBack {
         void swapItemData(int position1, int position2);
 
         void delItemData(int position);

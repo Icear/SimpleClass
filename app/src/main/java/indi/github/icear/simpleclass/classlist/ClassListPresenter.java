@@ -20,6 +20,7 @@ import indi.github.icear.simpleclass.data.academicdata.entity.Class;
 class ClassListPresenter implements ClassListContract.Presenter {
 
     private ClassListContract.View mClassListView;
+    private Class deletedItem;
 
     ClassListPresenter(ClassListContract.View classListView) {
         mClassListView = classListView;
@@ -96,7 +97,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
     @Override
     public void swapItem(int position1, int position2) {
         List<Class> classes = SimpleClassApplication.getApplication().getAcademicDataProvider().getClasses();
-        if (0 >= position1 || 0 >= position2
+        if (0 > position1 || 0 > position2
                 || position1 >= classes.size() || position2 >= classes.size()) {
             throw new IndexOutOfBoundsException("position1: " + position1 + " position2:" + position2);
         }
@@ -109,7 +110,16 @@ class ClassListPresenter implements ClassListContract.Presenter {
         if (0 > position || position >= classes.size()) {
             throw new IndexOutOfBoundsException("position: " + position);
         }
+        deletedItem = classes.get(position);//备份Item以供Revert函数调用
         classes.remove(position);
+    }
+
+    @Override
+    public void revertItemDel(int position) {
+        if (deletedItem != null) {
+            List<Class> classes = SimpleClassApplication.getApplication().getAcademicDataProvider().getClasses();
+            classes.add(position, deletedItem);
+        }
     }
 
 
