@@ -28,7 +28,7 @@
     <string name="import_finish">导入完成</string>
     <string name="import_course_to_calendar">将课程导入至日历中</string>
     <string name="oh_no_we_cant_access_your_calendar_app_exit">惊了，我们没有权限访问您的日历。程序即将退出</string>
-    <string name="use_preset_account">使用程序预设的帐户</string>
+    <string name="use_preset_account">为我创建单独的日历</string>
     <string name="choose_account_to_write">选择要写入的帐户</string>
     <string name="import_finish_last_sentence">现在你的课程已经保存在日历之中了</string>
     <string name="app_description">SimpleClass可以将课程直接导入你的手机日历</string>
