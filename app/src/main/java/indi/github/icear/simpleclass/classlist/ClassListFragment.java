@@ -29,11 +29,13 @@ import indi.github.icear.simpleclass.util.RandomColorUtil;
  */
 public class ClassListFragment extends Fragment implements ClassListContract.View, ClassListRecyclerViewAdapter.ListActionCallBack, CustomItemTouchHelperCallback.ItemModifyActionCallBack {
 
-    //TODO listItem点击范围不对，待修复
+    //Done listItem点击范围不对，待修复
     //Done 跳转向下一个module的函数未完成
     //Done 跳转向showItemDetail的函数未完成
     //Done Item右划以删除的功能完成
     //Done Activity按钮确认事件完成
+    //TODO Item拖拽没有动画效果
+    //TODO Item删除没有撤销按钮
 
     private ClassListContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
@@ -104,9 +106,10 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
 
         Context context = mRecyclerView.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.setAdapter(new ClassListRecyclerViewAdapter(itemList, mColorList, this));
+        ClassListRecyclerViewAdapter adapter = new ClassListRecyclerViewAdapter(itemList, mColorList, this);
+        mRecyclerView.setAdapter(adapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(
-                getActivity(), DividerItemDecoration.VERTICAL));//添加分割线
+                getContext(), DividerItemDecoration.VERTICAL));//添加分割线
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new CustomItemTouchHelperCallback(this));//用于实现向右滑动删除以及上下拖动的功能
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
@@ -134,7 +137,8 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
 
     @Override
     public void showMessage(int resourceID) {
-        Snackbar.make(getActivity().findViewById(indi.github.icear.simpleclass.R.id.container), resourceID, Snackbar.LENGTH_LONG)
+        //随便传入一个根视图是coordinatorLayout的View就行，随意传
+        Snackbar.make(mRecyclerView, resourceID, Snackbar.LENGTH_LONG)
                 .show();
     }
 

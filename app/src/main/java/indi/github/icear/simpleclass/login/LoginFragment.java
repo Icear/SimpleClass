@@ -1,5 +1,6 @@
 package indi.github.icear.simpleclass.login;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -9,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import indi.github.icear.simpleclass.R;
+import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.classlist.ClassListViewModule;
 import indi.github.icear.simpleclass.util.ModuleUtil;
 
@@ -62,6 +65,9 @@ public class LoginFragment extends Fragment implements LoginContract.View{
                     editTextPassword.setError(getString(indi.github.icear.simpleclass.R.string.enterCorrectPassword));
                     return;
                 }
+                InputMethodManager imm = (InputMethodManager) SimpleClassApplication
+                        .getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editTextPassword.getWindowToken(), 0); //强制隐藏键盘
                 mPresenter.login(editTextAccount.getText().toString(),
                         editTextPassword.getText().toString());
             }
@@ -128,5 +134,9 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     public void leadToClassModule() {
         ModuleUtil.initModule(getActivity().getSupportFragmentManager(),
                 ClassListViewModule.class.getName(), null, true);
+    }
+
+    private void hideSystemSoftKeyboard() {
+
     }
 }

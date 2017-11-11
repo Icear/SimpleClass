@@ -2,7 +2,6 @@ package indi.github.icear.simpleclass.calendarimport;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +18,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import indi.github.icear.simpleclass.PermissionQuestActivity;
+import indi.github.icear.simpleclass.MainActivity;
+import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.data.academicdata.entity.Class;
 import indi.github.icear.simpleclass.data.academicdata.entity.ClassInfo;
@@ -33,7 +33,7 @@ import indi.github.icear.simpleclass.data.timedata.entity.TimeQuantum;
  * Created by icear on 2017/11/3.
  * CalendarImportPresenter
  */
-class CalendarImportPresenter implements CalendarImportContract.Presenter, PermissionQuestActivity.OnRequestPermissionResultCallback {
+class CalendarImportPresenter implements CalendarImportContract.Presenter, MainActivity.OnRequestPermissionResultCallback {
     private static final String TAG = CalendarImportPresenter.class.getSimpleName();
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 126;
 
@@ -113,7 +113,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, Permi
                 newCalendar.setOwnerAccount(presetAccountName);
                 newCalendar.setName(SimpleClassApplication.getApplication().getString(indi.github.icear.simpleclass.R.string.app_name));
                 newCalendar.setCalendarDisplayName(SimpleClassApplication.getApplication().getString(indi.github.icear.simpleclass.R.string.app_name));
-                newCalendar.setCalendarColor(Color.BLUE);//允许个性化？
+                newCalendar.setCalendarColor(SimpleClassApplication.getApplication().getResources().getColor(R.color.lightBlue));//允许个性化？
                 newCalendar.setSyncEvent(true);
                 newCalendar.setCalendarAccessLevel(CalendarContract.Calendars.CAL_ACCESS_OWNER);
                 newCalendar.setCalendarTimeZone(SimpleClassApplication.getApplication().getTimeDataProvider().getTimeZone());
@@ -147,14 +147,10 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, Permi
      */
     private boolean checkPermission() {
          /* 权限检查 */
-        if (ActivityCompat.checkSelfPermission(SimpleClassApplication.getApplication(), Manifest.permission.WRITE_CALENDAR) !=
+        return !(ActivityCompat.checkSelfPermission(SimpleClassApplication.getApplication(), Manifest.permission.WRITE_CALENDAR) !=
                 PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(SimpleClassApplication.getApplication(), Manifest.permission.READ_CALENDAR) !=
-                PackageManager.PERMISSION_GRANTED) {
-            requestPermission();
-            return false;
-        }
-        return true;
+                PackageManager.PERMISSION_GRANTED);
     }
 
     /**
@@ -165,7 +161,9 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, Permi
                 Manifest.permission.WRITE_CALENDAR,
                 Manifest.permission.READ_CALENDAR
         };
-        ActivityCompat.requestPermissions(new PermissionQuestActivity(this), permissions, REQUEST_CODE_REQUEST_PERMISSION);
+        MainActivity activity = MainActivity.getInstance();
+        activity.setCallback(this);
+        ActivityCompat.requestPermissions(activity, permissions, REQUEST_CODE_REQUEST_PERMISSION);
     }
 
     @Override
@@ -310,9 +308,6 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, Permi
                     //获得开学的第一天日期
                     Date firstSemesterDay = timeDataProvider.getFirstSemesterDay();
                     Calendar gregorianCalendar = new GregorianCalendar();
-                    Log.d(TAG, String.valueOf(firstSemesterDay.getYear() + 1900));
-                    Log.d(TAG, String.valueOf(firstSemesterDay.getMonth() + 1));
-                    Log.d(TAG, String.valueOf(firstSemesterDay.getDate()));
 
                     //设定日期为开学第一日日期，然后再做日期加法
                     gregorianCalendar.set(firstSemesterDay.getYear() + 1900,

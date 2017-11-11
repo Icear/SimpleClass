@@ -106,7 +106,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
     @Override
     public void delItem(int position) {
         List<Class> classes = SimpleClassApplication.getApplication().getAcademicDataProvider().getClasses();
-        if (0 >= position || position >= classes.size()) {
+        if (0 < position || position >= classes.size()) {
             throw new IndexOutOfBoundsException("position: " + position);
         }
         classes.remove(position);

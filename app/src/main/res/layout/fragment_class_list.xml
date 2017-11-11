@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
-            tools:context="com.github.icear.nefu.simpleclass.ClassList.ClassListFragment"
+            tools:context="com.github.icear.simpleclass.ClassList.ClassListFragment"
             tools:listitem="@layout/item_class" />
     </LinearLayout>
 
@@ -55,7 +55,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
+        android:adjustViewBounds="true"
         android:src="@drawable/ic_check_black_24dp"
+        android:tint="@color/white"
         app:fabSize="normal" />
 
 </android.support.design.widget.CoordinatorLayout>

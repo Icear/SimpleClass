@@ -17,6 +17,7 @@ import indi.github.icear.simpleclass.data.academicdata.entity.Class;
  * ListActionCallBack
  */
 class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecyclerViewAdapter.ViewHolder> {
+    private final static String TAG = ClassListRecyclerViewAdapter.class.getSimpleName();
 
     private final List<Class> mItemList;
     private final List<Integer> mColorList;

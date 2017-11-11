@@ -37,6 +37,6 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.github.icear.nefu.simpleclass.CalendarImport.CalendarImportFragment"
+        tools:context="com.github.icear.simpleclass.CalendarImport.CalendarImportFragment"
         tools:listitem="@layout/item_class" />
 </android.support.design.widget.CoordinatorLayout>
