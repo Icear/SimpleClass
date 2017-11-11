@@ -80,7 +80,7 @@ class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecycle
 //     * 从数据表删除指定item，如果item不存在则操作无效
 //     * @param position position
 //     */
-//    void delItem(int position) {
+//    void delItemData(int position) {
 //        if(0 < position && position < mItemList.size()){
 //            mItemList.remove(position);
 //            mColorList.remove(position);//同时移除颜色列表的对应值
@@ -95,7 +95,7 @@ class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecycle
 //     * @param position1 position
 //     * @param position2 position
 //     */
-//    public void swapItem(int position1, int position2){
+//    public void swapItemData(int position1, int position2){
 //        if(0 < position1 && 0 < position2
 //                && position1 < mItemList.size() && position2 <mItemList.size()){
 //            Collections.swap(mItemList,position1,position2);

@@ -14,9 +14,11 @@ import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 
 public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private ItemModifyActionCallBack mCallBack;
+    private RecyclerView.Adapter mAdapter;
 
-    public CustomItemTouchHelperCallback(ItemModifyActionCallBack callBack) {
+    public CustomItemTouchHelperCallback(ItemModifyActionCallBack callBack, RecyclerView.Adapter adapter) {
         mCallBack = callBack;
+        mAdapter = adapter;
     }
 
     @Override
@@ -26,7 +28,18 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        mCallBack.swapItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        mCallBack.swapItemData(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        return true;
+    }
+
+    @Override
+    public boolean canDropOver(RecyclerView recyclerView, RecyclerView.ViewHolder current, RecyclerView.ViewHolder target) {
+        return true;
+    }
+
+    @Override
+    public boolean isLongPressDragEnabled() {
         return true;
     }
 
@@ -34,13 +47,14 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         if (direction == RIGHT) {
             //在这里选择删除
-            mCallBack.delItem(viewHolder.getAdapterPosition());
+            mCallBack.delItemData(viewHolder.getAdapterPosition());
+            mAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
         }
     }
 
     public interface ItemModifyActionCallBack {
-        void swapItem(int position1, int position2);
+        void swapItemData(int position1, int position2);
 
-        void delItem(int position);
+        void delItemData(int position);
     }
 }

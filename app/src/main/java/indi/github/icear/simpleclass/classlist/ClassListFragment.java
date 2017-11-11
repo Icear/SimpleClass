@@ -106,12 +106,11 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
 
         Context context = mRecyclerView.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        ClassListRecyclerViewAdapter adapter = new ClassListRecyclerViewAdapter(itemList, mColorList, this);
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(new ClassListRecyclerViewAdapter(itemList, mColorList, this));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 getContext(), DividerItemDecoration.VERTICAL));//添加分割线
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new CustomItemTouchHelperCallback(this));//用于实现向右滑动删除以及上下拖动的功能
+                new CustomItemTouchHelperCallback(this, mRecyclerView.getAdapter()));//用于实现向右滑动删除以及上下拖动的功能
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
@@ -148,16 +147,16 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     }
 
     @Override
-    public void swapItem(int position1, int position2) {
+    public void swapItemData(int position1, int position2) {
         mPresenter.swapItem(position1, position2);
         Collections.swap(mColorList, position1, position2);//参数检查由Presenter进行，这里只做基本的View层反馈
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+//        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
-    public void delItem(int position) {
+    public void delItemData(int position) {
         mPresenter.delItem(position);
         mColorList.remove(position);//参数检查由Presenter进行，这里只做基本的View层反馈
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+//        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 }

@@ -88,7 +88,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         textViewTeacher.setText(item.getTeachers());
         classInfoRecyclerView.setAdapter(new ClassInfoRecyclerViewAdapter(item.getClassInfo(), this));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new CustomItemTouchHelperCallback(this));
+                new CustomItemTouchHelperCallback(this, classInfoRecyclerView.getAdapter()));
         itemTouchHelper.attachToRecyclerView(classInfoRecyclerView);
     }
 
@@ -108,12 +108,12 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
     }
 
     @Override
-    public void swapItem(int position1, int position2) {
+    public void swapItemData(int position1, int position2) {
 
     }
 
     @Override
-    public void delItem(int position) {
+    public void delItemData(int position) {
 
     }
 }
