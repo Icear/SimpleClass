@@ -94,7 +94,6 @@
             android:layout_gravity="end"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/login"
             app:layout_constraintRight_toRightOf="parent"
@@ -117,7 +116,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:src="@mipmap/NEFU_LOGO" />
+                android:contentDescription="@string/smile_face"
+                android:src="@mipmap/nefu_logo">
+
+            </ImageView>
 
             <TextView
                 android:id="@+id/textView3"
@@ -127,7 +129,9 @@
                 android:layout_margin="4dp"
                 android:text="@string/suitable_description"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp">
+
+            </TextView>
         </LinearLayout>
 
 
