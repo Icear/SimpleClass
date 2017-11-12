@@ -97,7 +97,7 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     public void showItemWorkResult(Class item, boolean result) {
         mShownItems.add(0, item);
         mStatusList.add(0, result);
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        mRecyclerView.getAdapter().notifyItemInserted(0);
     }
 
     @Override
