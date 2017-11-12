@@ -1,7 +1,6 @@
 package indi.github.icear.simpleclass.calendarimport;
 
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import indi.github.icear.simpleclass.R;
+import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.data.academicdata.entity.Class;
 
 /**
@@ -45,11 +46,11 @@ class CalendarImportRecyclerViewAdapter extends RecyclerView.Adapter<CalendarImp
         if (mStatusList.get(position)) {
             //状态为成功
             holder.mIcon.setImageResource(indi.github.icear.simpleclass.R.drawable.ic_check_circle_black_24dp);
-            holder.mIcon.setColorFilter(Color.GREEN);
+            holder.mIcon.setColorFilter(SimpleClassApplication.getApplication().getResources().getColor(R.color.green));
         } else {
             //状态为失败
             holder.mIcon.setImageResource(indi.github.icear.simpleclass.R.drawable.ic_error_black_24dp);
-            holder.mIcon.setColorFilter(Color.YELLOW);
+            holder.mIcon.setColorFilter(SimpleClassApplication.getApplication().getResources().getColor(R.color.yellow));
         }
 
     }
