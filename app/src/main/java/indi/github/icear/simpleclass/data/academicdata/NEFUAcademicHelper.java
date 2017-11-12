@@ -127,9 +127,9 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         Log.d(TAG, "container:");
         Log.d(TAG, container.html());
 //        Pattern p = Pattern.compile("[-]*(<br>)?(.*?)<br><font title=\"周次\\(节次\\)\">(.*?)\\(周\\)</font><br><font title=\"教室\">(.*?)</font><br>");
-        Pattern p = Pattern.compile("(<br>)?([^-<>]*?)\\s*?<br>\\s*?<font[\\s\\S]*?>(\\D*?)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)\\(周\\)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)</font>\\s*?<br>");
+        Pattern p = Pattern.compile("(<br>)?([^-<>]*?)\\s*?<br>\\s*?<font[\\s\\S]*?>(\\D*?)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)\\(.*?\\)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)</font>\\s*?<br>");
         Matcher m = p.matcher(container.html());
-        if (m.find()) {
+        while (m.find()) {
             //用于兼容课程表格式,林大是每两节课合并在一起显示
             //所以这里对它添加两次，重新拆分成两节课以符合标准格式
             for (int i = classIndex * 2 - 1; i <= classIndex * 2; i++) {
@@ -147,8 +147,6 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
                 readLocation(classInfo, m.group(5));
                 updateOrAddClass(classContainer, m.group(2), m.group(3), classInfo);
             }
-        } else {
-            Log.d(TAG, "no found, pass");
         }
     }
 
