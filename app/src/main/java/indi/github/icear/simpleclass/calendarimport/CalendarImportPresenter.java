@@ -38,7 +38,8 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 126;
 
     private CalendarImportContract.View mView;
-    private boolean isRunning; //防止重复执行
+    private boolean isRunning = false; //防止重复执行
+    private boolean isFinished = false;//防止在操作结束后再次触发
     private CalendarDataHelper calendarDataHelper;
     private List<CalendarInfo> calendarInfoList;
     private List<Class> classes;
@@ -51,7 +52,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
 
     @Override
     public void start() {
-        if (!isRunning) {
+        if (!isRunning && !isFinished) {
             isRunning = true;
             if (!checkPermission()) {
                 requestPermission();
@@ -311,20 +312,34 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
 
                     //设定日期为开学第一日日期，然后再做日期加法
                     gregorianCalendar.set(firstSemesterDay.getYear() + 1900,
-                            firstSemesterDay.getMonth() + 1,
-                            firstSemesterDay.getDate()
-                    );
+                            firstSemesterDay.getMonth(),//Calendar中month以0开头，和Date设定一样
+                            firstSemesterDay.getDate(),
+                            0,
+                            0,
+                            0
+                    );//屏蔽未定义的时间对后面时间操作的影响
+
+                    /*
+                     * Calendar类使用set函数时并不会更新所有的数据，只有在调用getTime等函数时才会刷新
+                     * 反而使用add时会立刻刷新所有数据
+                     */
 
                     //设定时间模板
                     Calendar classStartTemplate = (Calendar) gregorianCalendar.clone();
-                    classStartTemplate.set(Calendar.HOUR, classTimeQuantum.getStartTime().getHours());
+                    classStartTemplate.set(Calendar.HOUR_OF_DAY, classTimeQuantum.getStartTime().getHours());
                     classStartTemplate.set(Calendar.MINUTE, classTimeQuantum.getStartTime().getMinutes());
                     classStartTemplate.set(Calendar.SECOND, classTimeQuantum.getStartTime().getSeconds());
 
+//                    Log.d(TAG, "StartTime: " + classTimeQuantum.getStartTime().getHours() + ":" + classTimeQuantum.getStartTime().getMinutes() + ":" + classTimeQuantum.getStartTime().getSeconds());
+//                    Log.d(TAG, "classStartTemplate: " + classStartTemplate.getTime());
+
                     Calendar classEndTemplate = (Calendar) gregorianCalendar.clone();
-                    classEndTemplate.set(Calendar.HOUR, classTimeQuantum.getEndTime().getHours());
+                    classEndTemplate.set(Calendar.HOUR_OF_DAY, classTimeQuantum.getEndTime().getHours());
                     classEndTemplate.set(Calendar.MINUTE, classTimeQuantum.getEndTime().getMinutes());
                     classStartTemplate.set(Calendar.SECOND, classTimeQuantum.getStartTime().getSeconds());
+
+//                    Log.d(TAG, "EndTime: " + classTimeQuantum.getEndTime().getHours() + ":" + classTimeQuantum.getEndTime().getMinutes() + ":" + classTimeQuantum.getEndTime().getSeconds());
+//                    Log.d(TAG, "classEndTemplate: " + classEndTemplate.getTime());
 
                     //为每一个class的每一个课时设定一个事件
                     for (int week : classinfo.getWeek()) {
@@ -343,6 +358,11 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                             Calendar classEnd = (Calendar) classEndTemplate.clone();
                             classEnd.add(Calendar.DATE, amount);
                             newEvent.setDtEnd(classEnd.getTimeInMillis());//事件的结束时间
+
+                            //添加周次备注
+                            newEvent.setDescription(newEvent.getDescription() + " " +
+                                    SimpleClassApplication.getApplication()
+                                            .getString(R.string.weekCount, String.valueOf(week)));
 
                             calendarDataHelper.createNewEvent(newEvent);//创建
                             eventCount++;
@@ -363,6 +383,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             isRunning = false;
+            isFinished = true;
             mView.hideProgress();
             mView.showProgressFinished();
         }
