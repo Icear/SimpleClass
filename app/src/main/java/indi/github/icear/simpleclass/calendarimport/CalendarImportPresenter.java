@@ -94,7 +94,9 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         //TODO 将这些字符串转到配置文件中，还有AcademicDataHelper
         long calendarId = -1;
         String presetAccountName = "SimpleClass@gmail.com";
-        String presetAccountType = "com.gmail";
+        //因为没有关联账户所以设置为Local以避免因没有关联而被回收
+        //调试时可以将这里改成自定义的字符串，从而触发系统的回收功能，表现效果为重启后或一段时间内导入的日历会自动消失，方便查看效果
+        String presetAccountType = CalendarContract.ACCOUNT_TYPE_LOCAL;
         if (calendar == null) {
             //创建独立的帐户进行写入
             //检查预设帐户是否存在
