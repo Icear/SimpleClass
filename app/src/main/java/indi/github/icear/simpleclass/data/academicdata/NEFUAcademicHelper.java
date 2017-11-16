@@ -32,39 +32,24 @@ import indi.github.icear.util.ConvertUtil;
  * 东北林业大学教务处类
  */
 public class NEFUAcademicHelper implements AcademicDataHelper {
+    /**
+     * 读取周次模式：连续模式
+     */
+    private static final int READ_WEEK_MODE_CONTINUOUS = 915;
+    /**
+     * 读取周次模式：奇数周模式
+     */
+    private static final int READ_WEEK_MODE_ODD = 180;
+    /**
+     * 读取周次模式：偶数周模式
+     */
+    private static final int READ_WEEK_MODE_EVEN = 364;
     private static String TAG = NEFUAcademicHelper.class.getSimpleName();
 
     public NEFUAcademicHelper() {
         //用于保持Cookie的同步
-        //这段代码不知道什么时候被误删了，尴尬
         CookieHandler.setDefault(new CookieManager());
     }
-
-//    /**
-//     * 初始化工具，注册到对应的用户上
-//     *
-//     * @param userName 用户名
-//     * @param password 密码
-//     * @return 成功返回初始化的对象，失败返回null
-//     * @throws IOException 网络IO或数据处理错误
-//     */
-//    public static NEFUAcademicHelper newInstance(String userName, String password){
-//       .cademicHelper NEFUAcademicHelper = new NEFUAcademicHelper();
-//
-//        /*
-//            似乎只要设定一次CookieHandle就能够维持整个生命周期内的Cookie
-//            因为不需要接续下一次启动前的Cookie，所以直接在这里进行一次CookieHandle的绑定
-//            之后便不再对其进行操作
-//         */
-//        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-//
-//        if (NEFUAcademicHelper.login(userName, password)) {
-//           .cademicHelper.initUser();
-//            return.cademicHelper;
-//        } else {
-//            return null;
-//        }
-//    }
 
     @Override
     public boolean init(String userName, String password) throws IOException {
@@ -127,7 +112,7 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         Log.d(TAG, "container:");
         Log.d(TAG, container.html());
 //        Pattern p = Pattern.compile("[-]*(<br>)?(.*?)<br><font title=\"周次\\(节次\\)\">(.*?)\\(周\\)</font><br><font title=\"教室\">(.*?)</font><br>");
-        Pattern p = Pattern.compile("(<br>)?([^-<>]*?)\\s*?<br>\\s*?<font[\\s\\S]*?>(\\D*?)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)\\(.*?\\)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)</font>\\s*?<br>");
+        Pattern p = Pattern.compile("(<br>)?([^-<>]*?)\\s*?<br>\\s*?<font[\\s\\S]*?>(\\D*?)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)\\((.*?)\\)</font>\\s*?<br>\\s*?<font[\\s\\S]*?>(.*?)</font>\\s*?<br>");
         Matcher m = p.matcher(container.html());
         while (m.find()) {
             //用于兼容课程表格式,林大是每两节课合并在一起显示
@@ -137,19 +122,32 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
                 Log.d(TAG, "name: " + m.group(2));
                 Log.d(TAG, "teacher: " + m.group(3));
                 Log.d(TAG, "week: " + m.group(4));
-                Log.d(TAG, "location: " + m.group(5));
+                Log.d(TAG, "weekMode: " + m.group(5));
+                Log.d(TAG, "location: " + m.group(6));
 
                 ClassInfo classInfo = new ClassInfo();
                 classInfo.setWeekDay(dayIndex);
                 classInfo.setSection(i);
 
-                readWeek(classInfo, m.group(4));
-                readLocation(classInfo, m.group(5));
+                if ("周".equals(m.group(5))) {
+                    readWeek(classInfo, m.group(4), READ_WEEK_MODE_CONTINUOUS);//正常模式
+                } else if ("单周".equals(m.group(5))) {
+                    readWeek(classInfo, m.group(4), READ_WEEK_MODE_ODD);//单周模式
+                } else if ("双周".equals(m.group(5))) {
+                    readWeek(classInfo, m.group(4), READ_WEEK_MODE_EVEN);//双周模式
+                }
+                readLocation(classInfo, m.group(6));
                 updateOrAddClass(classContainer, m.group(2), m.group(3), classInfo);
             }
         }
     }
 
+    /**
+     * 从mixLocation读取地点数据填充至classInfo中
+     *
+     * @param classInfo   要填充的classInfo
+     * @param mixLocation 要读取的地点信息
+     */
     private void readLocation(ClassInfo classInfo, String mixLocation) {
         Log.d(TAG, "parse Location");
         Log.d(TAG, mixLocation);
@@ -167,17 +165,54 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         }
     }
 
-    private void readWeek(ClassInfo classInfo, String mixWeek) {
+    /**
+     * 从mixWeek读取周次信息填充至classInfo中
+     *
+     * @param classInfo 要填充的classInfo
+     * @param mixWeek   要读取的周次信息
+     * @param mode      周次模式，传入定义好的常数
+     */
+    private void readWeek(ClassInfo classInfo, String mixWeek, int mode) {
         Log.d(TAG, "tend to parse Week");
         Log.d(TAG, mixWeek);
         List<Integer> weekList = new ArrayList<>();
-        for (String weekPart :
-                mixWeek.split(",")) {
-            //处理多段时间
-            String[] weeks = weekPart.split("-");//分割周起始与结束(只有一个时则只执行一次
-            for (int i = Integer.parseInt(weeks[0]); i <= Integer.parseInt(weeks[weeks.length - 1]); i++) {
-                weekList.add(i);
-            }
+
+        switch (mode) {
+            case READ_WEEK_MODE_ODD:
+                for (String weekPart :
+                        mixWeek.split(",")) {
+                    //处理多段时间
+                    String[] weeks = weekPart.split("-");//分割周起始与结束(只有一个时则只执行一次
+                    for (int i = Integer.parseInt(weeks[0]); i <= Integer.parseInt(weeks[weeks.length - 1]); i++) {
+                        if (i % 2 == 1) {
+                            weekList.add(i);
+                        }
+                    }
+                }
+                break;
+            case READ_WEEK_MODE_EVEN:
+                for (String weekPart :
+                        mixWeek.split(",")) {
+                    //处理多段时间
+                    String[] weeks = weekPart.split("-");//分割周起始与结束(只有一个时则只执行一次
+                    for (int i = Integer.parseInt(weeks[0]); i <= Integer.parseInt(weeks[weeks.length - 1]); i++) {
+                        if (i % 2 == 0) {
+                            weekList.add(i);
+                        }
+                    }
+                }
+                break;
+            case READ_WEEK_MODE_CONTINUOUS:
+            default:
+                for (String weekPart :
+                        mixWeek.split(",")) {
+                    //处理多段时间
+                    String[] weeks = weekPart.split("-");//分割周起始与结束(只有一个时则只执行一次
+                    for (int i = Integer.parseInt(weeks[0]); i <= Integer.parseInt(weeks[weeks.length - 1]); i++) {
+                        weekList.add(i);
+                    }
+                }
+                break;
         }
         Log.d(TAG, "final parse week number: " + weekList.size());
         classInfo.setWeek(weekList);
