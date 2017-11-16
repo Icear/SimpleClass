@@ -164,6 +164,10 @@ public class CalendarDataHelper {
         values.put(CalendarContract.Events.EVENT_TIMEZONE, event.getEventTimeZone());//事件的时区
 
         //非必填项，检查未设置的则跳过
+        if (event.getOrganizer() != null) {
+            values.put(CalendarContract.Events.ORGANIZER, event.getOrganizer());//事件的组织者
+        }
+
         if (event.getTitle() != null) {
             values.put(CalendarContract.Events.TITLE, event.getTitle());//事件的标题
         }
@@ -194,4 +198,5 @@ public class CalendarDataHelper {
         Uri result = cr.insert(CalendarContract.Events.CONTENT_URI, values);
         return result == null ? -1 : ContentUris.parseId(result);
     }
+
 }

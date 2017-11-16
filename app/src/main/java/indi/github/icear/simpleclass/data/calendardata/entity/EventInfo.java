@@ -16,6 +16,7 @@ public class EventInfo implements Cloneable {
     private String rRule;
     private String rDate;
     private int availability;
+    private String organizer;
 
     @Override
     public EventInfo clone() throws CloneNotSupportedException {
@@ -102,6 +103,14 @@ public class EventInfo implements Cloneable {
         this.availability = availability;
     }
 
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
+    }
+
     @Override
     public String toString() {
         return "EventInfo{" +
@@ -115,6 +124,7 @@ public class EventInfo implements Cloneable {
                 ", rRule='" + rRule + '\'' +
                 ", rDate='" + rDate + '\'' +
                 ", availability=" + availability +
+                ", organizer='" + organizer + '\'' +
                 '}';
     }
 }

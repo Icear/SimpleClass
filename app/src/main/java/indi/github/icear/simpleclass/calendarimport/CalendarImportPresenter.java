@@ -255,7 +255,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         @Override
         protected Object doInBackground(Long... params) {
 
-
+            String organizer = "SimpleClass@gmail.com";
             /*遍历数据，将每一个数据插入到日历中*/
             for (Class aClass :
                     classes) {
@@ -271,6 +271,9 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
 
                     //事件所属日历的id
                     eventTemplate.setCalendarId(calendarId);
+
+                    //设定事件的组织者，固定为SimpleClass@gmail.com，同时用作标记事件来自本程序的记号（用于后面的删除）
+                    eventTemplate.setOrganizer(organizer);
 
                     //事件的标题
                     eventTemplate.setTitle(aClass.getName());
