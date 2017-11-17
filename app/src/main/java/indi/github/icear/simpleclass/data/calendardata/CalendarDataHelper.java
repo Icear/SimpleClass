@@ -50,31 +50,17 @@ public class CalendarDataHelper {
         final int PROJECTION_DISPLAY_NAME_INDEX = 2;
 
 
-        Cursor cur = null;
-        try {
-            Uri uri = CalendarContract.Calendars.CONTENT_URI;
-
-            // Submit the query and get a Cursor object back.
-            cur = cr.query(uri, EVENT_PROJECTION, null, null, null);
-
-            // Use the cursor to step through the returned records
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        try (Cursor cur = cr.query(uri, EVENT_PROJECTION, null, null, null)) {
             if (cur != null) {
                 CalendarInfo calendarInfo;
                 while (cur.moveToNext()) {
                     calendarInfo = new CalendarInfo();
-
-                    // Get the field values
                     calendarInfo.setCalendarId(cur.getLong(PROJECTION_ID_INDEX));
                     calendarInfo.setCalendarDisplayName(cur.getString(PROJECTION_DISPLAY_NAME_INDEX));
                     calendarInfo.setAccountName(cur.getString(PROJECTION_ACCOUNT_NAME_INDEX));
-
-                    // Do something with the values...
                     calendarInfoList.add(calendarInfo);
                 }
-            }
-        } finally {
-            if (cur != null) {
-                cur.close();
             }
         }
 
@@ -87,33 +73,52 @@ public class CalendarDataHelper {
      * @param accountName  帐户名
      * @param accountType  帐户类型
      * @param ownerAccount 拥有者
-     * @return 查询结果
+     * @return 如果存在返回日历id，否则返回-1
      * @throws SecurityException 没有读取日历权限时触发异常
      */
-    public boolean checkCalendarAccountExist(String accountName,
-                                             String accountType,
-                                             String ownerAccount) throws SecurityException {
+    public long checkCalendarAccountExist(String accountName,
+                                          String accountType,
+                                          String ownerAccount) throws SecurityException {
         final String[] EVENT_PROJECTION = new String[]{
                 CalendarContract.Calendars._ID,                           // 0
         };
+        final int PROJECTION_ID_INDEX = 0;
 
-        Cursor cur = null;
-        try {
-            Uri uri = CalendarContract.Calendars.CONTENT_URI;
-            String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
-                    + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                    + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
-            String[] selectionArgs = new String[]{accountName, accountType, ownerAccount};
-            // Submit the query and get a Cursor object back.
-            cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+        long calendarId = -1;
 
-            // Use the cursor to step through the returned records
-            return cur != null && cur.getCount() > 0;
-        } finally {
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
+                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
+                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
+        String[] selectionArgs = new String[]{accountName, accountType, ownerAccount};
+
+        try (Cursor cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null)) {
             if (cur != null) {
-                cur.close();
+                if (cur.moveToNext()) {
+                    calendarId = cur.getLong(PROJECTION_ID_INDEX);
+                }
             }
         }
+        return calendarId;
+    }
+
+    /**
+     * 根据传入的日历信息尝试删除某个日历
+     * 需求：calendarId，accountName
+     *
+     * @param calendarInfo 日历信息
+     * @return 删除的数量
+     */
+    public int deleteCalendarById(CalendarInfo calendarInfo) {
+        //以同步适配器身份操作日历
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        Uri uriWithRight = uri.buildUpon()
+                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, calendarInfo.getAccountName())
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+                .build();
+        Uri pointedUriWithRight = ContentUris.withAppendedId(uriWithRight, calendarInfo.getCalendarId());
+        return cr.delete(pointedUriWithRight, null, null);
     }
 
     /**
@@ -151,6 +156,7 @@ public class CalendarDataHelper {
 
     /**
      * 根据传入的EventInfo创建新的Event
+     * 需求：calendarId，dtStart，eventTimeZone
      *
      * @param event EventInfo
      * @return 新Event的ID

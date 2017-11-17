@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import indi.github.icear.simpleclass.data.academicdata.AcademicDataProvider;
+import indi.github.icear.simpleclass.data.academicdata.NEFUAcademicHelper;
 import indi.github.icear.simpleclass.data.timedata.TimeDataProvider;
 
 /**
@@ -14,8 +15,14 @@ import indi.github.icear.simpleclass.data.timedata.TimeDataProvider;
  * 自定义Application类
  */
 
-//Done 将Provider切换为非静态属性
 public class SimpleClassApplication extends Application {
+
+
+    //将需要配置的属性放到这里统一管理
+    public static String PRESET_ACCOUNT_NAME = "SimpleClass@gmail.com";//单独创建日历时的日历账户
+    public static String PRESET_ACADEMIC_DATA_HELPER = NEFUAcademicHelper.class.getName();//要使用的AcademicDataHelper
+    public static String PRESET_ORGANIZER = "SimpleClass@gmail.com";//预设的事件组织者
+
     private static SimpleClassApplication application;
     private AcademicDataProvider academicDataProvider;
     private TimeDataProvider timeDataProvider;

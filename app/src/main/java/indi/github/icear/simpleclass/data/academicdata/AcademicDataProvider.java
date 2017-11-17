@@ -39,8 +39,9 @@ public class AcademicDataProvider {
      * @return 初始化结果
      * @throws IOException 网络IO错误
      */
-    public boolean init(String account, String password) throws IOException {
-        academicDataHelper = new NEFUAcademicHelper();//使用Nefu的helper
+    public boolean init(String account, String password) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        academicDataHelper = (AcademicDataHelper) java.lang.Class.forName(
+                SimpleClassApplication.PRESET_ACADEMIC_DATA_HELPER).newInstance();//使用预设的helper
         return academicDataHelper.init(account, password);
     }
 

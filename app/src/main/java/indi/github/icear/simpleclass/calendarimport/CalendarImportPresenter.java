@@ -91,9 +91,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
      * @return 日历id
      */
     private long getCalendarIdWithCreate(@Nullable CalendarInfo calendar) {
-        //TODO 将这些字符串转到配置文件中，还有AcademicDataHelper
         long calendarId = -1;
-        String presetAccountName = "SimpleClass@gmail.com";
         //因为没有关联账户所以设置为Local以避免因没有关联而被回收
         //调试时可以将这里改成自定义的字符串，从而触发系统的回收功能，表现效果为重启后或一段时间内导入的日历会自动消失，方便查看效果
         String presetAccountType = CalendarContract.ACCOUNT_TYPE_LOCAL;
@@ -101,9 +99,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
             //创建独立的帐户进行写入
             //检查预设帐户是否存在
             for (CalendarInfo calendarInfo : calendarInfoList) {
-                if (calendarInfo.getAccountName().equals(presetAccountName)
-                        && calendarInfo.getAccountType().equals(presetAccountType)
-                        && calendarInfo.getOwnerAccount().equals(presetAccountName)) {
+                if (calendarInfo.getAccountName().equals(SimpleClassApplication.PRESET_ACCOUNT_NAME)) {
                     calendarId = calendarInfo.getCalendarId();
                     break;
                 }
@@ -111,9 +107,9 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
             if (calendarId == -1) {
                 //不存在，创建之
                 CalendarInfo newCalendar = new CalendarInfo();
-                newCalendar.setAccountName(presetAccountName);
+                newCalendar.setAccountName(SimpleClassApplication.PRESET_ACCOUNT_NAME);
                 newCalendar.setAccountType(presetAccountType);
-                newCalendar.setOwnerAccount(presetAccountName);
+                newCalendar.setOwnerAccount(SimpleClassApplication.PRESET_ACCOUNT_NAME);
                 newCalendar.setName(SimpleClassApplication.getApplication().getString(indi.github.icear.simpleclass.R.string.app_name));
                 newCalendar.setCalendarDisplayName(SimpleClassApplication.getApplication().getString(indi.github.icear.simpleclass.R.string.app_name));
                 newCalendar.setCalendarColor(SimpleClassApplication.getApplication().getResources().getColor(R.color.lightBlue));//允许个性化？
@@ -255,7 +251,6 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         @Override
         protected Object doInBackground(Long... params) {
 
-            String organizer = "SimpleClass@gmail.com";
             /*遍历数据，将每一个数据插入到日历中*/
             for (Class aClass :
                     classes) {
@@ -273,7 +268,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                     eventTemplate.setCalendarId(calendarId);
 
                     //设定事件的组织者，固定为SimpleClass@gmail.com，同时用作标记事件来自本程序的记号（用于后面的删除）
-                    eventTemplate.setOrganizer(organizer);
+                    eventTemplate.setOrganizer(SimpleClassApplication.PRESET_ORGANIZER);
 
                     //事件的标题
                     eventTemplate.setTitle(aClass.getName());

@@ -8,9 +8,12 @@ import android.os.AsyncTask;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import indi.github.icear.simpleclass.MainActivity;
 import indi.github.icear.simpleclass.SimpleClassApplication;
+import indi.github.icear.simpleclass.data.calendardata.CalendarDataHelper;
+import indi.github.icear.simpleclass.data.calendardata.entity.CalendarInfo;
 
 /**
  * Created by icear on 2017/11/16.
@@ -20,6 +23,8 @@ import indi.github.icear.simpleclass.SimpleClassApplication;
 //TODO 临时写出来的功能，先凑合用吧，代码之后再重构，重复部分太多
 
 class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainActivity.OnRequestPermissionResultCallback {
+    private static final String TAG = DeleteImportedPresenter.class.getSimpleName();
+
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 126;
 
     private DeleteImportedContract.View mView;
@@ -103,8 +108,7 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
     }
 
     private class deleteTask extends AsyncTask<Object, Object, Integer> {
-        //标记需要和CalendarImportPresenter中CalendarEventAsyncTask中doInBackground函数的organizer相同
-        String organizer = "SimpleClass@gmail.com";
+
         private ContentResolver cr;
 
         deleteTask(ContentResolver cr) {
@@ -123,10 +127,6 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
              * 读取organizer为定义值的事件，调用remove函数删除之
              */
 
-            Uri uri = CalendarContract.Events.CONTENT_URI;
-
-
-            //TODO 区分创建在用户定义的日历中和创建在自己设置的日历中两种情况下的删除
             /*
              * 问题：
              *  在用户自定义日历中，APP不是同步适配器身份，不能够直接完整地删除数据，只能标记为dirty然后等待该日历的控制器来更新
@@ -138,18 +138,48 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
              *  还有一个问题，我并不清楚标记之后是不是只能由同步适配器来进行清理，还是说系统会自动清理，有待研究
              *  ==================================================================
              *  目前暂时都以普通身份做标记，等有时间了再仔细研究
+             *  Done 区分创建在用户定义的日历中和创建在自己设置的日历中两种情况下的删除
+             *  ==================================================================
+             *  直接删两次，顺手把日历删掉，美滋滋
              */
-//            //以同步适配器身份操作日历
-//            Uri calendarUri = CalendarContract.Events.CONTENT_URI.buildUpon()
-//                    .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-//                    .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, calendarInfo.getAccountName())
-//                    .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
-//                    .build();
+
+            //以普通身份操作日历
+            Uri uri = CalendarContract.Events.CONTENT_URI;
+
+            //以同步适配器身份操作日历
+            Uri uriWithRight = uri.buildUpon()
+                    .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                    .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, SimpleClassApplication.PRESET_ACCOUNT_NAME)
+                    .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+                    .build();
 
             String selection = "((" + CalendarContract.Events.ORGANIZER + " = ?))";
-            String[] selectionArgs = new String[]{organizer};
+            String[] selectionArgs = new String[]{SimpleClassApplication.PRESET_ORGANIZER};
             try {
-                return cr.delete(uri, selection, selectionArgs);
+                //以同步适配器身份删一次,删除自创建日历的事件
+                int deleteOnBehalfSyncAdapter = cr.delete(uriWithRight, selection, selectionArgs);
+                Log.d(TAG, "delete " + deleteOnBehalfSyncAdapter + " from preset calendar");
+
+                //以普通身份删一次，删除插入在其它日历里的事件
+                int deleteOnBehalfUser = cr.delete(uri, selection, selectionArgs);
+                Log.d(TAG, "delete " + deleteOnBehalfUser + " from other calendar");
+
+                //检查预设账户是否已经创建日历，如果已创建，则删除
+                CalendarDataHelper calendarDataHelper = new CalendarDataHelper(cr);
+                long calendarId = calendarDataHelper.checkCalendarAccountExist(
+                        SimpleClassApplication.PRESET_ACCOUNT_NAME,
+                        CalendarContract.ACCOUNT_TYPE_LOCAL,
+                        SimpleClassApplication.PRESET_ACCOUNT_NAME);
+                if (calendarId != -1) {
+                    //存在账户
+                    CalendarInfo calendarInfo = new CalendarInfo();
+                    calendarInfo.setCalendarId(calendarId);
+                    calendarInfo.setAccountName(SimpleClassApplication.PRESET_ACCOUNT_NAME);
+                    int rows = calendarDataHelper.deleteCalendarById(calendarInfo);
+                    Log.i(TAG, "delete " + rows + " preset calendar");
+                }
+
+                return deleteOnBehalfSyncAdapter + deleteOnBehalfUser;
             } catch (SecurityException e) {
                 //捕获权限异常
                 e.printStackTrace();
@@ -162,12 +192,14 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
             super.onPostExecute(integer);
             if (integer != -1) {
                 //操作成功
+                Log.i(TAG, "succeed delete " + integer + " event(s)");
                 isFinished = true;
                 isRunning = false;
                 mView.hideProgress();
                 mView.showDeleteResult(integer);
             } else {
                 //操作失败
+                Log.w(TAG, "delete failed");
                 isRunning = false;
                 mView.showFailMessage();
             }

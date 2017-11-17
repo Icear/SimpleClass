@@ -42,6 +42,6 @@
     <string name="delete_fail">删除失败</string>
     <string name="exception_during_running_cannot_access_calendar">执行时异常，无法访问日历</string>
     <string name="return_last_level">返回</string>
-    <string name="succeed_delete_event">成功删除了%d条事件</string>
+    <string name="succeed_delete_event">清除完成(%d)</string>
     <string name="delete_imported">清除已导入的日历</string>
 </resources>

@@ -50,6 +50,10 @@ class LoginPresenter implements LoginContract.Presenter {
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
+                } catch (IllegalAccessException | ClassNotFoundException | InstantiationException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e.getMessage());
+                    //这种异常属于配置问题，不应该进行处理
                 }
             }
 
