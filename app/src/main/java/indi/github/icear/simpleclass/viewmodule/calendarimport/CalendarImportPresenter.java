@@ -20,6 +20,7 @@ import java.util.List;
 
 import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
+import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
 import indi.github.icear.simpleclass.module.academicdata.entity.Class;
 import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
 import indi.github.icear.simpleclass.module.calendardata.CalendarDataProvider;
@@ -76,11 +77,11 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         long calendarId = getCalendarIdWithCreate(calendar);
 
         /*获得数据*/
-        classes = SimpleClassApplication.getApplication().getAcademicDataProvider().getClasses();
+        classes = AcademicDataProvider.getInstance().getClasses();
         mView.showWorkingItems(classes);
 
         /*使用异步线程完成剩余操作*/
-        new CalendarEventAsyncTask(calendarId, classes, SimpleClassApplication.getApplication().getTimeDataProvider(), new PresenterMessageHandler(new WeakReference<>(this))).execute();
+        new CalendarEventAsyncTask(calendarId, classes, TimeDataProvider.getInstance(), new PresenterMessageHandler(new WeakReference<>(this))).execute();
 
     }
 
@@ -115,7 +116,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                 newCalendar.setCalendarColor(SimpleClassApplication.getApplication().getResources().getColor(R.color.lightBlue));//允许个性化？
                 newCalendar.setSyncEvent(true);
                 newCalendar.setCalendarAccessLevel(CalendarContract.Calendars.CAL_ACCESS_OWNER);
-                newCalendar.setCalendarTimeZone(SimpleClassApplication.getApplication().getTimeDataProvider().getTimeZone());
+                newCalendar.setCalendarTimeZone(TimeDataProvider.getInstance().getTimeZone());
                 calendarId = calendarDataProvider.createNewCalendarAccount(newCalendar);
             }
         } else {

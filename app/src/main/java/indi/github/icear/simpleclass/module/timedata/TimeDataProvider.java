@@ -32,22 +32,30 @@ public class TimeDataProvider {
      * 再提供一个函数来读取指定的时间
      */
     private static String TAG = TimeDataProvider.class.getSimpleName();
+    private static TimeDataProvider instance;
     private TimeData timeData;
 
-    /**
-     * 建议通过{@link SimpleClassApplication#getTimeDataProvider()}函数获得实例
-     * 以保证TimeDataProvider可以获得完整的生命周期
-     *
-     * @see SimpleClassApplication#getTimeDataProvider()
-     */
-    public TimeDataProvider() {
+    private TimeDataProvider() {
         try {
             init();
         } catch (IOException e) {
             Log.d(TAG, "Exception occur during init");
             e.printStackTrace();
             //理论上这里不会触发
+            //TODO 修正为Error
         }
+    }
+
+    /**
+     * 获得TimeManager对象
+     *
+     * @return TimeManager对象
+     */
+    public static TimeDataProvider getInstance() {
+        if (instance == null) {
+            instance = new TimeDataProvider();
+        }
+        return instance;
     }
 
     /**

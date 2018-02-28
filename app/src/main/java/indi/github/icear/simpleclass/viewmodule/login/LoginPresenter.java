@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import java.io.IOException;
 
 import indi.github.icear.simpleclass.R;
-import indi.github.icear.simpleclass.SimpleClassApplication;
+import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
 
 /**
  * Created by icear on 2017/10/6.
@@ -46,7 +46,7 @@ class LoginPresenter implements LoginContract.Presenter {
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
-                    return SimpleClassApplication.getApplication().getAcademicDataProvider().init(params[0], params[1]);
+                    return AcademicDataProvider.getInstance().init(params[0], params[1]);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;

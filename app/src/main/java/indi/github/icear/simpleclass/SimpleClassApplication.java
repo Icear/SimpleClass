@@ -6,9 +6,7 @@ import android.app.Application;
 import java.util.ArrayList;
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
 import indi.github.icear.simpleclass.module.academicdata.NEFUAcademicHelper;
-import indi.github.icear.simpleclass.module.timedata.TimeDataProvider;
 
 /**
  * Created by icear on 2017/10/15.
@@ -24,8 +22,8 @@ public class SimpleClassApplication extends Application {
     public static String PRESET_ORGANIZER = "SimpleClass@gmail.com";//预设的事件组织者
 
     private static SimpleClassApplication application;
-    private AcademicDataProvider academicDataProvider;
-    private TimeDataProvider timeDataProvider;
+
+
     private List<Activity> activityList;
 
     /**
@@ -37,29 +35,6 @@ public class SimpleClassApplication extends Application {
         return application;
     }
 
-    /**
-     * 获得AcademicDataProvider对象
-     *
-     * @return AcademicDataProvider对象
-     */
-    public AcademicDataProvider getAcademicDataProvider() {
-        if (academicDataProvider == null) {
-            academicDataProvider = new AcademicDataProvider();
-        }
-        return academicDataProvider;
-    }
-
-    /**
-     * 获得TimeManager对象
-     *
-     * @return TimeManager对象
-     */
-    public TimeDataProvider getTimeDataProvider() {
-        if (timeDataProvider == null) {
-            timeDataProvider = new TimeDataProvider();
-        }
-        return timeDataProvider;
-    }
 
     @Override
     public void onCreate() {

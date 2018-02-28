@@ -14,6 +14,7 @@ import indi.github.icear.simpleclass.module.academicdata.entity.User;
  */
 
 public class AcademicDataProvider {
+    private static AcademicDataProvider instance;
     /**
      * 为了能在不同的ViewModule之间同步数据
      * 所以使得AcademicDataProvider唯一，并且不与ViewModule关联
@@ -22,13 +23,19 @@ public class AcademicDataProvider {
     private User user;
     private List<Class> classList;
 
+    private AcademicDataProvider() {
+    }
+
     /**
-     * 建议通过{@link SimpleClassApplication#getAcademicDataProvider()}函数获得实例
-     * 以保证AcademicDataProvider可以获得完整的生命周期
+     * 获得AcademicDataProvider对象
      *
-     * @see SimpleClassApplication#getAcademicDataProvider()
+     * @return AcademicDataProvider对象
      */
-    public AcademicDataProvider() {
+    public static AcademicDataProvider getInstance() {
+        if (instance == null) {
+            instance = new AcademicDataProvider();
+        }
+        return instance;
     }
 
     /**

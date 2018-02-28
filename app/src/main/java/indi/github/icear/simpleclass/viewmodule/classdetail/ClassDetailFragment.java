@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import indi.github.icear.simpleclass.R;
-import indi.github.icear.simpleclass.SimpleClassApplication;
+import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
 import indi.github.icear.simpleclass.module.academicdata.entity.Class;
 import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
 
@@ -49,7 +49,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mPresenter.receiveData(
-                    SimpleClassApplication.getApplication().getAcademicDataProvider()
+                    AcademicDataProvider.getInstance()
                             .getClasses().get(getArguments().getInt(PARAMS_CLASS_POSITION)));
         }
     }
