@@ -16,16 +16,16 @@ import indi.github.icear.simpleclass.module.calendardata.entity.EventInfo;
 
 /**
  * Created by icear on 2017/11/6.
- * CalendarDataUtil
- * 用于辅助进行Android端Calendar数据操作
+ * CalendarDataUProvider
+ * 提供Android端Calendar数据操作API
  */
 
-public class CalendarDataHelper {
-    private static final String TAG = CalendarDataHelper.class.getSimpleName();
+public class CalendarDataProvider {
+    private static final String TAG = CalendarDataProvider.class.getSimpleName();
 
     private ContentResolver cr;
 
-    public CalendarDataHelper(ContentResolver cr) {
+    public CalendarDataProvider(ContentResolver cr) {
         this.cr = cr;
     }
 

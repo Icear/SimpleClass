@@ -11,7 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import indi.github.icear.simpleclass.SimpleClassApplication;
-import indi.github.icear.simpleclass.module.calendardata.CalendarDataHelper;
+import indi.github.icear.simpleclass.module.calendardata.CalendarDataProvider;
 import indi.github.icear.simpleclass.module.calendardata.entity.CalendarInfo;
 import indi.github.icear.simpleclass.viewmodule.MainActivity;
 
@@ -165,8 +165,8 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
                 Log.d(TAG, "delete " + deleteOnBehalfUser + " from other calendar");
 
                 //检查预设账户是否已经创建日历，如果已创建，则删除
-                CalendarDataHelper calendarDataHelper = new CalendarDataHelper(cr);
-                long calendarId = calendarDataHelper.checkCalendarAccountExist(
+                CalendarDataProvider calendarDataProvider = new CalendarDataProvider(cr);
+                long calendarId = calendarDataProvider.checkCalendarAccountExist(
                         SimpleClassApplication.PRESET_ACCOUNT_NAME,
                         CalendarContract.ACCOUNT_TYPE_LOCAL,
                         SimpleClassApplication.PRESET_ACCOUNT_NAME);
@@ -175,7 +175,7 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
                     CalendarInfo calendarInfo = new CalendarInfo();
                     calendarInfo.setCalendarId(calendarId);
                     calendarInfo.setAccountName(SimpleClassApplication.PRESET_ACCOUNT_NAME);
-                    int rows = calendarDataHelper.deleteCalendarById(calendarInfo);
+                    int rows = calendarDataProvider.deleteCalendarById(calendarInfo);
                     Log.i(TAG, "delete " + rows + " preset calendar");
                 }
 

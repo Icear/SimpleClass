@@ -22,7 +22,7 @@ import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.module.academicdata.entity.Class;
 import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
-import indi.github.icear.simpleclass.module.calendardata.CalendarDataHelper;
+import indi.github.icear.simpleclass.module.calendardata.CalendarDataProvider;
 import indi.github.icear.simpleclass.module.calendardata.entity.CalendarInfo;
 import indi.github.icear.simpleclass.module.calendardata.entity.EventInfo;
 import indi.github.icear.simpleclass.module.timedata.TimeDataProvider;
@@ -40,7 +40,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     private CalendarImportContract.View mView;
     private boolean isRunning = false; //防止重复执行
     private boolean isFinished = false;//防止在操作结束后再次触发
-    private CalendarDataHelper calendarDataHelper;
+    private CalendarDataProvider calendarDataProvider;
     private List<CalendarInfo> calendarInfoList;
     private List<Class> classes;
 
@@ -116,7 +116,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                 newCalendar.setSyncEvent(true);
                 newCalendar.setCalendarAccessLevel(CalendarContract.Calendars.CAL_ACCESS_OWNER);
                 newCalendar.setCalendarTimeZone(SimpleClassApplication.getApplication().getTimeDataProvider().getTimeZone());
-                calendarId = calendarDataHelper.createNewCalendarAccount(newCalendar);
+                calendarId = calendarDataProvider.createNewCalendarAccount(newCalendar);
             }
         } else {
             calendarId = calendar.getCalendarId();
@@ -131,8 +131,8 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         //从Provider拿到数据，对应插入到日历中，同时UI提供反馈
 
         /*获得要插入的日历项*/
-        calendarDataHelper = new CalendarDataHelper(SimpleClassApplication.getApplication().getContentResolver());
-        calendarInfoList = calendarDataHelper.queryCalendar();
+        calendarDataProvider = new CalendarDataProvider(SimpleClassApplication.getApplication().getContentResolver());
+        calendarInfoList = calendarDataProvider.queryCalendar();
 
         //传递给view，要求用户选择或创建一个新的日历
         mView.chooseOrCreateNewCalendar(calendarInfoList);
@@ -364,7 +364,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                                     SimpleClassApplication.getApplication()
                                             .getString(R.string.weekCount, String.valueOf(week)));
 
-                            calendarDataHelper.createNewEvent(newEvent);//创建
+                            calendarDataProvider.createNewEvent(newEvent);//创建
                             eventCount++;
                         } catch (CloneNotSupportedException e) {
                             Log.w(TAG, "skip one event");
