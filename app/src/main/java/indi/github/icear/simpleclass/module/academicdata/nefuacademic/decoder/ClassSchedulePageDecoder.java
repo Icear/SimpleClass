@@ -1,4 +1,4 @@
-package indi.github.icear.simpleclass.module.academicdata;
+package indi.github.icear.simpleclass.module.academicdata.nefuacademic.decoder;
 
 import android.util.Log;
 
@@ -7,31 +7,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import indi.github.icear.network.BasicNameValuePair;
-import indi.github.icear.network.NameValuePair;
-import indi.github.icear.network.util.NetworkUtil;
 import indi.github.icear.simpleclass.module.academicdata.entity.Class;
 import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
-import indi.github.icear.simpleclass.module.academicdata.entity.User;
-import indi.github.icear.util.ConvertUtil;
 
 /**
- * Created by icear on 2017/9/25.
- * 东北林业大学教务处类
+ * Created by icear on 2018/2/28.
+ * 课程表页面解析器
  */
-public class NEFUAcademicHelper implements AcademicDataHelper {
+
+public class ClassSchedulePageDecoder {
     /**
      * 读取周次模式：连续模式
      */
@@ -44,30 +33,20 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
      * 读取周次模式：偶数周模式
      */
     private static final int READ_WEEK_MODE_EVEN = 364;
-    private static String TAG = NEFUAcademicHelper.class.getSimpleName();
+    private static String TAG = ClassSchedulePageDecoder.class.getName();
+    private Document document;
 
-    public NEFUAcademicHelper() {
-        //用于保持Cookie的同步
-        CookieHandler.setDefault(new CookieManager());
+    public ClassSchedulePageDecoder(String data) {
+        document = Jsoup.parse(data);
     }
 
-    @Override
-    public boolean init(String userName, String password) throws IOException {
-        return login(userName, password);
-    }
-
-    @Override
-    public User getUser() throws IOException {
-        return initUser();
-    }
-
-    @Override
-    public List<Class> getClasses() throws IOException {
+    /**
+     * 获得页面中的课程
+     *
+     * @return 课程信息
+     */
+    public List<Class> getClasses() {
         List<Class> classContainer = new ArrayList<>();
-
-        String response;
-        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
-        Document document = Jsoup.parse(response);
         Element classTable = document.getElementsByAttributeValue("id", "kbtable").first();
         Element tBody = classTable.getAllElements().first();
         Elements trEls = tBody.getElementsByTag("tr");
@@ -88,13 +67,7 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
             }
             dayIndex = 0;
         }
-
-        Log.i(TAG, "finally get " + classContainer.size() + " classes");
-        if (classContainer.size() == 0) {
-            return null;
-        } else {
-            return classContainer;
-        }
+        return classContainer;
     }
 
     /**
@@ -243,89 +216,5 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         classInfos.add(classInfo);
         newClass.setClassInfo(classInfos);
         classContainer.add(newClass);
-    }
-
-
-    /**
-     * 执行登陆，登陆成功则初始化有效的cookieToken
-     *
-     * @param userName 用户名
-     * @param password 密码
-     * @return 成功返回true，失败返回false
-     * @throws IOException 网络IO或数据处理错误
-     */
-    private boolean login(String userName, String password) throws IOException {
-        Log.i(TAG, "Start login");
-        List<NameValuePair> parameter = new ArrayList<>();
-        parameter.add(new BasicNameValuePair("USERNAME", userName));
-        parameter.add(new BasicNameValuePair("PASSWORD", password));
-
-        URL url = new URL("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xk/LoginToXk");
-
-        Log.d(TAG, "execute request to " + url.toString());
-        Log.d(TAG, "method: Post");
-
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestMethod("POST");
-
-        String postData = NetworkUtil.generateString(parameter);
-        httpURLConnection.setRequestProperty("Accept-Encoding", "");
-        httpURLConnection.setInstanceFollowRedirects(false);
-        httpURLConnection.setDoOutput(true);
-        httpURLConnection.setDoInput(true);
-
-
-        OutputStream outputStream = httpURLConnection.getOutputStream();
-        outputStream.write(postData.getBytes("UTF-8"));
-//        outputStream.write(Charset.forName("UTF-8").encode(postData));
-        outputStream.flush();
-        outputStream.close();
-
-        InputStream inputStream = httpURLConnection.getInputStream();//开启输入流，但不需要接收数据
-        if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
-            //登陆成功
-            inputStream.close();
-            Log.i(TAG, "Login status: successful");
-            return true;
-        } else {
-            //登陆失败
-            Log.i(TAG, "Login status: failed");
-            Log.d(TAG, "response:");
-            Log.d(TAG, "\tstatus code: " + httpURLConnection.getResponseCode());
-            Log.d(TAG, "\tcontext:" + ConvertUtil.toString(inputStream));
-            inputStream.close();
-            return false;
-        }
-    }
-
-    /**
-     * 访问用户主页，读取相关信息并储存到User类中
-     * @return user对象
-     * @throws IOException 网络IO或读取信息失败
-     */
-    private User initUser() throws IOException {
-        Log.i(TAG, "Start to init User");
-        String response;
-        response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
-        Document document = Jsoup.parse(response);
-        Element container = document.getElementsByAttributeValue("class", "wap").first();
-        Element targetElement = container.getElementsByAttributeValue("class", "block1text").first();
-        String info = targetElement.html();
-
-        String patten = "姓名：(.*?)\\n<br>[\\s\\S]*?学号：(\\d*?)\\n<br>";
-        Pattern r = Pattern.compile(patten);
-        Matcher m = r.matcher(info);
-        if (m.find()) {
-            User user = new User();
-            user.setName(m.group(1));
-            user.setId(m.group(2));
-            Log.i(TAG, "read info succeed, method finish");
-            return user;
-        } else {
-            Log.e(TAG, "parse user info failed");
-            Log.d(TAG, "container info:\n" + container);
-            Log.d(TAG, "targetElement: \n" + info);
-            throw new IOException("read user info failed, unknown format");
-        }
     }
 }

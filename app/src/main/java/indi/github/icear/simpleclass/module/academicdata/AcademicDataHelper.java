@@ -11,7 +11,7 @@ import indi.github.icear.simpleclass.module.academicdata.entity.User;
  * interface for accessing AcademicData
  */
 
-interface AcademicDataHelper {
+public interface AcademicDataHelper {
 
     /**
      * 初始化工具

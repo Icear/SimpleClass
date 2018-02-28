@@ -6,7 +6,7 @@ import android.app.Application;
 import java.util.ArrayList;
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.NEFUAcademicHelper;
+import indi.github.icear.simpleclass.module.academicdata.nefuacademic.NEFUAcademicHelper;
 
 /**
  * Created by icear on 2017/10/15.

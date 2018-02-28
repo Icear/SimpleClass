@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.NEFUAcademicHelper;
 import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.nefuacademic.NEFUAcademicHelper;
 
 /**
  * Created by icear on 2017/11/1.
