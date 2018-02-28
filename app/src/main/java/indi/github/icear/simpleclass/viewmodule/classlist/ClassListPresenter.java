@@ -9,7 +9,7 @@ import java.util.List;
 
 import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.viewmodule.classdetail.ClassDetailFragment;
 
 /**
@@ -20,7 +20,7 @@ import indi.github.icear.simpleclass.viewmodule.classdetail.ClassDetailFragment;
 class ClassListPresenter implements ClassListContract.Presenter {
 
     private ClassListContract.View mClassListView;
-    private Class deletedItem;
+    private IClass deletedItem;
     private AcademicDataProvider academicDataProvider = AcademicDataProvider.getInstance();
 
     ClassListPresenter(ClassListContract.View classListView) {
@@ -35,7 +35,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
             mClassListView.showData(AcademicDataProvider.getInstance().getClasses());
         } else {
             //调用函数初始化数据
-            new AsyncTask<Object, Object, List<Class>>() {
+            new AsyncTask<Object, Object, List<IClass>>() {
 
                 @Override
                 protected void onPreExecute() {
@@ -59,7 +59,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
                  * @see #publishProgress
                  */
                 @Override
-                protected List<Class> doInBackground(Object... params) {
+                protected List<IClass> doInBackground(Object... params) {
                     try {
                         return academicDataProvider.getClassesFromNetwork();
                     } catch (IOException e) {
@@ -69,7 +69,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
                 }
 
                 @Override
-                protected void onPostExecute(List<Class> classes) {
+                protected void onPostExecute(List<IClass> classes) {
                     super.onPostExecute(classes);
                     if (classes != null) {
                         mClassListView.showData(classes);
@@ -83,7 +83,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
     }
 
     @Override
-    public void showItemDetail(Class item) {
+    public void showItemDetail(IClass item) {
         int position = academicDataProvider.getClasses().indexOf(item);
         Bundle bundle = new Bundle();
         bundle.putInt(ClassDetailFragment.PARAMS_CLASS_POSITION, position);
@@ -97,7 +97,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
 
     @Override
     public void swapItem(int position1, int position2) {
-        List<Class> classes = academicDataProvider.getClasses();
+        List<IClass> classes = academicDataProvider.getClasses();
         if (0 > position1 || 0 > position2
                 || position1 >= classes.size() || position2 >= classes.size()) {
             throw new IndexOutOfBoundsException("position1: " + position1 + " position2:" + position2);
@@ -107,7 +107,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
 
     @Override
     public void delItem(int position) {
-        List<Class> classes = academicDataProvider.getClasses();
+        List<IClass> classes = academicDataProvider.getClasses();
         if (0 > position || position >= classes.size()) {
             throw new IndexOutOfBoundsException("position: " + position);
         }
@@ -118,7 +118,7 @@ class ClassListPresenter implements ClassListContract.Presenter {
     @Override
     public void revertItemDel(int position) {
         if (deletedItem != null) {
-            List<Class> classes = academicDataProvider.getClasses();
+            List<IClass> classes = academicDataProvider.getClasses();
             classes.add(position, deletedItem);
         }
     }

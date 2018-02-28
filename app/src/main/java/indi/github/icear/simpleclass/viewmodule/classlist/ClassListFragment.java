@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import indi.github.icear.simpleclass.R;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.util.ModuleUtil;
 import indi.github.icear.simpleclass.util.RandomColorUtil;
 import indi.github.icear.simpleclass.viewmodule.calendarimport.CalendarImportViewModule;
@@ -91,7 +91,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     }
 
     @Override
-    public void showData(List<Class> itemList) {
+    public void showData(List<IClass> itemList) {
         /// Set the adapter
 
         if (mColorList == null) {
@@ -145,7 +145,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     }
 
     @Override
-    public void onListItemClick(Class item) {
+    public void onListItemClick(IClass item) {
         mPresenter.showItemDetail(item);
     }
 

@@ -3,8 +3,8 @@ package indi.github.icear.simpleclass.viewmodule.classdetail;
 import java.util.Collections;
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
 
 /**
  * Created by icear on 2017/10/14.
@@ -13,8 +13,8 @@ import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
 
 class ClassDetailPresenter implements ClassDetailContract.Presenter {
     private ClassDetailContract.View mView;
-    private Class mItem;
-    private ClassInfo deletedItem;
+    private IClass mItem;
+    private IClassInfo deletedItem;
 
     ClassDetailPresenter(ClassDetailContract.View view) {
         mView = view;
@@ -28,7 +28,7 @@ class ClassDetailPresenter implements ClassDetailContract.Presenter {
 
 
     @Override
-    public void receiveData(Class item) {
+    public void receiveData(IClass item) {
         mItem = item;
     }
 
@@ -39,7 +39,7 @@ class ClassDetailPresenter implements ClassDetailContract.Presenter {
 
     @Override
     public void swipeItem(int position1, int position2) {
-        List<ClassInfo> classInfos = mItem.getClassInfo();
+        List<IClassInfo> classInfos = mItem.getClassInfo();
         if (0 > position1 || 0 > position2
                 || position1 >= classInfos.size() || position2 >= classInfos.size()) {
             throw new IndexOutOfBoundsException("position1: " + position1 + " position2:" + position2);
@@ -49,7 +49,7 @@ class ClassDetailPresenter implements ClassDetailContract.Presenter {
 
     @Override
     public void delItem(int position) {
-        List<ClassInfo> classInfoList = mItem.getClassInfo();
+        List<IClassInfo> classInfoList = mItem.getClassInfo();
         deletedItem = classInfoList.get(position);
         classInfoList.remove(position);
     }
@@ -57,7 +57,7 @@ class ClassDetailPresenter implements ClassDetailContract.Presenter {
     @Override
     public void revertItemDel(int position) {
         if (deletedItem != null) {
-            List<ClassInfo> classInfos = mItem.getClassInfo();
+            List<IClassInfo> classInfos = mItem.getClassInfo();
             classInfos.add(position, deletedItem);
         }
     }

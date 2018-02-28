@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import indi.github.icear.simpleclass.SimpleClassApplication;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.User;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.entity.IUser;
 
 /**
  * Created by icear on 2017/10/7.
@@ -20,8 +20,8 @@ public class AcademicDataProvider {
      * 所以使得AcademicDataProvider唯一，并且不与ViewModule关联
      */
     private AcademicDataHelper academicDataHelper;
-    private User user;
-    private List<Class> classList;
+    private IUser user;
+    private List<IClass> classList;
 
     private AcademicDataProvider() {
     }
@@ -58,7 +58,7 @@ public class AcademicDataProvider {
      * @return User对象
      * @exception IOException 网络IO错误或数据处理错误
      */
-    public User getUser() throws IOException {
+    public IUser getUser() throws IOException {
         if (user == null) {
             user = academicDataHelper.getUser();
         }
@@ -72,7 +72,7 @@ public class AcademicDataProvider {
      * @throws IOException 网络IO或数据解析错误
      * @see AcademicDataProvider#getClasses()
      */
-    public List<Class> getClassesFromNetwork() throws IOException {
+    public List<IClass> getClassesFromNetwork() throws IOException {
         classList = academicDataHelper.getClasses();
         return classList;
     }
@@ -83,7 +83,7 @@ public class AcademicDataProvider {
      *
      * @return 课程信息
      */
-    public List<Class> getClasses() {
+    public List<IClass> getClasses() {
         return classList;
     }
 }

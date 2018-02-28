@@ -12,18 +12,18 @@ import java.util.List;
 
 import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Class} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link IClass} and makes a call to the
  * ListActionCallBack
  */
 class CalendarImportRecyclerViewAdapter extends RecyclerView.Adapter<CalendarImportRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Class> mItemList;
+    private final List<IClass> mItemList;
     private final List<Boolean> mStatusList;
 
-    CalendarImportRecyclerViewAdapter(List<Class> items, List<Boolean> statusList) {
+    CalendarImportRecyclerViewAdapter(List<IClass> items, List<Boolean> statusList) {
         //在这里创建Adapter并传入要展示的item数据，同时设定传到上层的单击监听事件
         mItemList = items;
         mStatusList = statusList;
@@ -66,7 +66,7 @@ class CalendarImportRecyclerViewAdapter extends RecyclerView.Adapter<CalendarImp
         final TextView mTitle;
         final TextView mSubtitle;
         final ImageView mIcon;
-        Class mItem;
+        IClass mItem;
 
         ViewHolder(View view) {
             //在这里预先hold住View中的元素并保存到holder中

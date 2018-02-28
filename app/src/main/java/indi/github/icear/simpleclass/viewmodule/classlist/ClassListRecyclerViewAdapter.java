@@ -10,20 +10,20 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Class} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link IClass} and makes a call to the
  * ListActionCallBack
  */
 class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecyclerViewAdapter.ViewHolder> {
     private final static String TAG = ClassListRecyclerViewAdapter.class.getSimpleName();
 
-    private final List<Class> mItemList;
+    private final List<IClass> mItemList;
     private final List<Integer> mColorList;
     private final ListActionCallBack mListener;
 
-    ClassListRecyclerViewAdapter(List<Class> items, List<Integer> colorList, ListActionCallBack listener) {
+    ClassListRecyclerViewAdapter(List<IClass> items, List<Integer> colorList, ListActionCallBack listener) {
         //在这里创建Adapter并传入要展示的item数据，同时设定传到上层的单击监听事件
         mItemList = items;
         mListener = listener;
@@ -66,7 +66,7 @@ class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecycle
 //     * 向数据表添加指定item
 //     * @param item item
 //     */
-//    public void addItem(Class item){
+//    public void addItem(IClass item){
 //        if(item != null){
 //            mItemList.add(item);
 //            mColorList.add(RandomColorUtil.getRandomColor());//同时为新的item添加颜色
@@ -107,7 +107,7 @@ class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecycle
 //    }
 
     interface ListActionCallBack {
-        void onListItemClick(Class item);
+        void onListItemClick(IClass item);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -115,7 +115,7 @@ class ClassListRecyclerViewAdapter extends RecyclerView.Adapter<ClassListRecycle
         final TextView mTitle;
         final TextView mSubtitle;
         final ImageView mIcon;
-        Class mItem;
+        IClass mItem;
 
         ViewHolder(View view) {
             //在这里预先hold住View中的元素并保存到holder中

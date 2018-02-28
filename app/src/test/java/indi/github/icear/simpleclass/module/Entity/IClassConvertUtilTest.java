@@ -9,9 +9,9 @@ import indi.github.icear.simpleclass.module.academicdata.util.ClassConvertUtil;
 
 /**
  * Created by icear on 2017/10/30.
- * ClassConvertUtilTest
+ * IClassConvertUtilTest
  */
-public class ClassConvertUtilTest {
+public class IClassConvertUtilTest {
     @Test
     public void toStringTest() throws Exception {
         List<Integer> weeks = new ArrayList<>();

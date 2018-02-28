@@ -16,8 +16,8 @@ import indi.github.icear.network.BasicNameValuePair;
 import indi.github.icear.network.NameValuePair;
 import indi.github.icear.network.util.NetworkUtil;
 import indi.github.icear.simpleclass.module.academicdata.AcademicDataHelper;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.User;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.entity.IUser;
 import indi.github.icear.simpleclass.module.academicdata.nefuacademic.decoder.ClassSchedulePageDecoder;
 import indi.github.icear.simpleclass.module.academicdata.nefuacademic.decoder.IndexPageDecoder;
 import indi.github.icear.util.ConvertUtil;
@@ -41,19 +41,19 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
     }
 
     @Override
-    public User getUser() throws IOException {
+    public IUser getUser() throws IOException {
         return initUser();
     }
 
     @Override
-    public List<Class> getClasses() throws IOException {
-        List<Class> classContainer = new ArrayList<>();
+    public List<IClass> getClasses() throws IOException {
+        List<IClass> classContainer = new ArrayList<>();
 
         String response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
         ClassSchedulePageDecoder classSchedulePageDecoder = new ClassSchedulePageDecoder(response);
         classContainer.addAll(classSchedulePageDecoder.getClasses());
 
-        Log.i(TAG, "decode the Class Schedule, and get " + classContainer.size() + " classes");
+        Log.i(TAG, "decode the IClass Schedule, and get " + classContainer.size() + " classes");
         if (classContainer.size() == 0) {
             return null;
         } else {
@@ -118,11 +118,11 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
      * @return user对象
      * @throws IOException 网络IO或读取信息失败
      */
-    private User initUser() throws IOException {
-        Log.i(TAG, "Start to init User");
+    private IUser initUser() throws IOException {
+        Log.i(TAG, "Start to init IUser");
         String response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/framework/main.jsp", null);
         IndexPageDecoder indexPageDecoder = new IndexPageDecoder(response);
-        User user = indexPageDecoder.getUser();
+        IUser user = indexPageDecoder.getUser();
         Log.i(TAG, "read info succeed, method finish");
         return user;
     }

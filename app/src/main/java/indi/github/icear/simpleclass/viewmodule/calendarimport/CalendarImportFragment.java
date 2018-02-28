@@ -15,7 +15,7 @@ import java.util.List;
 
 import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.module.calendardata.entity.CalendarInfo;
 
 /**
@@ -27,8 +27,8 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     private Toolbar mToolbar;
     private View mProgressBar;
 
-    //    private List<Class> mItems;
-    private List<Class> mShownItems;
+    //    private List<IClass> mItems;
+    private List<IClass> mShownItems;
     private List<Boolean> mStatusList;
 
     public CalendarImportFragment() {
@@ -81,20 +81,20 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     }
 
     @Override
-    public void showWorkingItems(List<Class> items) {
+    public void showWorkingItems(List<IClass> items) {
         mShownItems = new ArrayList<>();
         mStatusList = new ArrayList<>();
         mRecyclerView.setAdapter(new CalendarImportRecyclerViewAdapter(mShownItems, mStatusList));
     }
 
     @Override
-    public void showWorkingItem(Class item) {
+    public void showWorkingItem(IClass item) {
 //        mShownItems.add(0,item);
 //        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
-    public void showItemWorkResult(Class item, boolean result) {
+    public void showItemWorkResult(IClass item, boolean result) {
         mShownItems.add(0, item);
         mStatusList.add(0, result);
         mRecyclerView.getAdapter().notifyItemInserted(0);

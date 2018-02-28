@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.module.calendardata.entity.CalendarInfo;
 import indi.github.icear.simpleclass.viewmodule.BasePresenter;
 import indi.github.icear.simpleclass.viewmodule.BaseView;
@@ -32,11 +32,11 @@ interface CalendarImportContract {
 
         void hideProgress();
 
-        void showWorkingItems(List<Class> items);
+        void showWorkingItems(List<IClass> items);
 
-        void showWorkingItem(Class item);
+        void showWorkingItem(IClass item);
 
-        void showItemWorkResult(Class item, boolean result);
+        void showItemWorkResult(IClass item, boolean result);
 
         void showProgressFinished();
 

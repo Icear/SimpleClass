@@ -1,7 +1,7 @@
 package indi.github.icear.simpleclass.viewmodule.classdetail;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
 import indi.github.icear.simpleclass.viewmodule.BasePresenter;
 import indi.github.icear.simpleclass.viewmodule.BaseView;
 
@@ -12,7 +12,7 @@ import indi.github.icear.simpleclass.viewmodule.BaseView;
 
 interface ClassDetailContract {
     interface Presenter extends BasePresenter {
-        void receiveData(Class item);
+        void receiveData(IClass item);
 
         void onUserConfirm();
 
@@ -24,9 +24,9 @@ interface ClassDetailContract {
     }
 
     interface View extends BaseView<Presenter> {
-        void showItemInfo(Class item);
+        void showItemInfo(IClass item);
 
-        void showItemModifyView(ClassInfo item);
+        void showItemModifyView(IClassInfo item);
 
         void goBackToLastLevel();
     }

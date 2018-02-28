@@ -21,8 +21,8 @@ import java.util.List;
 import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
 import indi.github.icear.simpleclass.module.calendardata.CalendarDataProvider;
 import indi.github.icear.simpleclass.module.calendardata.entity.CalendarInfo;
 import indi.github.icear.simpleclass.module.calendardata.entity.EventInfo;
@@ -43,7 +43,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     private boolean isFinished = false;//防止在操作结束后再次触发
     private CalendarDataProvider calendarDataProvider;
     private List<CalendarInfo> calendarInfoList;
-    private List<Class> classes;
+    private List<IClass> classes;
 
 
     CalendarImportPresenter(CalendarImportContract.View view) {
@@ -232,11 +232,11 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
 
         private int eventCount = 0;//统计插入了多少事件
         private long calendarId;
-        private List<Class> classes;
+        private List<IClass> classes;
         private TimeDataProvider timeDataProvider;
         private Handler mHandler;
 
-        CalendarEventAsyncTask(long calendarId, List<Class> classes, TimeDataProvider timeDataProvider, Handler receiver) {
+        CalendarEventAsyncTask(long calendarId, List<IClass> classes, TimeDataProvider timeDataProvider, Handler receiver) {
             this.calendarId = calendarId;
             this.classes = classes;
             this.timeDataProvider = timeDataProvider;
@@ -253,13 +253,13 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         protected Object doInBackground(Long... params) {
 
             /*遍历数据，将每一个数据插入到日历中*/
-            for (Class aClass :
+            for (IClass aClass :
                     classes) {
 
                 mView.showWorkingItem(aClass);
                 boolean isImported = true;
 
-                for (ClassInfo classinfo :
+                for (IClassInfo classinfo :
                         aClass.getClassInfo()) {
 
                     /*准备事件模板*/
@@ -395,7 +395,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
          * @param aClass     要变化的参数
          * @param isImported 要变化的参数，
          */
-        private void showItemWorkResult(Class aClass, boolean isImported) {
+        private void showItemWorkResult(IClass aClass, boolean isImported) {
             Bundle bundle = new Bundle();
             bundle.putBoolean(PresenterMessageHandler.ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX, isImported);
             bundle.putInt(PresenterMessageHandler.ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX, classes.indexOf(aClass));

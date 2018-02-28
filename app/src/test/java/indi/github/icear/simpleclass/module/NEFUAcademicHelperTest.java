@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.module.academicdata.nefuacademic.NEFUAcademicHelper;
 
 /**
@@ -24,11 +24,11 @@ public class NEFUAcademicHelperTest {
     public void getClasses() throws Exception {
         NEFUAcademicHelper nefuAcademicHelper = new NEFUAcademicHelper();
         nefuAcademicHelper.init("", "");
-        List<Class> classList = nefuAcademicHelper.getClasses();
+        List<IClass> classList = nefuAcademicHelper.getClasses();
         System.out.println(classList);
         System.out.println("read " + classList.size() + " classes");
         int classInfoCount = 0;
-        for (Class aClass : classList) {
+        for (IClass aClass : classList) {
             classInfoCount += aClass.getClassInfo().size();
         }
         System.out.println("read " + classInfoCount + " classInfos");

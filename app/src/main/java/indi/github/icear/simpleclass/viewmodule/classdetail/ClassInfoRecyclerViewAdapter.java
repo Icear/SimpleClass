@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import indi.github.icear.simpleclass.SimpleClassApplication;
-import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
 import indi.github.icear.simpleclass.module.academicdata.util.ClassConvertUtil;
 import indi.github.icear.util.DateUtil;
 
@@ -22,10 +22,10 @@ import indi.github.icear.util.DateUtil;
 
 class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecyclerViewAdapter.ViewHolder> {
 
-    private List<ClassInfo> mValue;
+    private List<IClassInfo> mValue;
     private ItemActionCallBack mItemActionCallBack;
 
-    ClassInfoRecyclerViewAdapter(List<ClassInfo> items, ItemActionCallBack itemActionCallBack) {
+    ClassInfoRecyclerViewAdapter(List<IClassInfo> items, ItemActionCallBack itemActionCallBack) {
         mValue = items;
         mItemActionCallBack = itemActionCallBack;
     }
@@ -108,11 +108,11 @@ class ClassInfoRecyclerViewAdapter extends RecyclerView.Adapter<ClassInfoRecycle
     }
 
     interface ItemActionCallBack {
-        void onItemClick(ClassInfo item);
+        void onItemClick(IClassInfo item);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ClassInfo mItem;
+        private IClassInfo mItem;
         private TextView mTextViewWeeks;
         private TextView mTextViewLocation;
         private TextView mTextViewTime;

@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import indi.github.icear.simpleclass.R;
 import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
 
 
 public class ClassDetailFragment extends Fragment implements ClassDetailContract.View,
@@ -85,7 +85,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
     }
 
     @Override
-    public void showItemInfo(Class item) {
+    public void showItemInfo(IClass item) {
         toolbar.setTitle(item.getName());
         textViewClassName.setText(item.getName());
         textViewTeacher.setText(item.getTeachers());
@@ -96,7 +96,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
     }
 
     @Override
-    public void showItemModifyView(ClassInfo item) {
+    public void showItemModifyView(IClassInfo item) {
 
     }
 
@@ -106,7 +106,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
     }
 
     @Override
-    public void onItemClick(ClassInfo item) {
+    public void onItemClick(IClassInfo item) {
 
     }
 

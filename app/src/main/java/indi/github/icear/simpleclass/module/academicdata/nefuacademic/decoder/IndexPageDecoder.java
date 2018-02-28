@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.User;
+import indi.github.icear.simpleclass.module.academicdata.entity.IUser;
+import indi.github.icear.simpleclass.module.academicdata.nefuacademic.entity.NEFUUser;
 
 /**
  * Created by icear on 2018/2/28.
@@ -28,7 +29,7 @@ public class IndexPageDecoder {
     }
 
     @NonNull
-    public User getUser() throws IOException {
+    public IUser getUser() throws IOException {
         Element container = document.getElementsByAttributeValue("class", "wap").first();
         Element targetElement = container.getElementsByAttributeValue("class", "block1text").first();
         String info = targetElement.html();
@@ -37,7 +38,7 @@ public class IndexPageDecoder {
         Pattern r = Pattern.compile(patten);
         Matcher m = r.matcher(info);
         if (m.find()) {
-            User user = new User();
+            IUser user = new NEFUUser();
             user.setName(m.group(1));
             user.setId(m.group(2));
             return user;

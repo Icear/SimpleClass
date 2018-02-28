@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.viewmodule.BasePresenter;
 import indi.github.icear.simpleclass.viewmodule.BaseView;
 
@@ -15,7 +15,7 @@ import indi.github.icear.simpleclass.viewmodule.BaseView;
 
 interface ClassListContract {
     interface Presenter extends BasePresenter {
-        void showItemDetail(Class item);
+        void showItemDetail(IClass item);
         void onUserConfirmed();
 
         void swapItem(int position1, int position2);
@@ -25,7 +25,7 @@ interface ClassListContract {
     }
 
     interface View extends BaseView<Presenter> {
-        void showData(List<Class> itemList);
+        void showData(List<IClass> itemList);
         void showProgressBar();
         void hideProgressBar();
         void leadToImportModule();

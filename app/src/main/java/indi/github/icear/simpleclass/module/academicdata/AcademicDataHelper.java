@@ -3,8 +3,8 @@ package indi.github.icear.simpleclass.module.academicdata;
 import java.io.IOException;
 import java.util.List;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.User;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.entity.IUser;
 
 /**
  * Created by icear on 2017/11/2.
@@ -29,7 +29,7 @@ public interface AcademicDataHelper {
      * @return User对象
      * @throws IOException 网络IO或数据处理错误
      */
-    User getUser() throws IOException;
+    IUser getUser() throws IOException;
 
     /**
      * 获得课程数据
@@ -37,5 +37,5 @@ public interface AcademicDataHelper {
      * @return classList
      * @throws IOException 网络IO或数据处理错误
      */
-    List<Class> getClasses() throws IOException;
+    List<IClass> getClasses() throws IOException;
 }

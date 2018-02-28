@@ -12,8 +12,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import indi.github.icear.simpleclass.module.academicdata.entity.Class;
-import indi.github.icear.simpleclass.module.academicdata.entity.ClassInfo;
+import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
+import indi.github.icear.simpleclass.module.academicdata.nefuacademic.entity.NEFUClass;
+import indi.github.icear.simpleclass.module.academicdata.nefuacademic.entity.NEFUClassInfo;
+import indi.github.icear.simpleclass.module.academicdata.nefuacademic.util.InterfaceConvertUtil;
 
 /**
  * Created by icear on 2018/2/28.
@@ -45,8 +47,8 @@ public class ClassSchedulePageDecoder {
      *
      * @return 课程信息
      */
-    public List<Class> getClasses() {
-        List<Class> classContainer = new ArrayList<>();
+    public List<IClass> getClasses() {
+        List<IClass> classContainer = new ArrayList<>();
         Element classTable = document.getElementsByAttributeValue("id", "kbtable").first();
         Element tBody = classTable.getAllElements().first();
         Elements trEls = tBody.getElementsByTag("tr");
@@ -78,7 +80,7 @@ public class ClassSchedulePageDecoder {
      * @param classIndex     节数索引（第几节课）
      * @param dayIndex       天数索引（星期几）
      */
-    private void parseNode(List<Class> classContainer, String html, int classIndex, int dayIndex) {
+    private void parseNode(List<IClass> classContainer, String html, int classIndex, int dayIndex) {
         Log.i(TAG, "tend to parseNode");
         Document document = Jsoup.parse(html);
         Element container = document.getElementsByAttributeValue("class", "kbcontent").first();
@@ -98,19 +100,19 @@ public class ClassSchedulePageDecoder {
                 Log.d(TAG, "weekMode: " + m.group(5));
                 Log.d(TAG, "location: " + m.group(6));
 
-                ClassInfo classInfo = new ClassInfo();
-                classInfo.setWeekDay(dayIndex);
-                classInfo.setSection(i);
+                NEFUClassInfo NEFUClassInfo = new NEFUClassInfo();
+                NEFUClassInfo.setWeekDay(dayIndex);
+                NEFUClassInfo.setSection(i);
 
                 if ("周".equals(m.group(5))) {
-                    readWeek(classInfo, m.group(4), READ_WEEK_MODE_CONTINUOUS);//正常模式
+                    readWeek(NEFUClassInfo, m.group(4), READ_WEEK_MODE_CONTINUOUS);//正常模式
                 } else if ("单周".equals(m.group(5))) {
-                    readWeek(classInfo, m.group(4), READ_WEEK_MODE_ODD);//单周模式
+                    readWeek(NEFUClassInfo, m.group(4), READ_WEEK_MODE_ODD);//单周模式
                 } else if ("双周".equals(m.group(5))) {
-                    readWeek(classInfo, m.group(4), READ_WEEK_MODE_EVEN);//双周模式
+                    readWeek(NEFUClassInfo, m.group(4), READ_WEEK_MODE_EVEN);//双周模式
                 }
-                readLocation(classInfo, m.group(6));
-                updateOrAddClass(classContainer, m.group(2), m.group(3), classInfo);
+                readLocation(NEFUClassInfo, m.group(6));
+                updateOrAddClass(classContainer, m.group(2), m.group(3), NEFUClassInfo);
             }
         }
     }
@@ -118,10 +120,10 @@ public class ClassSchedulePageDecoder {
     /**
      * 从mixLocation读取地点数据填充至classInfo中
      *
-     * @param classInfo   要填充的classInfo
+     * @param NEFUClassInfo   要填充的classInfo
      * @param mixLocation 要读取的地点信息
      */
-    private void readLocation(ClassInfo classInfo, String mixLocation) {
+    private void readLocation(NEFUClassInfo NEFUClassInfo, String mixLocation) {
         Log.d(TAG, "parse Location");
         Log.d(TAG, mixLocation);
         /* 将上课地点的楼与教室分开，便于后面读取时间表 */
@@ -131,8 +133,8 @@ public class ClassSchedulePageDecoder {
             Log.d(TAG, "location find match");
             Log.d(TAG, "location: " + m.group(1));
             Log.d(TAG, "room: " + m.group(2));
-            classInfo.setLocation(m.group(1));
-            classInfo.setRoom(m.group(2));
+            NEFUClassInfo.setLocation(m.group(1));
+            NEFUClassInfo.setRoom(m.group(2));
         } else {
             Log.e(TAG, "oh! We can't read this location!");
         }
@@ -141,11 +143,11 @@ public class ClassSchedulePageDecoder {
     /**
      * 从mixWeek读取周次信息填充至classInfo中
      *
-     * @param classInfo 要填充的classInfo
+     * @param NEFUClassInfo 要填充的classInfo
      * @param mixWeek   要读取的周次信息
      * @param mode      周次模式，传入定义好的常数
      */
-    private void readWeek(ClassInfo classInfo, String mixWeek, int mode) {
+    private void readWeek(NEFUClassInfo NEFUClassInfo, String mixWeek, int mode) {
         Log.d(TAG, "tend to parse Week");
         Log.d(TAG, mixWeek);
         List<Integer> weekList = new ArrayList<>();
@@ -188,7 +190,7 @@ public class ClassSchedulePageDecoder {
                 break;
         }
         Log.d(TAG, "final parse week number: " + weekList.size());
-        classInfo.setWeek(weekList);
+        NEFUClassInfo.setWeek(weekList);
     }
 
     /**
@@ -197,24 +199,24 @@ public class ClassSchedulePageDecoder {
      * @param classContainer 容器
      * @param name           课程名称
      * @param teacher        上课教室
-     * @param classInfo      上课信息
+     * @param NEFUClassInfo      上课信息
      */
-    private void updateOrAddClass(List<Class> classContainer, String name, String teacher, ClassInfo classInfo) {
+    private void updateOrAddClass(List<IClass> classContainer, String name, String teacher, NEFUClassInfo NEFUClassInfo) {
         //查找现有class，有相同者进行合并
-        for (Class aClass :
+        for (IClass aClass :
                 classContainer) {
             if (aClass.getName().equals(name) && aClass.getTeachers().equals(teacher)) {
-                aClass.getClassInfo().add(classInfo);
+                aClass.getClassInfo().add(NEFUClassInfo);
                 return;
             }
         }
         //未找到，创建新的
-        Class newClass = new Class();
+        NEFUClass newClass = new NEFUClass();
         newClass.setName(name);
         newClass.setTeachers(teacher);
-        List<ClassInfo> classInfos = new ArrayList<>();
-        classInfos.add(classInfo);
-        newClass.setClassInfo(classInfos);
+        List<NEFUClassInfo> NEFUClassInfos = new ArrayList<>();
+        NEFUClassInfos.add(NEFUClassInfo);
+        newClass.setClassInfo(InterfaceConvertUtil.convertListForIClassInfo(NEFUClassInfos));
         classContainer.add(newClass);
     }
 }
