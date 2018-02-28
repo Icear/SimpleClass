@@ -15,7 +15,7 @@
         android:theme="@style/SimpleClassAppTheme"
         >
         <activity
-            android:name="indi.github.icear.simpleclass.MainActivity"
+            android:name="indi.github.icear.simpleclass.viewmodule.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/SimpleClassAppTheme">
             <intent-filter>

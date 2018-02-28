@@ -5,8 +5,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import indi.github.icear.simpleclass.data.timedata.TimeDataProvider;
-import indi.github.icear.simpleclass.data.timedata.entity.TimeQuantum;
+import indi.github.icear.simpleclass.module.timedata.TimeDataProvider;
+import indi.github.icear.simpleclass.module.timedata.entity.TimeQuantum;
 
 
 /**

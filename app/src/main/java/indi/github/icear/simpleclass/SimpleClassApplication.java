@@ -6,9 +6,9 @@ import android.app.Application;
 import java.util.ArrayList;
 import java.util.List;
 
-import indi.github.icear.simpleclass.data.academicdata.AcademicDataProvider;
-import indi.github.icear.simpleclass.data.academicdata.NEFUAcademicHelper;
-import indi.github.icear.simpleclass.data.timedata.TimeDataProvider;
+import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
+import indi.github.icear.simpleclass.module.academicdata.NEFUAcademicHelper;
+import indi.github.icear.simpleclass.module.timedata.TimeDataProvider;
 
 /**
  * Created by icear on 2017/10/15.
