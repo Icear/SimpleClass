@@ -1,45 +1,63 @@
 # SimpleClass
-=========================================
-## 概述
 
-因为平时记录待办事项、活动的时候习惯了使用日历来安排，而课程却单独存放在了一些课程类APP上，这样的话，要安排事情的时候总要来回切换，感觉很是不方便，于是萌生这个想法有了SimpleClass。
-当前适配：东北林业大学
+[![Android version](https://img.shields.io/badge/Android-5.0%2B-brightgreen.svg)](https://github.com/Icear/SimpleClass/release/latest/) [![Travis](https://img.shields.io/travis/Icear/SimpleClass.svg)](https://github.com/Icear/SimpleClass/releases/latest/) [![GitHub release](https://img.shields.io/github/release/Icear/SimpleClass.svg)](https://github.com/Icear/SimpleClass/releases/latest/)
+
+
+
+> 能够将学校教务处的课程表等信息导入至手机日历中
+>- 当前适配：
+    - 东北林业大学
 
 ## 功能
 
-将教务处的课程转化为日历的事件导入至手机日历中
-- 支持指定日历或创建单独的日历（方便显示和隐藏）
-- 支持将课程的地点数据对应至日历事件的地点数据上
-- 支持选择要加入的课程（其实就是删除）
-- 支持完全清除已导入的事件
+- [x] 支持导入至指定日历或创建单独的日历并导入（创建单独日历时可以通过隐藏该日历）
+- [x] 自动匹配对应教室的上课时间
+- [x] 支持选择要加入的课程（其实就是删除）
+- [x] 支持完全清除已导入的日历事件
+- [ ] 在课程导入前进行修改
+- [ ] 允许自定义导入的事件的格式
+- [ ] 在课程变化之后支持更新事件
+- [ ] 支持英语
 
-## 用法
 
-- 打开APP
-- 登陆至教务处
-- 检查课程情况
-- 选择要导入的日历
-- 导入完成
+	1. 日历导入之后可能默认是不显示状态(需要去自己的日历中手动打开该日历的显示)
+	2. 可以将日历导入至Google Schedule之类支持同步的日历，能够实现多终端同步
+	3. 课程事件默认没有添加提醒，有的日历APP会自带提醒功能，为了避免重复没有加入
+	4. 不同的手机日历APP显示效果可能不一样
+	
+## 安装
+- 在[release](https://github.com/Icear/SimpleClass/releases/latest/)中下载最新版本进行安装
 
-补充：
-- 日历导入之后可能默认是不显示状态(需要去自己的日历中手动打开该日历的显示)
-- 可以将日历导入至Google Schedule之类支持同步的日历，能够实现多终端同步
-- 课程事件默认没有添加提醒，有的日历APP会自带提醒功能，为了避免重复没有加入
-- 不同的手机日历APP显示效果可能不一样
 
-## 开发细节
+## 使用
+
+- 使用时输入教务处的身份验证信息（即账号&密码），**程序不会保存您的密码**，所以每一次使用时均需要手动输入
+- 在课程卡片上右划以删去该课程
+- 点击课程卡片可查看详细信息
+- 上课时间表由项目维护，暂时无法自定义，如遇某处上课时间不准确或缺失，请与我们反馈（issue、邮件等方式）
+
+## 参与到项目中
+
+### 开发环境
+
+- Android Studio 2.2+
+- Gradle 3.3+
+
+### 引入项目
+
+在Android Studio中引入
+> 在Welcome界面或项目界面->VCS,选择"Check out project from Version Control",根据提示操作即可
+
+通过 git bash 引入
+> - git clone https://github.com/Icear/SimpleClass/releases
+> - 在Android Studio中选择Open an existing Android Studio project 
+> - 根据提示操作
+
+### 项目细节
 
 - APP采用了MVP模式，单Activity多Fragment
-- 将获取课程数据的部分使用接口分离，可以很轻松地适配多个学校（如果想要适配其它学校，只需要继承`indi.github.icear.simpleclass.data.academicdata.AcademicDataHelper`接口实现，在AcademicDataProvider中修改指向即可）
-- 时间表数据独立放置在timeSchedule.json中，采用json，便于快速维护
+- 将获取课程数据的部分使用接口分离,想要适配新的目标，只需实现`indi.github.icear.simpleclass.data.academicdata.AcademicDataHelper`及相关接口
+- 时间表数据独立放置在timeSchedule.json中，采用json，格式参考项目中正在使用的timeSchedule.json文件
 
-## 未完成的功能
 
-- 在课程导入前进行完整的修改
-- 允许自定义导入的事件的格式
-- 在课程变化之后支持更新事件
-- 英语环境适配
-- 将一些细节设定转移到配置文件中（目前放在了SimpleClassApplication类中）
-
-PS：做到这里暂时告一段落了，欢迎有兴趣的同伴接收（虽然做的很菜）
 TAG：三角形轮子
