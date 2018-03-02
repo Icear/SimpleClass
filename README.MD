@@ -57,6 +57,6 @@
 - APP采用了MVP模式，单Activity多Fragment
 - 将获取课程数据的部分使用接口分离,想要适配新的目标，只需实现`indi.github.icear.simpleclass.data.academicdata.AcademicDataHelper`及相关接口
 - 时间表数据独立放置在timeSchedule.json中，采用json，格式参考项目中正在使用的timeSchedule.json文件
-
+- 版权问题，上传的源代码中不包含林大的校徽图片，同时在fragment_login.xml中注释了对应引用，不影响代码逻辑
 
 TAG：三角形轮子
