@@ -19,11 +19,10 @@
 - [ ] 在课程变化之后支持更新事件
 - [ ] 支持英语
 
-
-	1. 日历导入之后可能默认是不显示状态(需要去自己的日历中手动打开该日历的显示)
-	2. 可以将日历导入至Google Schedule之类支持同步的日历，能够实现多终端同步
-	3. 课程事件默认没有添加提醒，有的日历APP会自带提醒功能，为了避免重复没有加入
-	4. 不同的手机日历APP显示效果可能不一样
+>- 日历导入之后可能默认是不显示状态(需要去自己的日历中手动打开该日历的显示)
+>- 可以将日历导入至Google Schedule之类支持同步的日历，能够实现多终端同步
+>- 课程事件默认没有添加提醒，有的日历APP会自带提醒功能，为了避免重复没有加入
+>- 不同的手机日历APP显示效果可能不一样
 	
 ## 安装
 - 在[release](https://github.com/Icear/SimpleClass/releases/latest/)中下载最新版本进行安装
@@ -45,13 +44,13 @@
 
 ### 引入项目
 
-在Android Studio中引入
-> 在Welcome界面或项目界面->VCS,选择"Check out project from Version Control",根据提示操作即可
+- 在Android Studio中引入
+    > 在Welcome界面或项目界面->VCS,选择"Check out project from Version Control",根据提示操作即可
 
-通过 git bash 引入
-> - git clone https://github.com/Icear/SimpleClass/releases
-> - 在Android Studio中选择Open an existing Android Studio project 
-> - 根据提示操作
+- 通过 git bash 引入
+    > - git clone https://github.com/Icear/SimpleClass/releases
+    > - 在Android Studio中选择Open an existing Android Studio project 
+    > - 根据提示操作
 
 ### 项目细节
 
