@@ -5,8 +5,6 @@ android:
     - android-23
     - extra-android-m2repository
     - extra-android-support
-script:
-  - run:
-        name: chmod permissions
-        command: chmod +x ./gradlew
-  - ./gradlew assembleRelease
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew assembleRelease
