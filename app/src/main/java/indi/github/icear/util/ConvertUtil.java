@@ -17,7 +17,7 @@ public class ConvertUtil {
      * 将inputStream内容转换为String
      * @param inputStream inputStream
      * @return String结果
-     * @throws IOException IOException
+     * @throws IOException IOException 文件读取时发生错误
      */
     public static String toString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));

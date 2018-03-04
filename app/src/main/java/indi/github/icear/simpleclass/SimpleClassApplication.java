@@ -20,6 +20,7 @@ public class SimpleClassApplication extends Application {
     public static String PRESET_ACCOUNT_NAME = "SimpleClass@gmail.com";//单独创建日历时的日历账户
     public static String PRESET_ACADEMIC_DATA_HELPER = NEFUAcademicHelper.class.getName();//要使用的AcademicDataHelper
     public static String PRESET_ORGANIZER = "SimpleClass@gmail.com";//预设的事件组织者
+    public static String remoteFileServerPathAddress = "https://raw.githubusercontent.com/Icear/SimpleClass/master/data";//远程文件服务器目录地址
 
     private static SimpleClassApplication application;
 
