@@ -1,6 +1,6 @@
 # SimpleClass
 
-[![Android version](https://img.shields.io/badge/Android-5.0%2B-brightgreen.svg)](https://github.com/Icear/SimpleClass/release/latest/) [![Travis](https://img.shields.io/travis/Icear/SimpleClass.svg)](https://github.com/Icear/SimpleClass/releases/latest/) [![GitHub release](https://img.shields.io/github/release/Icear/SimpleClass.svg)](https://github.com/Icear/SimpleClass/releases/latest/)
+[![Android version](https://img.shields.io/badge/Android-5.0%2B-brightgreen.svg)](https://github.com/Icear/SimpleClass/release/latest/) [![Travis](https://api.travis-ci.org/Icear/SimpleClass.svg?branch=master)](https://travis-ci.org/Icear/SimpleClass#) [![GitHub release](https://img.shields.io/github/release/Icear/SimpleClass.svg)](https://github.com/Icear/SimpleClass/releases/latest/)
 
 
 
