@@ -38,9 +38,11 @@ interface CalendarImportContract {
 
         void showItemWorkResult(IClass item, boolean result);
 
-        void showProgressFinished();
+        void showProgressSuccessfullyFinished();
 
         void showWarningMessage(int resId);
+
+        void showWarningMessage(String message);
 
         void quitAll();
 

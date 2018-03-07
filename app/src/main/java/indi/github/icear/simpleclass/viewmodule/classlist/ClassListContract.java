@@ -16,21 +16,27 @@ import indi.github.icear.simpleclass.viewmodule.BaseView;
 interface ClassListContract {
     interface Presenter extends BasePresenter {
         void showItemDetail(IClass item);
-        void onUserConfirmed();
+
+        void onUserConfirmClassList();
 
         void swapItem(int position1, int position2);
         void delItem(int position);
 
         void revertItemDel(int position);
+
+        void onUserConfirmSection(String section);
     }
 
     interface View extends BaseView<Presenter> {
         void showData(List<IClass> itemList);
         void showProgressBar();
         void hideProgressBar();
-        void leadToImportModule();
+
+        void leadToImportModule(Bundle bundle);
 
         void initItemDetailModule(Bundle bundle);
         void showMessage(int res);
+
+        void askForChooseSection(List<String> sectionList);
     }
 }

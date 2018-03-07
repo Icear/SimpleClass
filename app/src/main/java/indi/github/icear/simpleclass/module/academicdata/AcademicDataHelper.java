@@ -37,5 +37,20 @@ public interface AcademicDataHelper {
      * @return classList
      * @throws IOException 网络IO或数据处理错误
      */
-    List<IClass> getClasses() throws IOException;
+    List<IClass> getClasses(String section) throws IOException;
+
+    /**
+     * 获得可读取数据的学期列表
+     *
+     * @return 学期列表
+     * @throws IOException 网络IO或数据处理错误
+     */
+    List<String> getSectionList() throws IOException;
+
+    /**
+     * 获得学校代号
+     *
+     * @return 学校代号
+     */
+    String getSchool();
 }

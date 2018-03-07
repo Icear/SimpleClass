@@ -73,6 +73,21 @@ public class ClassSchedulePageDecoder {
     }
 
     /**
+     * 获得可读取数据的学期列表
+     * @return 学期列表
+     */
+    public List<String> getAvailableSections() {
+        List<String> sectionList = new ArrayList<>();
+        Element sectionContainer = document.getElementById("xnxq01id");
+        Elements sections = sectionContainer.children();
+        for (Element section :
+                sections) {
+            sectionList.add(section.attr("value"));
+        }
+        return sectionList;
+    }
+
+    /**
      * 解析课程所在的html元素
      *
      * @param classContainer class容器

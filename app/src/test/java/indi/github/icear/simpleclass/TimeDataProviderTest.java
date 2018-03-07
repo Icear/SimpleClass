@@ -20,8 +20,8 @@ public class TimeDataProviderTest {
 
     @Test
     public void init() throws Exception {
-        timeDataProvider = TimeDataProvider.getInstance();
-        timeDataProvider.init();
+//        timeDataProvider = TimeDataProvider.getInstance();
+//        timeDataProvider.init();
         System.out.println("TimeDataProvider:" + timeDataProvider);
 
     }

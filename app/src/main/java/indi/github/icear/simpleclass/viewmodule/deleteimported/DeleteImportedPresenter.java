@@ -2,9 +2,11 @@ package indi.github.icear.simpleclass.viewmodule.deleteimported;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -39,7 +41,12 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
     }
 
     @Override
-    public void start() {
+    public void onCreate(Context context, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onStart() {
         if (!isRunning && !isFinished) {
             isRunning = true;
             if (!checkPermission()) {
@@ -93,7 +100,7 @@ class DeleteImportedPresenter implements DeleteImportedContract.Presenter, MainA
                 }
                 isRunning = false;
                 if (GRANT_PERMISSION_READ_CALENDAR && GRANT_PERMISSION_WRITE_CALENDAR) {
-                    start();
+                    onStart();
                 } else {
                     //没有权限时的处理
                     mView.showWarningMessage(indi.github.icear.simpleclass.R.string.oh_no_we_cant_access_your_calendar_app_exit);

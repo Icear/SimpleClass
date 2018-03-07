@@ -1,10 +1,16 @@
 package indi.github.icear.simpleclass.viewmodule.classdetail;
 
+import android.content.Context;
+import android.os.Bundle;
+
 import java.util.Collections;
 import java.util.List;
 
+import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
 import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
+
+import static indi.github.icear.simpleclass.viewmodule.classdetail.ClassDetailFragment.PARAMS_CLASS_POSITION;
 
 /**
  * Created by icear on 2017/10/14.
@@ -22,14 +28,17 @@ class ClassDetailPresenter implements ClassDetailContract.Presenter {
     }
 
     @Override
-    public void start() {
-        mView.showItemInfo(mItem);
+    public void onCreate(Context context, Bundle bundle) {
+        if (bundle != null) {
+            AcademicDataProvider academicDataProvider = (AcademicDataProvider) bundle.getSerializable("AcademicDataProvider");
+            int index = bundle.getInt(PARAMS_CLASS_POSITION);
+            mItem = academicDataProvider != null ? academicDataProvider.getClasses().get(index) : null;
+        }
     }
 
-
     @Override
-    public void receiveData(IClass item) {
-        mItem = item;
+    public void onStart() {
+        mView.showItemInfo(mItem);
     }
 
     @Override

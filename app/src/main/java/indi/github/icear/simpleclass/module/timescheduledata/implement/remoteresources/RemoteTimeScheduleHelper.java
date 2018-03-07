@@ -1,5 +1,7 @@
 package indi.github.icear.simpleclass.module.timescheduledata.implement.remoteresources;
 
+import android.util.Log;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidParameterException;
@@ -15,15 +17,18 @@ import indi.github.icear.simpleclass.module.timescheduledata.contract.exception.
  */
 
 public class RemoteTimeScheduleHelper {
+    private static final String TAG = RemoteTimeScheduleHelper.class.getSimpleName();
+
     public RemoteTimeSchedule getTimeSchedule(String school, String section)
             throws TargetNotFoundException, ServerNotAvailableException {
         if ("".equals(school.trim()) || "".equals(section.trim())) {
             throw new InvalidParameterException("'school' or 'section' should not be null");
         }
 
-        String dirTemplate = "/TimeScheduleCache/%s/%s.json";
+        String dirTemplate = "/TimeSchedule/%s/%s.json";
         String finalUrl = SimpleClassApplication.remoteFileServerPathAddress
                 + String.format(dirTemplate, school, section);
+        Log.d(TAG, "the final resource URL is: " + finalUrl);
         try {
             return new RemoteTimeSchedule(NetworkUtil.httpGetForString(finalUrl, null));
         } catch (FileNotFoundException e) {

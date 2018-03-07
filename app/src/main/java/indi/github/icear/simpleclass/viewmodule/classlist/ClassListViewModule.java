@@ -16,7 +16,7 @@ public class ClassListViewModule implements BaseViewModule {
 
     @Override
     public void init(Bundle bundle) {
-        fragment = ClassListFragment.newInstance();
+        fragment = ClassListFragment.newInstance(bundle);
         fragment.setEnterTransition(new Explode());
         fragment.setExitTransition(new Explode());
         fragment.setReturnTransition(new Explode());

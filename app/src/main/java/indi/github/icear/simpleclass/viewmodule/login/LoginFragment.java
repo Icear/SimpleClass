@@ -39,8 +39,16 @@ public class LoginFragment extends Fragment implements LoginContract.View{
      *
      * @return A new instance of fragment LoginFragment.
      */
-    public static LoginFragment newInstance() {
-        return new LoginFragment();
+    public static LoginFragment newInstance(Bundle bundle) {
+        LoginFragment loginFragment = new LoginFragment();
+        loginFragment.setArguments(bundle);
+        return loginFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter.onCreate(this.getContext(), getArguments());
     }
 
     @Nullable
@@ -105,7 +113,7 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.start();
+        mPresenter.onStart();
     }
 
     @Override
@@ -131,9 +139,9 @@ public class LoginFragment extends Fragment implements LoginContract.View{
     }
 
     @Override
-    public void leadToClassModule() {
+    public void leadToClassModule(Bundle bundle) {
         ModuleUtil.initModule(getActivity().getSupportFragmentManager(),
-                ClassListViewModule.class.getName(), null, true);
+                ClassListViewModule.class.getName(), bundle, true);
     }
 
     private void hideSystemSoftKeyboard() {

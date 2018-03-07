@@ -11,6 +11,7 @@ import indi.github.icear.simpleclass.module.academicdata.nefuacademic.NEFUAcadem
  * Created by icear on 2017/11/1.
  * 测试
  */
+@Deprecated
 public class NEFUAcademicHelperTest {
 
     @Test
@@ -24,7 +25,7 @@ public class NEFUAcademicHelperTest {
     public void getClasses() throws Exception {
         NEFUAcademicHelper nefuAcademicHelper = new NEFUAcademicHelper();
         nefuAcademicHelper.init("", "");
-        List<IClass> classList = nefuAcademicHelper.getClasses();
+        List<IClass> classList = nefuAcademicHelper.getClasses("2017-2018-2");
         System.out.println(classList);
         System.out.println("read " + classList.size() + " classes");
         int classInfoCount = 0;

@@ -1,6 +1,8 @@
 package indi.github.icear.simpleclass.viewmodule.login;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
@@ -16,6 +18,7 @@ import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
 class LoginPresenter implements LoginContract.Presenter {
 
     private LoginContract.View mLoginView;
+    private AcademicDataProvider academicDataProvider = new AcademicDataProvider();
 
     LoginPresenter(@NonNull LoginContract.View loginView) {
         mLoginView = loginView;
@@ -23,7 +26,12 @@ class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void start() {
+    public void onCreate(Context context, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onStart() {
 
     }
 
@@ -46,7 +54,8 @@ class LoginPresenter implements LoginContract.Presenter {
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
-                    return AcademicDataProvider.getInstance().init(params[0], params[1]);
+
+                    return academicDataProvider.init(params[0], params[1]);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -65,7 +74,9 @@ class LoginPresenter implements LoginContract.Presenter {
                     if(aBoolean){
                         //登陆成功
                         mLoginView.showMessage(R.string.loginSuccessfully);
-                        mLoginView.leadToClassModule();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("AcademicDataProvider", academicDataProvider);
+                        mLoginView.leadToClassModule(bundle);
                     }else{
                         //登陆失败
                         mLoginView.showMessage(R.string.accountOrPasswordError);

@@ -1,5 +1,7 @@
 package indi.github.icear.simpleclass.viewmodule.welcome;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 /**
@@ -17,7 +19,12 @@ class WelcomePresenter implements WelcomeContract.Presenter {
     }
 
     @Override
-    public void start() {
+    public void onCreate(Context context, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onStart() {
 
     }
 

@@ -12,8 +12,6 @@ import indi.github.icear.simpleclass.viewmodule.BaseView;
 
 interface ClassDetailContract {
     interface Presenter extends BasePresenter {
-        void receiveData(IClass item);
-
         void onUserConfirm();
 
         void swipeItem(int position1, int position2);

@@ -16,7 +16,7 @@ public class WelcomeViewModule implements BaseViewModule {
 
     @Override
     public void init(Bundle bundle) {
-        fragment = WelcomeFragment.newInstance();
+        fragment = WelcomeFragment.newInstance(bundle);
         fragment.setEnterTransition(new Explode());
         fragment.setExitTransition(new Explode());
         fragment.setReturnTransition(new Explode());

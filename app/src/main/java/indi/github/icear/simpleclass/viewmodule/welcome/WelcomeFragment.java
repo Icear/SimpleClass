@@ -2,6 +2,7 @@ package indi.github.icear.simpleclass.viewmodule.welcome;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -27,8 +28,16 @@ public class WelcomeFragment extends Fragment implements WelcomeContract.View{
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static WelcomeFragment newInstance() {
-        return new WelcomeFragment();
+    public static WelcomeFragment newInstance(Bundle bundle) {
+        WelcomeFragment welcomeFragment = new WelcomeFragment();
+        welcomeFragment.setArguments(bundle);
+        return welcomeFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter.onCreate(this.getContext(), getArguments());
     }
 
     @Override
@@ -67,7 +76,7 @@ public class WelcomeFragment extends Fragment implements WelcomeContract.View{
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.start();
+        mPresenter.onStart();
     }
 
     @Override

@@ -46,10 +46,14 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
     }
 
     @Override
-    public List<IClass> getClasses() throws IOException {
-        List<IClass> classContainer = new ArrayList<>();
+    public List<IClass> getClasses(String section) throws IOException {
+        Log.i(TAG, "getting classes for section: " + section);
 
-        String response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
+        List<IClass> classContainer = new ArrayList<>();
+        List<NameValuePair> postData = new ArrayList<>();
+        postData.add(new BasicNameValuePair("xnxq01id", section));
+
+        String response = NetworkUtil.httpPostForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null, postData);
         ClassSchedulePageDecoder classSchedulePageDecoder = new ClassSchedulePageDecoder(response);
         classContainer.addAll(classSchedulePageDecoder.getClasses());
 
@@ -59,6 +63,18 @@ public class NEFUAcademicHelper implements AcademicDataHelper {
         } else {
             return classContainer;
         }
+    }
+
+    @Override
+    public List<String> getSectionList() throws IOException {
+        String response = NetworkUtil.httpGetForString("http://jwcnew.nefu.edu.cn/dblydx_jsxsd/xskb/xskb_list.do", null);
+        ClassSchedulePageDecoder classSchedulePageDecoder = new ClassSchedulePageDecoder(response);
+        return classSchedulePageDecoder.getAvailableSections();
+    }
+
+    @Override
+    public String getSchool() {
+        return "Northeast-Forestry-University";
     }
 
     /**

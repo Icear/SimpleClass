@@ -44,6 +44,7 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter.onCreate(this.getContext(), this.getArguments());
     }
 
     @Override
@@ -60,7 +61,7 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.start();
+        mPresenter.onStart();
     }
 
     @Override
@@ -101,7 +102,7 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
     }
 
     @Override
-    public void showProgressFinished() {
+    public void showProgressSuccessfullyFinished() {
         mToolbar.setTitle(indi.github.icear.simpleclass.R.string.import_finish);
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle(indi.github.icear.simpleclass.R.string.import_finish)
@@ -117,6 +118,17 @@ public class CalendarImportFragment extends Fragment implements CalendarImportCo
                 new AlertDialog.Builder(getContext())
                         .setTitle(R.string.app_name)
                         .setMessage(resId)
+                        .setPositiveButton(R.string.yes, null)
+                        .create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void showWarningMessage(String message) {
+        AlertDialog alertDialog =
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.app_name)
+                        .setMessage(message)
                         .setPositiveButton(R.string.yes, null)
                         .create();
         alertDialog.show();

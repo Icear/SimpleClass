@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import indi.github.icear.simpleclass.R;
-import indi.github.icear.simpleclass.module.academicdata.AcademicDataProvider;
 import indi.github.icear.simpleclass.module.academicdata.entity.IClass;
 import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
 
@@ -47,11 +46,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mPresenter.receiveData(
-                    AcademicDataProvider.getInstance()
-                            .getClasses().get(getArguments().getInt(PARAMS_CLASS_POSITION)));
-        }
+        mPresenter.onCreate(getContext(), getArguments());
     }
 
     @Override
@@ -76,7 +71,7 @@ public class ClassDetailFragment extends Fragment implements ClassDetailContract
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.start();
+        mPresenter.onStart();
     }
 
     @Override

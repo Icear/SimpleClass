@@ -1,6 +1,8 @@
 package indi.github.icear.simpleclass.module.academicdata;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import indi.github.icear.simpleclass.SimpleClassApplication;
@@ -13,29 +15,13 @@ import indi.github.icear.simpleclass.module.academicdata.entity.IUser;
  * 使用前需先使用{@link AcademicDataProvider#init(String, String)}函数进行初始化
  */
 
-public class AcademicDataProvider {
-    private static AcademicDataProvider instance;
-    /**
-     * 为了能在不同的ViewModule之间同步数据
-     * 所以使得AcademicDataProvider唯一，并且不与ViewModule关联
-     */
+public class AcademicDataProvider implements Serializable {
     private AcademicDataHelper academicDataHelper;
     private IUser user;
     private List<IClass> classList;
+    private List<String> sectionList;
 
-    private AcademicDataProvider() {
-    }
-
-    /**
-     * 获得AcademicDataProvider对象
-     *
-     * @return AcademicDataProvider对象
-     */
-    public static AcademicDataProvider getInstance() {
-        if (instance == null) {
-            instance = new AcademicDataProvider();
-        }
-        return instance;
+    public AcademicDataProvider() {
     }
 
     /**
@@ -68,22 +54,50 @@ public class AcademicDataProvider {
     /**
      * 从网络读取课程信息数据，函数包含网络访问代码
      *
+     * @param section 目标学期的课程数据
      * @return 课程信息
      * @throws IOException 网络IO或数据解析错误
      * @see AcademicDataProvider#getClasses()
      */
-    public List<IClass> getClassesFromNetwork() throws IOException {
-        classList = academicDataHelper.getClasses();
-        return classList;
+    public List<IClass> getClassesFromNetwork(String section) throws IOException {
+        if (sectionList == null) {
+            sectionList = academicDataHelper.getSectionList();
+        }
+
+        if (sectionList.contains(section)) {
+            classList = academicDataHelper.getClasses(section);
+            return classList;
+        } else {
+            throw new InvalidParameterException("not available section: " + section);
+        }
     }
 
     /**
-     * 从本地读取课程信息数据
-     * 数据来自网络缓存，要求曾调用过{@link AcademicDataProvider#getClassesFromNetwork()}函数
+     * 从本地读取上一次课程信息数据
+     * 数据来自网络缓存，要求曾调用过{@link AcademicDataProvider#getClassesFromNetwork(String section)}函数
      *
      * @return 课程信息
      */
     public List<IClass> getClasses() {
         return classList;
+    }
+
+    /**
+     * 获得可读取数据的学期列表
+     *
+     * @return 学期列表
+     */
+    public List<String> getSectionList() throws IOException {
+        sectionList = academicDataHelper.getSectionList();
+        return sectionList;
+    }
+
+    /**
+     * 获得当前操作的学校代号
+     *
+     * @return 学校代号
+     */
+    public String getSchool() {
+        return academicDataHelper.getSchool();
     }
 }

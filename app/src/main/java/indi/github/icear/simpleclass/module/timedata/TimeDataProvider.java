@@ -1,24 +1,29 @@
 package indi.github.icear.simpleclass.module.timedata;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.security.InvalidParameterException;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 
-import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.module.timedata.entity.TimeData;
 import indi.github.icear.simpleclass.module.timedata.entity.TimeQuantum;
+import indi.github.icear.simpleclass.module.timedata.exception.DataInitializeFailException;
+import indi.github.icear.simpleclass.module.timedata.exception.DataNotProvidedException;
 import indi.github.icear.simpleclass.module.timedata.util.DateDeserializer;
 import indi.github.icear.simpleclass.module.timedata.util.TimeDeserializer;
-import indi.github.icear.util.ConvertUtil;
+import indi.github.icear.simpleclass.module.timescheduledata.contract.ITimeSchedule;
+import indi.github.icear.simpleclass.module.timescheduledata.contract.ITimeScheduleProvider;
+import indi.github.icear.simpleclass.module.timescheduledata.contract.exception.ServerNotAvailableException;
+import indi.github.icear.simpleclass.module.timescheduledata.contract.exception.TargetNotFoundException;
+import indi.github.icear.simpleclass.module.timescheduledata.implement.TimeScheduleProvider;
 
 
 /**
@@ -32,30 +37,14 @@ public class TimeDataProvider {
      * 再提供一个函数来读取指定的时间
      */
     private static String TAG = TimeDataProvider.class.getSimpleName();
-    private static TimeDataProvider instance;
+    private Context context;
     private TimeData timeData;
+    private String school;
+    private String section;
+    private boolean initialized = false;
 
-    private TimeDataProvider() {
-        try {
-            init();
-        } catch (IOException e) {
-            Log.d(TAG, "Exception occur during init");
-            e.printStackTrace();
-            //理论上这里不会触发
-            //TODO 修正为Error
-        }
-    }
-
-    /**
-     * 获得TimeManager对象
-     *
-     * @return TimeManager对象
-     */
-    public static TimeDataProvider getInstance() {
-        if (instance == null) {
-            instance = new TimeDataProvider();
-        }
-        return instance;
+    public TimeDataProvider(Context context) {
+        this.context = context;
     }
 
     /**
@@ -68,30 +57,25 @@ public class TimeDataProvider {
     }
 
     /**
-     * 初始化函数，用于从本地读取预置数据
+     * 用于初始化预置数据
      *
-     * @throws IOException 预置数据读写异常
+     * @param school 目标学校
+     * @param section 目标学期
+     * @throws TargetNotFoundException 目标数据未找到
+     * @throws ServerNotAvailableException 服务不可用
+     * @throws DataInitializeFailException 数据初始化失败
      */
-    public void init() throws IOException {
-        Log.i(TAG, "TimeDataProvider start init...");
+    public void init(String school, String section)
+            throws TargetNotFoundException, ServerNotAvailableException, DataInitializeFailException {
 
-        //Done 检查获取input流为空的情况->如果无法获取到时间数据，那就让它崩溃好了
-        //取得文件
-//        InputStream inputStream = Object.class.getResourceAsStream("/raw/timeschedule.json");
-        InputStream inputStream = SimpleClassApplication.getApplication().getResources().openRawResource(indi.github.icear.simpleclass.R.raw.timeschedule);
-        Log.d(TAG, "read \"timeschedule.json\" with inputStream: " + inputStream);
-        if (inputStream == null) {
-            Log.w(TAG, "the inputStream is null");
-            //无法获取文件，这不合理，应该让程序崩溃
-            throw new NullPointerException("the inputStream is null, maybe forgot to set time schedule data?");
+        if ("".equals(school.trim()) || "".equals(section.trim())) {
+            throw new InvalidParameterException("'school' or 'section' should not be null");
         }
+        Log.i(TAG, "TimeDataProvider onStart init...");
 
-        //这里会抛出IOException，和文件读写有关
-        String timeDataString = ConvertUtil.toString(inputStream);
-        Log.d(TAG, "convert data to String:");
-        Log.d(TAG, timeDataString);
-
-        inputStream.close();
+        ITimeScheduleProvider timeScheduleProvider = new TimeScheduleProvider(context);
+        ITimeSchedule timeSchedule = timeScheduleProvider.getTimeSchedule(school, section);
+        String timeDataString = timeSchedule.getTimeScheduleFileData();
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Time.class, new TimeDeserializer())//注册TimeDeserializer
@@ -103,11 +87,40 @@ public class TimeDataProvider {
         if (timeData != null) {
             Log.i(TAG, "successful loaded data.");
             Log.d(TAG, timeData.toString());
+            initialized = true;
+            this.school = school;
+            this.section = section;
         } else {
-            Log.w(TAG, "Oh no! We loaded nothing!");
-            //如果读取到的数据为空，这不合理，应该让程序崩溃
-            throw new ReadNoDataException("load nothing from json data file");
+            Log.e(TAG, "Oh no! We loaded nothing!");
+            //如果读取到的数据为空
+            throw new DataInitializeFailException("load nothing from json data file");
         }
+    }
+
+    /**
+     * 检查是否已初始化
+     * @return 初始化状态
+     */
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    /**
+     * 获得当前数据状态-学校
+     *
+     * @return 学校
+     */
+    public String getSchool() {
+        return school;
+    }
+
+    /**
+     * 获得当前数据状态-学期
+     *
+     * @return 学期
+     */
+    public String getSection() {
+        return section;
     }
 
     /**
@@ -148,15 +161,4 @@ public class TimeDataProvider {
         return timeData.getTimeZone();
     }
 
-    private class ReadNoDataException extends RuntimeException {
-        ReadNoDataException(String v) {
-            super(v);
-        }
-    }
-
-    public class DataNotProvidedException extends Exception {
-        DataNotProvidedException(String v) {
-            super(v);
-        }
-    }
 }

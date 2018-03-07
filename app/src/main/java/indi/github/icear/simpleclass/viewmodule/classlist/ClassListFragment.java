@@ -1,9 +1,11 @@
 package indi.github.icear.simpleclass.viewmodule.classlist;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,13 +54,16 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     public ClassListFragment() {
     }
 
-    public static ClassListFragment newInstance() {
-        return new ClassListFragment();
+    public static ClassListFragment newInstance(Bundle bundle) {
+        ClassListFragment classListFragment = new ClassListFragment();
+        classListFragment.setArguments(bundle);
+        return classListFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter.onCreate(this.getContext(), getArguments());
     }
 
     @Override
@@ -72,7 +77,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
             @Override
             public void onClick(View v) {
                 if (mPresenter != null) {
-                    mPresenter.onUserConfirmed();
+                    mPresenter.onUserConfirmClassList();
                 }
             }
         });
@@ -82,7 +87,7 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.start();
+        mPresenter.onStart();
     }
 
     @Override
@@ -112,8 +117,9 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         mRecyclerView.setAdapter(new ClassListRecyclerViewAdapter(itemList, mColorList, this));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 getContext(), DividerItemDecoration.VERTICAL));//添加分割线
+        //用于实现向右滑动删除以及上下拖动的功能
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ClassListItemTouchHelperCallback(this, mRecyclerView.getAdapter()));//用于实现向右滑动删除以及上下拖动的功能
+                new ClassListItemTouchHelperCallback(this, mRecyclerView.getAdapter()));
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
@@ -128,13 +134,15 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
     }
 
     @Override
-    public void leadToImportModule() {
-        ModuleUtil.initModule(getFragmentManager(), CalendarImportViewModule.class.getName(), null, true);
+    public void leadToImportModule(Bundle bundle) {
+        ModuleUtil.initModule(getFragmentManager(),
+                CalendarImportViewModule.class.getName(), bundle, true);
     }
 
     @Override
     public void initItemDetailModule(Bundle bundle) {
-        ModuleUtil.initModule(getFragmentManager(), ClassDetailViewModule.class.getName(), bundle, true);
+        ModuleUtil.initModule(getFragmentManager(),
+                ClassDetailViewModule.class.getName(), bundle, true);
     }
 
     @Override
@@ -142,6 +150,27 @@ public class ClassListFragment extends Fragment implements ClassListContract.Vie
         //随便传入一个根视图是coordinatorLayout的View就行，随意传
         Snackbar.make(mRecyclerView, resourceID, Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    public void askForChooseSection(List<String> sectionList) {
+        final List<String> itemList = new ArrayList<>();
+
+        for (String section :
+                sectionList) {
+            itemList.add(section);
+        }
+
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setTitle("请选择要读取课表的学期")
+                .setItems(itemList.toArray(new String[itemList.size()]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.onUserConfirmSection(itemList.get(which));
+                    }
+                })
+                .create();
+        alertDialog.show();
     }
 
     @Override

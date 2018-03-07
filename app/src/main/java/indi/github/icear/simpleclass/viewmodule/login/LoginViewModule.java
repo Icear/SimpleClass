@@ -16,7 +16,7 @@ public class LoginViewModule implements BaseViewModule {
 
     @Override
     public void init(Bundle bundle) {
-        fragment = LoginFragment.newInstance();
+        fragment = LoginFragment.newInstance(bundle);
         fragment.setEnterTransition(new Explode());
         fragment.setExitTransition(new Explode());
         fragment.setReturnTransition(new Explode());

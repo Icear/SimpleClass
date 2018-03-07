@@ -1,5 +1,6 @@
 package indi.github.icear.simpleclass.viewmodule.classlist;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -16,12 +17,14 @@ import indi.github.icear.simpleclass.viewmodule.classdetail.ClassDetailFragment;
  * Created by icear on 2017/10/7.
  * ClassListPresenter
  */
-
+//TODO 重构
 class ClassListPresenter implements ClassListContract.Presenter {
 
     private ClassListContract.View mClassListView;
     private IClass deletedItem;
-    private AcademicDataProvider academicDataProvider = AcademicDataProvider.getInstance();
+    private AcademicDataProvider academicDataProvider;
+    private String section;
+
 
     ClassListPresenter(ClassListContract.View classListView) {
         mClassListView = classListView;
@@ -29,56 +32,20 @@ class ClassListPresenter implements ClassListContract.Presenter {
     }
 
     @Override
-    public void start() {
+    public void onCreate(Context context, Bundle bundle) {
+        if (bundle != null) {
+            academicDataProvider = (AcademicDataProvider) bundle.getSerializable("AcademicDataProvider");
+        }
+    }
+
+    @Override
+    public void onStart() {
         if (academicDataProvider.getClasses() != null) {
             //已经获取过课程数据，直接从本地读取
-            mClassListView.showData(AcademicDataProvider.getInstance().getClasses());
+            mClassListView.showData(academicDataProvider.getClasses());
         } else {
             //调用函数初始化数据
-            new AsyncTask<Object, Object, List<IClass>>() {
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    mClassListView.showProgressBar();
-                    mClassListView.showMessage(R.string.processingClass_PleaseWait);
-                }
-
-                /**
-                 * Override this method to perform a computation on a background thread. The
-                 * specified parameters are the parameters passed to {@link #execute}
-                 * by the caller of this task.
-                 * <p>
-                 * This method can call {@link #publishProgress} to publish updates
-                 * on the UI thread.
-                 *
-                 * @param params The parameters of the task.
-                 * @return A result, defined by the subclass of this task.
-                 * @see #onPreExecute()
-                 * @see #onPostExecute
-                 * @see #publishProgress
-                 */
-                @Override
-                protected List<IClass> doInBackground(Object... params) {
-                    try {
-                        return academicDataProvider.getClassesFromNetwork();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(List<IClass> classes) {
-                    super.onPostExecute(classes);
-                    if (classes != null) {
-                        mClassListView.showData(classes);
-                    } else {
-                        mClassListView.showMessage(R.string.errorInReadClass_PleaseCheckTheInternet);
-                    }
-                    mClassListView.hideProgressBar();
-                }
-            }.execute();
+            loadSectionList();
         }
     }
 
@@ -86,13 +53,18 @@ class ClassListPresenter implements ClassListContract.Presenter {
     public void showItemDetail(IClass item) {
         int position = academicDataProvider.getClasses().indexOf(item);
         Bundle bundle = new Bundle();
+        bundle.putSerializable("AcademicDataProvider", academicDataProvider);
         bundle.putInt(ClassDetailFragment.PARAMS_CLASS_POSITION, position);
         mClassListView.initItemDetailModule(bundle);
     }
 
     @Override
-    public void onUserConfirmed() {
-        mClassListView.leadToImportModule();
+    public void onUserConfirmClassList() {
+        Bundle bundle = new Bundle();
+        bundle.putString("school", academicDataProvider.getSchool());
+        bundle.putString("section", section);
+        bundle.putSerializable("AcademicDataProvider", academicDataProvider);
+        mClassListView.leadToImportModule(bundle);
     }
 
     @Override
@@ -123,5 +95,99 @@ class ClassListPresenter implements ClassListContract.Presenter {
         }
     }
 
+    private void loadSectionList() {
+        new LoadAvailableSectionListAsyncTask().execute();
+    }
+
+    private void onLoadSectionListSucceed(List<String> sectionList) {
+        mClassListView.askForChooseSection(sectionList);
+    }
+
+    @Override
+    public void onUserConfirmSection(String section) {
+        this.section = section;
+        showClasses(section);
+    }
+
+    private void showClasses(String section) {
+        new LoadClassesAsyncTask(section).execute();
+    }
+
+    private class LoadAvailableSectionListAsyncTask extends AsyncTask<Object, Object, List<String>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mClassListView.showProgressBar();
+            mClassListView.showMessage(R.string.loading_section_list);
+        }
+
+        @Override
+        protected List<String> doInBackground(Object... params) {
+            try {
+                return academicDataProvider.getSectionList();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> strings) {
+            super.onPostExecute(strings);
+            mClassListView.hideProgressBar();
+            onLoadSectionListSucceed(strings);
+        }
+    }
+
+    private class LoadClassesAsyncTask extends AsyncTask<Object, Object, List<IClass>> {
+        private String section;
+
+        LoadClassesAsyncTask(String section) {
+            this.section = section;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mClassListView.showProgressBar();
+            mClassListView.showMessage(R.string.processingClass_PleaseWait);
+        }
+
+        /**
+         * Override this method to perform a computation on a background thread. The
+         * specified parameters are the parameters passed to {@link #execute}
+         * by the caller of this task.
+         * <p>
+         * This method can call {@link #publishProgress} to publish updates
+         * on the UI thread.
+         *
+         * @param params The parameters of the task.
+         * @return A result, defined by the subclass of this task.
+         * @see #onPreExecute()
+         * @see #onPostExecute
+         * @see #publishProgress
+         */
+        @Override
+        protected List<IClass> doInBackground(Object... params) {
+            try {
+                return academicDataProvider.getClassesFromNetwork(section);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<IClass> classes) {
+            super.onPostExecute(classes);
+            if (classes != null) {
+                mClassListView.showData(classes);
+            } else {
+                mClassListView.showMessage(R.string.errorInReadClass_PleaseCheckTheInternet);
+            }
+            mClassListView.hideProgressBar();
+        }
+    }
 
 }

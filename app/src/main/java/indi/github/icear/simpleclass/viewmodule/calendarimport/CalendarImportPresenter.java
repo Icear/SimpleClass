@@ -1,6 +1,7 @@
 package indi.github.icear.simpleclass.viewmodule.calendarimport;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ import indi.github.icear.simpleclass.module.calendardata.entity.CalendarInfo;
 import indi.github.icear.simpleclass.module.calendardata.entity.EventInfo;
 import indi.github.icear.simpleclass.module.timedata.TimeDataProvider;
 import indi.github.icear.simpleclass.module.timedata.entity.TimeQuantum;
+import indi.github.icear.simpleclass.module.timedata.exception.DataNotProvidedException;
+import indi.github.icear.simpleclass.module.timescheduledata.contract.exception.ServerNotAvailableException;
+import indi.github.icear.simpleclass.module.timescheduledata.contract.exception.TargetNotFoundException;
 import indi.github.icear.simpleclass.viewmodule.MainActivity;
 
 /**
@@ -41,10 +45,16 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     private CalendarImportContract.View mView;
     private boolean isRunning = false; //防止重复执行
     private boolean isFinished = false;//防止在操作结束后再次触发
+
+    private Context context;
     private CalendarDataProvider calendarDataProvider;
+    private TimeDataProvider timeDataProvider;
+    private AcademicDataProvider academicDataProvider;
+
     private List<CalendarInfo> calendarInfoList;
     private List<IClass> classes;
-
+    private String school;
+    private String section;
 
     CalendarImportPresenter(CalendarImportContract.View view) {
         mView = view;
@@ -52,15 +62,38 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     }
 
     @Override
-    public void start() {
+    public void onCreate(Context context, Bundle bundle) {
+        this.context = context;
+        calendarDataProvider = new CalendarDataProvider(context.getContentResolver());
+        timeDataProvider = new TimeDataProvider(context);
+        if (bundle != null) {
+            school = bundle.getString("school");
+            section = bundle.getString("section");
+            academicDataProvider = (AcademicDataProvider) bundle.getSerializable("AcademicDataProvider");
+            Log.d(TAG, "bundle received, load school: " + school + " ,section: " + section);
+        } else {
+            Log.d(TAG, "bundle is null");
+        }
+    }
+
+    @Override
+    public void onStart() {
         if (!isRunning && !isFinished) {
             isRunning = true;
             if (!checkPermission()) {
                 requestPermission();
             } else {
-                askToConfirmCalendar();
+                initializeTimeData();
             }
         }
+    }
+
+    /**
+     * 初始化TimeData
+     */
+    private void initializeTimeData() {
+        //开始流程，初始化TimeData
+        new InitializeTimeDataAsyncTask(timeDataProvider, school, section).execute();
     }
 
 
@@ -77,12 +110,18 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         long calendarId = getCalendarIdWithCreate(calendar);
 
         /*获得数据*/
-        classes = AcademicDataProvider.getInstance().getClasses();
+        classes = academicDataProvider.getClasses();
         mView.showWorkingItems(classes);
 
         /*使用异步线程完成剩余操作*/
-        new CalendarEventAsyncTask(calendarId, classes, TimeDataProvider.getInstance(), new PresenterMessageHandler(new WeakReference<>(this))).execute();
+        new CalendarEventAsyncTask(
+                calendarId, classes, timeDataProvider,
+                new PresenterMessageHandler(new WeakReference<>(this))).execute();
+    }
 
+
+    private void onInitialTimeDataProviderSucceed() {
+        askToConfirmCalendar();
     }
 
     /**
@@ -111,12 +150,12 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                 newCalendar.setAccountName(SimpleClassApplication.PRESET_ACCOUNT_NAME);
                 newCalendar.setAccountType(presetAccountType);
                 newCalendar.setOwnerAccount(SimpleClassApplication.PRESET_ACCOUNT_NAME);
-                newCalendar.setName(SimpleClassApplication.getApplication().getString(indi.github.icear.simpleclass.R.string.app_name));
-                newCalendar.setCalendarDisplayName(SimpleClassApplication.getApplication().getString(indi.github.icear.simpleclass.R.string.app_name));
-                newCalendar.setCalendarColor(SimpleClassApplication.getApplication().getResources().getColor(R.color.lightBlue));//允许个性化？
+                newCalendar.setName(context.getString(indi.github.icear.simpleclass.R.string.app_name));
+                newCalendar.setCalendarDisplayName(context.getString(indi.github.icear.simpleclass.R.string.app_name));
+                newCalendar.setCalendarColor(context.getResources().getColor(R.color.lightBlue));//允许个性化？
                 newCalendar.setSyncEvent(true);
                 newCalendar.setCalendarAccessLevel(CalendarContract.Calendars.CAL_ACCESS_OWNER);
-                newCalendar.setCalendarTimeZone(TimeDataProvider.getInstance().getTimeZone());
+                newCalendar.setCalendarTimeZone(timeDataProvider.getTimeZone());
                 calendarId = calendarDataProvider.createNewCalendarAccount(newCalendar);
             }
         } else {
@@ -132,7 +171,6 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         //从Provider拿到数据，对应插入到日历中，同时UI提供反馈
 
         /*获得要插入的日历项*/
-        calendarDataProvider = new CalendarDataProvider(SimpleClassApplication.getApplication().getContentResolver());
         calendarInfoList = calendarDataProvider.queryCalendar();
 
         //传递给view，要求用户选择或创建一个新的日历
@@ -147,9 +185,9 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
      */
     private boolean checkPermission() {
          /* 权限检查 */
-        return !(ActivityCompat.checkSelfPermission(SimpleClassApplication.getApplication(), Manifest.permission.WRITE_CALENDAR) !=
+        return !(ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) !=
                 PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(SimpleClassApplication.getApplication(), Manifest.permission.READ_CALENDAR) !=
+                || ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) !=
                 PackageManager.PERMISSION_GRANTED);
     }
 
@@ -161,6 +199,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                 Manifest.permission.WRITE_CALENDAR,
                 Manifest.permission.READ_CALENDAR
         };
+        //TODO 等待重构
         MainActivity activity = MainActivity.getInstance();
         activity.setCallback(this);
         ActivityCompat.requestPermissions(activity, permissions, REQUEST_CODE_REQUEST_PERMISSION);
@@ -181,13 +220,15 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                         GRANT_PERMISSION_WRITE_CALENDAR = (grantResults[i] == PackageManager.PERMISSION_GRANTED);
                     }
                 }
+
                 isRunning = false;
                 if (GRANT_PERMISSION_READ_CALENDAR && GRANT_PERMISSION_WRITE_CALENDAR) {
-                    start();
+                    onStart();
                 } else {
                     //没有权限时的处理
                     mView.showWarningMessage(indi.github.icear.simpleclass.R.string.oh_no_we_cant_access_your_calendar_app_exit);
-//                    mView.quitAll();
+                    isFinished = true; //结束流程
+//                    mView.quitAll();//退出程序
                 }
                 break;
         }
@@ -226,17 +267,93 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     }
 
     /**
+     * 初始化时间数据的任务
+     */
+    private class InitializeTimeDataAsyncTask extends AsyncTask<Long, Object, Object> {
+
+        private String school;
+        private String section;
+        private TimeDataProvider timeDataProvider;
+
+        private boolean succeed = false;
+        private String errorMessage;
+
+        InitializeTimeDataAsyncTask(TimeDataProvider timeDataProvider, String school, String section) {
+            this.school = school;
+            this.section = section;
+            this.timeDataProvider = timeDataProvider;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            isRunning = true;//强制更新状态
+            isFinished = false;
+            mView.showProgress();
+        }
+
+        @Override
+        protected Object doInBackground(Long... params) {
+            /*初始化时间数据*/
+            try {
+                initialTimeDataProvider(school, section);
+                succeed = true;
+            } catch (TargetNotFoundException | ServerNotAvailableException e) {
+                e.printStackTrace();
+                succeed = false;
+                errorMessage = e.getClass().getSimpleName() + ": " + e.getMessage();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if (succeed) {
+                onInitialTimeDataProviderSucceed();
+                mView.hideProgress();
+            } else {
+                mView.showWarningMessage(errorMessage);
+                isRunning = false;
+                isFinished = false;//允许重新开始
+                mView.hideProgress();
+            }
+        }
+
+        /**
+         * 初始化TimeDataProvider
+         *
+         * @param school  目标学校
+         * @param section 目标学期
+         */
+        private void initialTimeDataProvider(String school, String section) throws
+                TargetNotFoundException, ServerNotAvailableException {
+            if (timeDataProvider.isInitialized() &&
+                    timeDataProvider.getSchool().equals(school) &&
+                    timeDataProvider.getSection().equals(section)) {
+                //数据完整，无需重新初始化
+                return;
+            }
+            timeDataProvider.init(school, section);
+        }
+    }
+
+
+    /**
      * 用于完成向日历插入事件的任务
      */
     private class CalendarEventAsyncTask extends AsyncTask<Long, Object, Object> {
 
         private int eventCount = 0;//统计插入了多少事件
         private long calendarId;
+
         private List<IClass> classes;
         private TimeDataProvider timeDataProvider;
         private Handler mHandler;
 
-        CalendarEventAsyncTask(long calendarId, List<IClass> classes, TimeDataProvider timeDataProvider, Handler receiver) {
+        CalendarEventAsyncTask(long calendarId, List<IClass> classes,
+                               TimeDataProvider timeDataProvider,
+                               Handler receiver) {
             this.calendarId = calendarId;
             this.classes = classes;
             this.timeDataProvider = timeDataProvider;
@@ -246,6 +363,8 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            isRunning = true;//强制更新状态
+            isFinished = false;
             mView.showProgress();
         }
 
@@ -278,7 +397,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                     eventTemplate.setEventLocation(classinfo.getLocation() + classinfo.getRoom());
 
                     //事件的描述，这里附上授课教师
-                    eventTemplate.setDescription(SimpleClassApplication.getApplication().getString(indi.github.icear.simpleclass.R.string.teacher) + ": " + aClass.getTeachers());
+                    eventTemplate.setDescription(context.getString(indi.github.icear.simpleclass.R.string.teacher) + ": " + aClass.getTeachers());
 
                     //事件的时区，这里使用默认导入者的时区即可
                     eventTemplate.setEventTimeZone(timeDataProvider.getTimeZone());
@@ -301,7 +420,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                     try {
                         classTimeQuantum = timeDataProvider
                                 .getClassTime(classinfo.getLocation(), classinfo.getSection());
-                    } catch (TimeDataProvider.DataNotProvidedException e) {
+                    } catch (DataNotProvidedException e) {
                         e.printStackTrace();
                         isImported = false;//导出失败
                         continue;
@@ -362,8 +481,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
 
                             //添加周次备注
                             newEvent.setDescription(newEvent.getDescription() + " " +
-                                    SimpleClassApplication.getApplication()
-                                            .getString(R.string.weekCount, String.valueOf(week)));
+                                    context.getString(R.string.weekCount, String.valueOf(week)));
 
                             calendarDataProvider.createNewEvent(newEvent);//创建
                             eventCount++;
@@ -384,9 +502,9 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             isRunning = false;
-            isFinished = true;
+            isFinished = true;//流程结束
             mView.hideProgress();
-            mView.showProgressFinished();
+            mView.showProgressSuccessfullyFinished();
         }
 
         /**
@@ -404,7 +522,6 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
             message.arg1 = PresenterMessageHandler.ACTION_SHOW_ITEM_WORK_RESULT;//设置标志
             mHandler.sendMessage(message);
         }
-
     }
 
 }
