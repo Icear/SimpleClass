@@ -1,4 +1,4 @@
-package indi.github.icear.simpleclass.module.timescheduledata.implement.exception;
+package indi.github.icear.simpleclass.module.timescheduledata.implement.localcache.exception;
 
 /**
  * Created by icear on 2018/3/4.

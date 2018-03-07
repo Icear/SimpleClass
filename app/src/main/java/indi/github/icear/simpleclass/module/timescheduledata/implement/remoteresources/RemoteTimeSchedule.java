@@ -1,13 +1,9 @@
-package indi.github.icear.simpleclass.module.timescheduledata.implement;
+package indi.github.icear.simpleclass.module.timescheduledata.implement.remoteresources;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidParameterException;
 
-import indi.github.icear.network.util.NetworkUtil;
-import indi.github.icear.simpleclass.SimpleClassApplication;
 import indi.github.icear.simpleclass.module.timescheduledata.contract.ITimeSchedule;
 
 /**
@@ -19,15 +15,8 @@ public class RemoteTimeSchedule implements ITimeSchedule {
 
     private String timeScheduleData;
 
-    public RemoteTimeSchedule(String school, String section) throws IOException {
-        if ("".equals(school.trim()) || "".equals(section.trim())) {
-            throw new InvalidParameterException("'school' or 'section' should not be null");
-        }
-
-        String dirTemplate = "/TimeScheduleCache/\\s/\\s.cache";
-        String finalUrl = SimpleClassApplication.remoteFileServerPathAddress
-                + String.format(dirTemplate, school, section);
-        timeScheduleData = NetworkUtil.httpGetForString(finalUrl, null);
+    public RemoteTimeSchedule(String timeScheduleData) {
+        this.timeScheduleData = timeScheduleData;
     }
 
     @Override
