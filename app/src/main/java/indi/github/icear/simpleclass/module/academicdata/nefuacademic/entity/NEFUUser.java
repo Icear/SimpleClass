@@ -1,12 +1,14 @@
 package indi.github.icear.simpleclass.module.academicdata.nefuacademic.entity;
 
+import java.io.Serializable;
+
 import indi.github.icear.simpleclass.module.academicdata.entity.IUser;
 
 /**
  * Created by icear on 2017/9/25.
  * 教务处用户类，储存相关信息
  */
-public class NEFUUser implements IUser {
+public class NEFUUser implements IUser, Serializable {
     private String name;
     private String id;
     private String major;//专业

@@ -1,5 +1,6 @@
 package indi.github.icear.simpleclass.module.academicdata.nefuacademic.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
@@ -8,7 +9,7 @@ import indi.github.icear.simpleclass.module.academicdata.entity.IClassInfo;
  * Created by icear on 2017/9/13.
  * 储存课程时间信息
  */
-public class NEFUClassInfo implements IClassInfo {
+public class NEFUClassInfo implements IClassInfo, Serializable {
 
     /*
      * 课程

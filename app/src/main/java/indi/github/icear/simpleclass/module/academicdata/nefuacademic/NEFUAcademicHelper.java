@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
@@ -26,7 +27,7 @@ import indi.github.icear.util.ConvertUtil;
  * Created by icear on 2017/9/25.
  * 东北林业大学教务处类
  */
-public class NEFUAcademicHelper implements AcademicDataHelper {
+public class NEFUAcademicHelper implements AcademicDataHelper, Serializable {
 
     private static String TAG = NEFUAcademicHelper.class.getSimpleName();
 
