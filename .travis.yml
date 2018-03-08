@@ -4,6 +4,8 @@ notifications:
   email:
     recipients:
       - $notification_target
+      on_success: change
+      on_failure: always
 android:
   components:
     - build-tools-25.0.2
