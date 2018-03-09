@@ -39,8 +39,8 @@
 
 ### 开发环境
 
-- Android Studio 2.2+
-- Gradle 3.3+
+- Android Studio 3.0.1+
+- Gradle 4.6+
 
 ### 引入项目
 
