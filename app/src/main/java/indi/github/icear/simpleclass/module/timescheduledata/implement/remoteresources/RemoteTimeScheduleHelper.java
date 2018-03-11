@@ -26,7 +26,7 @@ public class RemoteTimeScheduleHelper {
         }
 
         String dirTemplate = "/TimeSchedule/%s/%s.json";
-        String finalUrl = SimpleClassApplication.remoteFileServerPathAddress
+        String finalUrl = SimpleClassApplication.REMOTE_FILE_SERVER_PATH_ADDRESS
                 + String.format(dirTemplate, school, section);
         Log.d(TAG, "the final resource URL is: " + finalUrl);
         try {
