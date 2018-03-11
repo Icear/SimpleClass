@@ -170,10 +170,10 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     private void askToConfirmCalendar() {
         //从Provider拿到数据，对应插入到日历中，同时UI提供反馈
 
-        /*获得要插入的日历项*/
+        /*获得要插入的日历账户*/
         calendarInfoList = calendarDataProvider.queryCalendar();
 
-        //传递给view，要求用户选择或创建一个新的日历
+        //传递给view，要求用户选择或创建一个新的日历账户
         mView.chooseOrCreateNewCalendar(calendarInfoList);
     }
 
@@ -514,6 +514,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
          * @param isImported 要变化的参数，
          */
         private void showItemWorkResult(IClass aClass, boolean isImported) {
+            //TODO 似乎可以用UpdateProgress替代？
             Bundle bundle = new Bundle();
             bundle.putBoolean(PresenterMessageHandler.ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX, isImported);
             bundle.putInt(PresenterMessageHandler.ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX, classes.indexOf(aClass));
