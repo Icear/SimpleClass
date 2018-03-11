@@ -93,7 +93,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
      */
     private void initializeTimeData() {
         //开始流程，初始化TimeData
-        new InitializeTimeDataAsyncTask(timeDataProvider, school, section).execute();
+        new InitializeTimeDataAsyncTask(this, timeDataProvider, school, section).execute();
     }
 
 
@@ -114,9 +114,10 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         mView.showWorkingItems(classes);
 
         /*使用异步线程完成剩余操作*/
-        new CalendarEventAsyncTask(
-                calendarId, classes, timeDataProvider,
-                new PresenterMessageHandler(new WeakReference<>(this))).execute();
+        new CalendarEventAsyncTask(this,
+                calendarId, classes, timeDataProvider, calendarDataProvider, context,
+                new PresenterMessageHandler(this)
+        ).execute();
     }
 
 
@@ -242,23 +243,35 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         static final int ACTION_SHOW_ITEM_WORK_RESULT = 568;
         static final String ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX = "ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX";
         static final String ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX = "ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX";
+
+        static final int ACTION_SHOW_ITEM_WORKING = 423;
+        static final String ACTION_SHOW_ITEM_WORKING_ITEM_INDEX = "ACTION_SHOW_ITEM_WORKING_ITEM_INDEX";
+
         private WeakReference<CalendarImportPresenter> calendarImportPresenterWeakReference;//使用WeakReference来避免内存泄漏
 
-        PresenterMessageHandler(WeakReference<CalendarImportPresenter> calendarImportPresenterWeakReference) {
-            this.calendarImportPresenterWeakReference = calendarImportPresenterWeakReference;
+        PresenterMessageHandler(CalendarImportPresenter calendarImportPresenter) {
+            this.calendarImportPresenterWeakReference = new WeakReference<>(calendarImportPresenter);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Bundle bundle = msg.getData();
+            CalendarImportPresenter calendarImportPresenter = calendarImportPresenterWeakReference.get();
             switch (msg.arg1) {
                 case ACTION_SHOW_ITEM_WORK_RESULT:
-                    Bundle bundle = msg.getData();
-                    CalendarImportPresenter calendarImportPresenter = calendarImportPresenterWeakReference.get();
                     if (calendarImportPresenter != null) {
                         calendarImportPresenter.mView.showItemWorkResult(
                                 calendarImportPresenter.classes.get(bundle.getInt(ACTION_SHOW_ITEM_WORK_RESULT_ITEM_INDEX)),
                                 bundle.getBoolean(ACTION_SHOW_ITEM_WORK_RESULT_RESULT_INDEX));
+                    }
+                    break;
+
+                case ACTION_SHOW_ITEM_WORKING:
+                    if (calendarImportPresenter != null) {
+                        calendarImportPresenter.mView.showWorkingItem(
+                                calendarImportPresenter.classes.get(bundle.getInt(ACTION_SHOW_ITEM_WORKING_ITEM_INDEX))
+                        );
                     }
                     break;
             }
@@ -269,27 +282,34 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     /**
      * 初始化时间数据的任务
      */
-    private class InitializeTimeDataAsyncTask extends AsyncTask<Long, Object, Object> {
+    private static class InitializeTimeDataAsyncTask extends AsyncTask<Long, Object, Object> {
 
         private String school;
         private String section;
         private TimeDataProvider timeDataProvider;
+        private WeakReference<CalendarImportPresenter> calendarImportPresenterWeakReference;
 
         private boolean succeed = false;
         private String errorMessage;
 
-        InitializeTimeDataAsyncTask(TimeDataProvider timeDataProvider, String school, String section) {
+        InitializeTimeDataAsyncTask(
+                CalendarImportPresenter calendarImportPresenter,
+                TimeDataProvider timeDataProvider, String school, String section) {
             this.school = school;
             this.section = section;
             this.timeDataProvider = timeDataProvider;
+            calendarImportPresenterWeakReference = new WeakReference<>(calendarImportPresenter);
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            isRunning = true;//强制更新状态
-            isFinished = false;
-            mView.showProgress();
+            CalendarImportPresenter calendarImportPresenter = calendarImportPresenterWeakReference.get();
+            if (calendarImportPresenter != null) {
+                calendarImportPresenter.isRunning = true;//强制更新状态
+                calendarImportPresenter.isFinished = false;
+                calendarImportPresenter.mView.showProgress();
+            }
         }
 
         @Override
@@ -309,14 +329,17 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if (succeed) {
-                onInitialTimeDataProviderSucceed();
-                mView.hideProgress();
-            } else {
-                mView.showWarningMessage(errorMessage);
-                isRunning = false;
-                isFinished = false;//允许重新开始
-                mView.hideProgress();
+            CalendarImportPresenter calendarImportPresenter = calendarImportPresenterWeakReference.get();
+            if (calendarImportPresenter != null) {
+                if (succeed) {
+                    calendarImportPresenter.onInitialTimeDataProviderSucceed();
+                    calendarImportPresenter.mView.hideProgress();
+                } else {
+                    calendarImportPresenter.mView.showWarningMessage(errorMessage);
+                    calendarImportPresenter.isRunning = false;
+                    calendarImportPresenter.isFinished = false;//允许重新开始
+                    calendarImportPresenter.mView.hideProgress();
+                }
             }
         }
 
@@ -342,30 +365,46 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
     /**
      * 用于完成向日历插入事件的任务
      */
-    private class CalendarEventAsyncTask extends AsyncTask<Long, Object, Object> {
+    private static class CalendarEventAsyncTask extends AsyncTask<Long, Object, Object> {
 
         private int eventCount = 0;//统计插入了多少事件
         private long calendarId;
+        private String teacherTemplate = "teacher: %s";//默认模板
+        private String weekCountTemplate = "week count: %s";//默认模板
 
         private List<IClass> classes;
         private TimeDataProvider timeDataProvider;
+        private CalendarDataProvider calendarDataProvider;
         private Handler mHandler;
+        private WeakReference<CalendarImportPresenter> calendarImportPresenterWeakReference;
 
-        CalendarEventAsyncTask(long calendarId, List<IClass> classes,
+        CalendarEventAsyncTask(CalendarImportPresenter calendarImportPresenter,
+                               long calendarId, List<IClass> classes,
                                TimeDataProvider timeDataProvider,
+                               CalendarDataProvider calendarDataProvider,
+                               Context context,
                                Handler receiver) {
+            calendarImportPresenterWeakReference =
+                    new WeakReference<>(calendarImportPresenter);
+            teacherTemplate = context.getString(R.string.teacher);
+            weekCountTemplate = context.getString(R.string.weekCount);
+
             this.calendarId = calendarId;
             this.classes = classes;
             this.timeDataProvider = timeDataProvider;
+            this.calendarDataProvider = calendarDataProvider;
             mHandler = receiver;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            isRunning = true;//强制更新状态
-            isFinished = false;
-            mView.showProgress();
+            CalendarImportPresenter calendarImportPresenter = calendarImportPresenterWeakReference.get();
+            if (calendarImportPresenter != null) {
+                calendarImportPresenter.isRunning = true;//强制更新状态
+                calendarImportPresenter.isFinished = false;
+                calendarImportPresenter.mView.showProgress();
+            }
         }
 
         @Override
@@ -375,7 +414,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
             for (IClass aClass :
                     classes) {
 
-                mView.showWorkingItem(aClass);
+                showItemWorking(aClass);
                 boolean isImported = true;
 
                 for (IClassInfo classinfo :
@@ -397,7 +436,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
                     eventTemplate.setEventLocation(classinfo.getLocation() + classinfo.getRoom());
 
                     //事件的描述，这里附上授课教师
-                    eventTemplate.setDescription(context.getString(indi.github.icear.simpleclass.R.string.teacher) + ": " + aClass.getTeachers());
+                    eventTemplate.setDescription(String.format(teacherTemplate, aClass.getTeachers()));
 
                     //事件的时区，这里使用默认导入者的时区即可
                     eventTemplate.setEventTimeZone(timeDataProvider.getTimeZone());
@@ -481,7 +520,7 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
 
                             //添加周次备注
                             newEvent.setDescription(newEvent.getDescription() + " " +
-                                    context.getString(R.string.weekCount, String.valueOf(week)));
+                                    String.format(weekCountTemplate, String.valueOf(week)));
 
                             calendarDataProvider.createNewEvent(newEvent);//创建
                             eventCount++;
@@ -501,11 +540,30 @@ class CalendarImportPresenter implements CalendarImportContract.Presenter, MainA
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            isRunning = false;
-            isFinished = true;//流程结束
-            mView.hideProgress();
-            mView.showProgressSuccessfullyFinished();
+            CalendarImportPresenter calendarImportPresenter = calendarImportPresenterWeakReference.get();
+            if (calendarImportPresenter != null) {
+                calendarImportPresenter.isRunning = false;//强制更新状态
+                calendarImportPresenter.isFinished = true;//流程结束
+                calendarImportPresenter.mView.hideProgress();
+                calendarImportPresenter.mView.showProgressSuccessfullyFinished();
+            }
         }
+
+
+        /**
+         * 通过MessageHandle要求主线程做出UI相关操作
+         *
+         * @param aClass 要变化的参数
+         */
+        private void showItemWorking(IClass aClass) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(PresenterMessageHandler.ACTION_SHOW_ITEM_WORKING_ITEM_INDEX, classes.indexOf(aClass));
+            Message message = new Message();
+            message.setData(bundle);
+            message.arg1 = PresenterMessageHandler.ACTION_SHOW_ITEM_WORKING;//设置标志
+            mHandler.sendMessage(message);
+        }
+
 
         /**
          * 通过MessageHandle要求主线程做出UI相关操作
