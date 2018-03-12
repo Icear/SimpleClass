@@ -18,6 +18,6 @@ script:
 notifications:
   email:
     recipients:
-      - $notification_target
+      - Icear.Github@outlook.com
     on_success: change
     on_failure: always
