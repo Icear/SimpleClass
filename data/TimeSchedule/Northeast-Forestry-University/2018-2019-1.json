@@ -1,0 +1,256 @@
+{
+  "timeZone": "Asia/Shanghai",
+  "semesterStartDay": "2018-8-27",
+  "timeSchedule": {
+    "成栋楼": [
+      {
+        "startTime": "08:00",
+        "endTime": "08:45"
+      },
+      {
+        "startTime": "08:50",
+        "endTime": "09:35"
+      },
+      {
+        "startTime": "09:55",
+        "endTime": "10:40"
+      },
+      {
+        "startTime": "10:45",
+        "endTime": "11:30"
+      },
+      {
+        "startTime": "13:40",
+        "endTime": "14:25"
+      },
+      {
+        "startTime": "14:30",
+        "endTime": "15:15"
+      },
+      {
+        "startTime": "15:35",
+        "endTime": "16:20"
+      },
+      {
+        "startTime": "16:25",
+        "endTime": "17:10"
+      },
+      {
+        "startTime": "18:00",
+        "endTime": "18:45"
+      },
+      {
+        "startTime": "18:50",
+        "endTime": "19:35"
+      },
+      {
+        "startTime": "19:40",
+        "endTime": "20:25"
+      },
+      {
+        "startTime": "20:30",
+        "endTime": "21:15"
+      }
+    ],
+    "图书馆": [
+      {
+        "startTime": "08:00",
+        "endTime": "08:45"
+      },
+      {
+        "startTime": "08:50",
+        "endTime": "09:35"
+      },
+      {
+        "startTime": "09:55",
+        "endTime": "10:40"
+      },
+      {
+        "startTime": "10:45",
+        "endTime": "11:30"
+      },
+      {
+        "startTime": "13:40",
+        "endTime": "14:25"
+      },
+      {
+        "startTime": "14:30",
+        "endTime": "15:15"
+      },
+      {
+        "startTime": "15:35",
+        "endTime": "16:20"
+      },
+      {
+        "startTime": "16:25",
+        "endTime": "17:10"
+      },
+      {
+        "startTime": "18:00",
+        "endTime": "18:45"
+      },
+      {
+        "startTime": "18:50",
+        "endTime": "19:35"
+      },
+      {
+        "startTime": "19:40",
+        "endTime": "20:25"
+      },
+      {
+        "startTime": "20:30",
+        "endTime": "21:15"
+      }
+    ],
+    "锦绣楼": [
+      {
+        "startTime": "08:00",
+        "endTime": "08:45"
+      },
+      {
+        "startTime": "08:50",
+        "endTime": "09:35"
+      },
+      {
+        "startTime": "09:55",
+        "endTime": "10:40"
+      },
+      {
+        "startTime": "10:45",
+        "endTime": "11:30"
+      },
+      {
+        "startTime": "13:40",
+        "endTime": "14:25"
+      },
+      {
+        "startTime": "14:30",
+        "endTime": "15:15"
+      },
+      {
+        "startTime": "15:35",
+        "endTime": "16:20"
+      },
+      {
+        "startTime": "16:25",
+        "endTime": "17:10"
+      },
+      {
+        "startTime": "18:00",
+        "endTime": "18:45"
+      },
+      {
+        "startTime": "18:50",
+        "endTime": "19:35"
+      },
+      {
+        "startTime": "19:40",
+        "endTime": "20:25"
+      },
+      {
+        "startTime": "20:30",
+        "endTime": "21:15"
+      }
+    ],
+    "文博楼": [
+      {
+        "startTime": "08:00",
+        "endTime": "08:45"
+      },
+      {
+        "startTime": "08:50",
+        "endTime": "09:35"
+      },
+      {
+        "startTime": "10:05",
+        "endTime": "10:50"
+      },
+      {
+        "startTime": "10:55",
+        "endTime": "11:40"
+      },
+      {
+        "startTime": "13:40",
+        "endTime": "14:25"
+      },
+      {
+        "startTime": "14:30",
+        "endTime": "15:15"
+      },
+      {
+        "startTime": "15:35",
+        "endTime": "16:20"
+      },
+      {
+        "startTime": "16:25",
+        "endTime": "17:10"
+      },
+      {
+        "startTime": "18:00",
+        "endTime": "18:45"
+      },
+      {
+        "startTime": "18:50",
+        "endTime": "19:35"
+      },
+      {
+        "startTime": "19:40",
+        "endTime": "20:25"
+      },
+      {
+        "startTime": "20:30",
+        "endTime": "21:15"
+      }
+    ],
+    "丹青楼": [
+      {
+        "startTime": "08:00",
+        "endTime": "08:45"
+      },
+      {
+        "startTime": "08:50",
+        "endTime": "09:30"
+      },
+      {
+        "startTime": "10:05",
+        "endTime": "10:50"
+      },
+      {
+        "startTime": "10:55",
+        "endTime": "11:40"
+      },
+      {
+        "startTime": "13:40",
+        "endTime": "14:25"
+      },
+      {
+        "startTime": "14:30",
+        "endTime": "15:15"
+      },
+      {
+        "startTime": "15:35",
+        "endTime": "16:20"
+      },
+      {
+        "startTime": "16:25",
+        "endTime": "17:10"
+      },
+      {
+        "startTime": "18:00",
+        "endTime": "18:45"
+      },
+      {
+        "startTime": "18:50",
+        "endTime": "19:35"
+      },
+      {
+        "startTime": "19:40",
+        "endTime": "20:25"
+      },
+      {
+        "startTime": "20:30",
+        "endTime": "21:15"
+      }
+    ]
+  }
+}
